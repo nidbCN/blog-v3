@@ -42,7 +42,7 @@ jobs:
 
             - name: Build
               run: hugo --minify --gc
-              
+
             - name: Deploy to Nginx
               uses: appleboy/scp-action@master
               with:
@@ -52,3 +52,10 @@ jobs:
                 port: 22
                 source: "public/*"
                 target: ${{ vars.DEPLOY_PATH }}
+            - name: Deploy to Pages
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  branch: gh-pages
+                  folder: public
+                  clean: true
+                  single-commit: true
