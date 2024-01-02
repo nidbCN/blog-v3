@@ -13,13 +13,13 @@ published = "2006 Jan 02"
 lastUpdated = "2006 Jan 02 15:04"
 
 [sidebar]
-emoji = "🍥"
+emoji = "🥰"
 subtitle = "记录生活"
 
 [sidebar.avatar]
 enabled = true
 local = true
-src = "img/avatar.png"
+src = "img/avatar-256x.webp"
 
 [article]
 math = false
