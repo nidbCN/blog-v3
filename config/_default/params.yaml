@@ -1,0 +1,6 @@
+comments:
+    enabled: true
+    provider: twikoo
+    twikoo:
+      envId: "https://api.gaein.cn/comments/"
+      lang: 'zh-CN'
