@@ -1,11 +1,21 @@
 # Configure main menu and social menu
-#[[main]]
-#identifier = "home"
-#name = "Home"
-#url = "/"
-#[main.params]
-#icon = "home"
-#newtab = true
+[[main]]
+identifier = "home"
+name = "首页"
+weight = -100
+url = "https://gaein.cn"
+[main.params]
+icon = "home"
+newtab = false
+
+[[main]]
+identifier = "links"
+name = "链接"
+weight = 100
+url = "https://www.gaein.cn/friends"
+[main.params]
+icon = "link"
+newtab = false
 
 [[social]]
 identifier = "github"
