@@ -1,3 +1,5 @@
+favicon: "https://img.cdn.gaein.cn/favicon.ico"
+
 comments:
     enabled: true
     provider: twikoo
