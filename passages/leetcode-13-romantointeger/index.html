@@ -1,0 +1,310 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="把罗马数字转成 int ，遍历字符串进行计算即可。 # 题干 [罗马数字转整数] 罗马数字包含以下七种字符: I，V，X，L，C，D 和 M。 1 2 3 4 5 6 7 8 字符"><title>罗马数字转整数-力扣13 遍历吧</title>
+<link rel=canonical href=https://demo.stack.jimmycai.com/passages/leetcode-13-romantointeger/><link rel=stylesheet href=/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css><meta property='og:title' content="罗马数字转整数-力扣13 遍历吧"><meta property='og:description' content="把罗马数字转成 int ，遍历字符串进行计算即可。 # 题干 [罗马数字转整数] 罗马数字包含以下七种字符: I，V，X，L，C，D 和 M。 1 2 3 4 5 6 7 8 字符"><meta property='og:url' content='https://demo.stack.jimmycai.com/passages/leetcode-13-romantointeger/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='算法'><meta property='article:tag' content='笔记'><meta property='article:tag' content='CSharp'><meta property='article:published_time' content='2021-09-16T13:52:23+00:00'><meta property='article:modified_time' content='2021-09-16T13:52:23+00:00'><meta name=twitter:title content="罗马数字转整数-力扣13 遍历吧"><meta name=twitter:description content="把罗马数字转成 int ，遍历字符串进行计算即可。 # 题干 [罗马数字转整数] 罗马数字包含以下七种字符: I，V，X，L，C，D 和 M。 1 2 3 4 5 6 7 8 字符"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu9ab209e57fee5d3324dd782f157f4448_18058_300x0_resize_q75_h2_box_2.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#题干>题干</a></li><li><a href=#自己想的慢速解法>自己想的慢速解法</a><ol><li><ol><li><a href=#思路>思路</a></li><li><a href=#代码>代码</a></li></ol></li></ol></li><li><a href=#大佬的高速解法>大佬的高速解法</a><ol><li><ol><li><a href=#思路-1>思路</a></li><li><a href=#代码-1>代码</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/leetcode-13-romantointeger/>罗马数字转整数-力扣13 遍历吧</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2021 Sep 16</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 3 分钟</time></div></footer></div></header><section class=article-content><blockquote><p>把罗马数字转成 <code>int</code> ，遍历字符串进行计算即可。</p></blockquote><h2 id=题干><a href=#%e9%a2%98%e5%b9%b2>#</a>
+题干</h2><p>[<a class=link href=https://leetcode-cn.com/problems/roman-to-integer/ target=_blank rel=noopener>罗马数字转整数</a>]</p><blockquote><p>罗马数字包含以下七种字符: <code>I</code>，<code>V</code>，<code>X</code>，<code>L</code>，<code>C</code>，<code>D</code> 和 <code>M</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>字符          数值
+</span></span><span class=line><span class=cl>I             1
+</span></span><span class=line><span class=cl>V             5
+</span></span><span class=line><span class=cl>X             10
+</span></span><span class=line><span class=cl>L             50
+</span></span><span class=line><span class=cl>C             100
+</span></span><span class=line><span class=cl>D             500
+</span></span><span class=line><span class=cl>M             1000
+</span></span></code></pre></td></tr></table></div></div><p>例如， 罗马数字 2 写做 II ，即为两个并列的 1。12 写做 XII ，即为 X + II 。 27 写做  XXVII, 即为 XX + V + II 。</p><p>通常情况下，罗马数字中小的数字在大的数字的右边。但也存在特例，例如 4 不写做 IIII，而是 IV。数字 1 在数字 5 的左边，所表示的数等于大数 5 减小数 1 得到的数值 4 。同样地，数字 9 表示为 IX。这个特殊的规则只适用于以下六种情况：</p><ul><li>I 可以放在 V (5) 和 X (10) 的左边，来表示 4 和 9。</li><li>X 可以放在 L (50) 和 C (100) 的左边，来表示 40 和 90。 </li><li>C 可以放在 D (500) 和 M (1000) 的左边，来表示 400 和 900。</li></ul><p>给定一个罗马数字，将其转换成整数。输入确保在 1 到 3999 的范围内。</p><p><strong>示例 1:</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;III&#34;
+</span></span><span class=line><span class=cl>输出: 3
+</span></span></code></pre></td></tr></table></div></div><p><strong>示例 2:</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;IV&#34;
+</span></span><span class=line><span class=cl>输出: 4
+</span></span></code></pre></td></tr></table></div></div><p><strong>示例 3:</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;IX&#34;
+</span></span><span class=line><span class=cl>输出: 9
+</span></span></code></pre></td></tr></table></div></div><p><strong>示例 4:</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;LVIII&#34;
+</span></span><span class=line><span class=cl>输出: 58
+</span></span><span class=line><span class=cl>解释: L = 50, V= 5, III = 3.
+</span></span></code></pre></td></tr></table></div></div><p><strong>示例 5:</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;MCMXCIV&#34;
+</span></span><span class=line><span class=cl>输出: 1994
+</span></span><span class=line><span class=cl>解释: M = 1000, CM = 900, XC = 90, IV = 4.
+</span></span></code></pre></td></tr></table></div></div><p><strong>提示：</strong></p><ul><li><code>1 &lt;= s.length &lt;= 15</code></li><li><code>s</code> 仅含字符 <code>('I', 'V', 'X', 'L', 'C', 'D', 'M')</code></li><li>题目数据保证 <code>s</code> 是一个有效的罗马数字，且表示整数在范围 <code>[1, 3999]</code> 内</li><li>题目所给测试用例皆符合罗马数字书写规则，不会出现跨位等情况。</li><li>IL 和 IM 这样的例子并不符合题目要求，49 应该写作 XLIX，999 应该写作 CMXCIX 。</li><li>关于罗马数字的详尽书写规则，可以参考 <a class=link href=https://b2b.partcommunity.com/community/knowledge/zh_CN/detail/10753/ target=_blank rel=noopener>罗马数字 - Mathematics</a> 。</li></ul></blockquote><h2 id=自己想的慢速解法><a href=#%e8%87%aa%e5%b7%b1%e6%83%b3%e7%9a%84%e6%85%a2%e9%80%9f%e8%a7%a3%e6%b3%95>#</a>
+自己想的慢速解法</h2><h4 id=思路><a href=#%e6%80%9d%e8%b7%af>#</a>
+思路</h4><p>罗马数字每个数字由一到两个字符构成：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;I&#34;</span><span class=p>:</span>  <span class=mi>1</span>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;V&#34;</span><span class=p>:</span>  <span class=mi>5</span>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;X&#34;</span><span class=p>:</span>  <span class=mi>10</span>   <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;L&#34;</span><span class=p>:</span>  <span class=mi>50</span>   <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;C&#34;</span><span class=p>:</span>  <span class=mi>100</span>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;D&#34;</span><span class=p>:</span>  <span class=mi>500</span>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;M&#34;</span><span class=p>:</span>  <span class=mi>1000</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;IV&#34;</span><span class=p>:</span> <span class=mi>4</span>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;IX&#34;</span><span class=p>:</span> <span class=mi>9</span>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;XL&#34;</span><span class=p>:</span> <span class=mi>40</span>   <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;XC&#34;</span><span class=p>:</span> <span class=mi>90</span>   <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;CD&#34;</span><span class=p>:</span> <span class=mi>400</span>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;CM&#34;</span><span class=p>:</span> <span class=mi>900</span>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>首先遍历读取字符串的每个字符，遇到 <code>I</code>, <code>X</code>, <code>C</code> 即为有可能和下一个字符组成一个罗马数字。</p><p>维护一个字典，存储所有的单个罗马数字 ( <code>IX</code>, <code>C</code> 这种) ，对字符串进行遍历，遇到可能有下一个字母组成罗马数字的就检查下一个是否越界，如果没有越界就查询字典，字典有就加上相应的数值并且 <code>i += 2</code> ，没有就查询当前字符，获取数值并加到 <code>result</code> 里，然后 <code>i++</code>。</p><h4 id=代码><a href=#%e4%bb%a3%e7%a0%81>#</a>
+代码</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>Solution</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kd>static</span> <span class=kt>bool</span> <span class=n>MayHasNext</span><span class=p>(</span><span class=kt>char</span> <span class=n>ch</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>=&gt;</span> <span class=p>(</span><span class=n>ch</span><span class=p>)</span> <span class=k>switch</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=sc>&#39;I&#39;</span> <span class=p>=&gt;</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=sc>&#39;X&#39;</span> <span class=p>=&gt;</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=sc>&#39;C&#39;</span> <span class=p>=&gt;</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>_</span> <span class=p>=&gt;</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>bool</span> <span class=n>TryParse</span><span class=p>(</span><span class=kt>char</span> <span class=n>ch</span><span class=p>,</span> <span class=k>out</span> <span class=kt>int</span> <span class=n>num</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>=&gt;</span> <span class=n>TryParse</span><span class=p>(</span><span class=n>ch</span><span class=p>.</span><span class=n>ToString</span><span class=p>(),</span> <span class=k>out</span> <span class=n>num</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>bool</span> <span class=n>TryParse</span><span class=p>(</span><span class=kt>char</span> <span class=n>ch1</span><span class=p>,</span> <span class=kt>char</span> <span class=n>ch2</span><span class=p>,</span> <span class=k>out</span> <span class=kt>int</span> <span class=n>num</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>=&gt;</span> <span class=n>TryParse</span><span class=p>(</span><span class=s>$&#34;{ch1}{ch2}&#34;</span><span class=p>,</span> <span class=k>out</span> <span class=n>num</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>bool</span> <span class=n>TryParse</span><span class=p>(</span><span class=kt>string</span> <span class=n>s</span><span class=p>,</span> <span class=k>out</span> <span class=kt>int</span> <span class=n>num</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>=&gt;</span> <span class=p>(</span><span class=n>num</span> <span class=p>=</span> <span class=n>s</span> <span class=k>switch</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;I&#34;</span> <span class=p>=&gt;</span> <span class=m>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;V&#34;</span> <span class=p>=&gt;</span> <span class=m>5</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;X&#34;</span> <span class=p>=&gt;</span> <span class=m>10</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;L&#34;</span> <span class=p>=&gt;</span> <span class=m>50</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;C&#34;</span> <span class=p>=&gt;</span> <span class=m>100</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;D&#34;</span> <span class=p>=&gt;</span> <span class=m>500</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;M&#34;</span> <span class=p>=&gt;</span> <span class=m>1000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;IV&#34;</span> <span class=p>=&gt;</span> <span class=m>4</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;IX&#34;</span> <span class=p>=&gt;</span> <span class=m>9</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;XL&#34;</span> <span class=p>=&gt;</span> <span class=m>40</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;XC&#34;</span> <span class=p>=&gt;</span> <span class=m>90</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;CD&#34;</span> <span class=p>=&gt;</span> <span class=m>400</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;CM&#34;</span> <span class=p>=&gt;</span> <span class=m>900</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=n>_</span> <span class=p>=&gt;</span> <span class=p>-</span><span class=m>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>})</span> <span class=p>!=</span> <span class=p>-</span><span class=m>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kt>int</span> <span class=n>RomanToInt</span><span class=p>(</span><span class=kt>string</span> <span class=n>s</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>s</span> <span class=k>is</span> <span class=kc>null</span><span class=p>)</span> <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>s</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>s</span> <span class=p>==</span> <span class=kt>string</span><span class=p>.</span><span class=n>Empty</span><span class=p>)</span> <span class=k>return</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>result</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>i</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>while</span> <span class=p>(</span><span class=n>i</span> <span class=p>&lt;</span> <span class=n>s</span><span class=p>.</span><span class=n>Length</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=kt>var</span> <span class=n>ch</span> <span class=p>=</span> <span class=n>s</span><span class=p>[</span><span class=n>i</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>MayHasNext</span><span class=p>(</span><span class=n>ch</span><span class=p>)</span> <span class=p>&amp;&amp;</span> <span class=n>i</span> <span class=p>&lt;</span> <span class=n>s</span><span class=p>.</span><span class=n>Length</span> <span class=p>-</span> <span class=m>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>TryParse</span><span class=p>(</span><span class=n>ch</span><span class=p>,</span> <span class=n>s</span><span class=p>[</span><span class=n>i</span> <span class=p>+</span> <span class=m>1</span><span class=p>],</span> <span class=k>out</span> <span class=kt>var</span> <span class=n>numOfTwo</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>result</span> <span class=p>+=</span> <span class=n>numOfTwo</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=n>i</span> <span class=p>+=</span> <span class=m>2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>TryParse</span><span class=p>(</span><span class=n>ch</span><span class=p>,</span> <span class=k>out</span> <span class=kt>var</span> <span class=n>num</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>                <span class=n>result</span> <span class=p>+=</span> <span class=n>num</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=n>i</span><span class=p>++;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>result</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=大佬的高速解法><a href=#%e5%a4%a7%e4%bd%ac%e7%9a%84%e9%ab%98%e9%80%9f%e8%a7%a3%e6%b3%95>#</a>
+大佬的高速解法</h2><h4 id=思路-1><a href=#%e6%80%9d%e8%b7%af-1>#</a>
+思路</h4><p>罗马数字的规则，用一句话来说就是：“把一个小值放在大值的左边，就是做减法，否则为加法”。也就是我们可以维护一个变量来存储上一个数字，然后比大小进行加减法。</p><h4 id=代码-1><a href=#%e4%bb%a3%e7%a0%81-1>#</a>
+代码</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kd>public</span> <span class=kt>int</span> <span class=n>RomanToInt</span><span class=p>(</span><span class=kt>string</span> <span class=n>s</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>strSpan</span> <span class=p>=</span> <span class=n>s</span><span class=p>.</span><span class=n>AsSpan</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>result</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>lastNum</span> <span class=p>=</span> <span class=n>GetRomanCharValue</span><span class=p>(</span><span class=n>strSpan</span><span class=p>[</span><span class=m>0</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>foreach</span><span class=p>(</span><span class=kt>var</span> <span class=n>ch</span> <span class=k>in</span>  <span class=n>strSpan</span><span class=p>[</span><span class=m>1.</span><span class=p>.])</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>num</span> <span class=p>=</span> <span class=n>GetRomanCharValue</span><span class=p>(</span><span class=n>ch</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>lastNum</span> <span class=p>&lt;</span> <span class=n>num</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>result</span> <span class=p>-=</span> <span class=n>lastNum</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>result</span> <span class=p>+=</span> <span class=n>lastNum</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>lastNum</span> <span class=p>=</span> <span class=n>num</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>result</span> <span class=p>+</span> <span class=n>lastNum</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>private</span> <span class=kd>static</span> <span class=kt>int</span> <span class=n>GetRomanCharValue</span><span class=p>(</span><span class=kt>char</span> <span class=n>ch</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>=&gt;</span> <span class=n>ch</span> <span class=k>switch</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=sc>&#39;I&#39;</span> <span class=p>=&gt;</span> <span class=m>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=sc>&#39;V&#39;</span> <span class=p>=&gt;</span> <span class=m>5</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=sc>&#39;X&#39;</span> <span class=p>=&gt;</span> <span class=m>10</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=sc>&#39;L&#39;</span> <span class=p>=&gt;</span> <span class=m>50</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=sc>&#39;C&#39;</span> <span class=p>=&gt;</span> <span class=m>100</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=sc>&#39;D&#39;</span> <span class=p>=&gt;</span> <span class=m>500</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=sc>&#39;M&#39;</span> <span class=p>=&gt;</span> <span class=m>1000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>_</span> <span class=p>=&gt;</span> <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentException</span><span class=p>(</span><span class=s>$&#34;Unknow roman char {ch}&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div></section><footer class=article-footer><section class=article-tags><a href=/tags/%E7%AE%97%E6%B3%95/>算法</a>
+<a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a>
+<a href=/tags/csharp/>CSharp</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/leetcode-417-pacificatlanticwaterflow/><div class=article-details><h2 class=article-title>太平洋大西洋水流问题-力扣417 深都优先搜索</h2></div></a></article><article><a href=/passages/leetcode-221-maximalsquare/><div class=article-details><h2 class=article-title>二叉树的中序遍历-力扣94 中序遍历</h2></div></a></article><article><a href=/passages/leetcode-94-binarytreeinordertraversal/><div class=article-details><h2 class=article-title>二叉树的中序遍历-力扣94 中序遍历</h2></div></a></article><article><a href=/passages/leetcode-70-climbingstairs/><div class=article-details><h2 class=article-title>爬楼梯-力扣70 动态规划</h2></div></a></article><article><a href=/passages/csharp-note6-delegates-lambda-expressions-and-events/><div class=article-details><h2 class=article-title>C#的委托、lambda 表达式和事件 - C#笔记</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.21/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2024 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.25.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

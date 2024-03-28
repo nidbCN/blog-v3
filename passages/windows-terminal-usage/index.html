@@ -1,0 +1,377 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="# 前言 总感觉 cmd、PowerShell 太丑。以前折腾过一阵子的 cmder 感觉也就一般。听学姐们吹了挺长时间的 Windows Terminal。今天试一下，确实效"><title>个性化你的 Windows Terminal 终端与 PowerShell</title>
+<link rel=canonical href=https://demo.stack.jimmycai.com/passages/windows-terminal-usage/><link rel=stylesheet href=/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css><meta property='og:title' content="个性化你的 Windows Terminal 终端与 PowerShell"><meta property='og:description' content="# 前言 总感觉 cmd、PowerShell 太丑。以前折腾过一阵子的 cmder 感觉也就一般。听学姐们吹了挺长时间的 Windows Terminal。今天试一下，确实效"><meta property='og:url' content='https://demo.stack.jimmycai.com/passages/windows-terminal-usage/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='软件介绍'><meta property='article:tag' content='软件教程'><meta property='article:published_time' content='2020-11-09T01:43:18+00:00'><meta property='article:modified_time' content='2020-11-09T01:43:18+00:00'><meta name=twitter:title content="个性化你的 Windows Terminal 终端与 PowerShell"><meta name=twitter:description content="# 前言 总感觉 cmd、PowerShell 太丑。以前折腾过一阵子的 cmder 感觉也就一般。听学姐们吹了挺长时间的 Windows Terminal。今天试一下，确实效"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu9ab209e57fee5d3324dd782f157f4448_18058_300x0_resize_q75_h2_box_2.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#前言>前言</a></li><li><a href=#安装>安装</a><ol><li><a href=#windows-terminal>Windows Terminal</a><ol><li><a href=#windows-terminal-简介>Windows Terminal 简介</a></li><li><a href=#安装-windows-terminal>安装 Windows Terminal</a></li><li><a href=#powershell>PowerShell</a></li><li><a href=#配置-powershell-core>配置 PowerShell Core</a></li><li><a href=#配置-windows-terminal>配置 Windows Terminal</a></li></ol></li></ol></li><li><a href=#参考>参考</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E7%94%B5%E8%84%91%E8%BD%AF%E4%BB%B6/>电脑软件</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/windows-terminal-usage/>个性化你的 Windows Terminal 终端与 PowerShell</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2020 Nov 09</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 7 分钟</time></div></footer></div></header><section class=article-content><h2 id=前言><a href=#%e5%89%8d%e8%a8%80>#</a>
+前言</h2><blockquote><p>总感觉 cmd、PowerShell 太丑。以前折腾过一阵子的 cmder 感觉也就一般。听学姐们吹了挺长时间的 Windows Terminal。今天试一下，确实效果非常好，美观好用。不得不说<del>巨硬</del>Micro$oft 正经去做某个东西还是非常好的。</p></blockquote><p>2022年11月9日更新如下：</p><blockquote><ul><li>修改名称 “Powershell 7” 为 “Powershell”，“Powershell 5” 为 “Windows Powershell”；</li><li>修改部分失效的配置</li><li>修改安装方式等</li></ul></blockquote><p>（其实还改了很多，毕竟已经两年过去了）</p><h2 id=安装><a href=#%e5%ae%89%e8%a3%85>#</a>
+安装</h2><p>这次主要有以下几个目的：</p><ol><li>使用 PowerShell 代替系统自带的 Windows PowerShell；</li><li>优化 PowerShell 字体、配色等；</li><li>在 Windows Terminal 里面添加 python 控制台；</li><li>合并 PowerShell、Git Bash、cmd 和 python 到 Windows Terminal 中，并取消其它的右键菜单，为 Windows Terminal 添加右键菜单。</li></ol><blockquote><p>可参阅： <a class=link href=https://docs.microsoft.com/en-us/windows/terminal/customize-settings/startup target=_blank rel=noopener>Windows Terminal Startup Settings | Microsoft Docs</a></p></blockquote><h3 id=windows-terminal><a href=#windows-terminal>#</a>
+Windows Terminal</h3><h4 id=windows-terminal-简介><a href=#windows-terminal-%e7%ae%80%e4%bb%8b>#</a>
+Windows Terminal 简介</h4><p>是一款新式、快速、高效且强大的终端应用程序。通过它可以使用命令提示符、PowerShell、WSL 等诸多 shell。Windows Terminal 支持多选项卡、窗格、Unicode 和 GPU 加速文本渲染引擎，同时也支持丰富多彩的用户自定义主题。</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/01.webp loading=lazy alt=wt宣传片></p><h4 id=安装-windows-terminal><a href=#%e5%ae%89%e8%a3%85-windows-terminal>#</a>
+安装 Windows Terminal</h4><p>可以使用多种方式安装：</p><p>包管理器 <code>winget</code> 和 <code>scoop</code> 等均有 windows terminal 的包，Windows 11 自带 Windows Terminal（中文版显示为“终端”）。</p><p>应用商店：</p><ol><li>打开系统的 Microsoft Store；</li><li>搜索"Windows Terminal"；
+<img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/02.webp loading=lazy alt=商店界面></li><li>点击"安装"。</li></ol><blockquote><p>由于网络环境不同等待时间也可能不一样
+<del>在未来某个版本的Windows会默认安装Windows Terminal，但是是几百年后就不知道了（x</del> Windows 11 已经预装。</p></blockquote><p>菜单里出现 Windows Terminal，打开后如图所示即为安装完成。</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/03.webp loading=lazy alt=WT打开></p><h4 id=powershell><a href=#powershell>#</a>
+PowerShell</h4><p>所以 Powershell 和 Windows Powershell 有啥不同？</p><h5 id=powershell-简介><a href=#powershell-%e7%ae%80%e4%bb%8b>#</a>
+Powershell 简介</h5><p>最初，Windows PowerShell 是在 .NET Framework 基础之上构建而成，仅适用于 Windows 系统。 在最新版本中，PowerShell 使用 .NET Core 3.1 作为运行时。 PowerShell 在 Windows、macOS 和 Linux 平台上运行。
+新的 PowerShell 拥有更高的效率和诸多优点。
+PowerShell Core 是 <a class=link href=https://github.com/PowerShell/PowerShell target=_blank rel=noopener>GitHub</a> 上面的开源项目，使用 MIT 许可证。</p><h5 id=安装-powershell><a href=#%e5%ae%89%e8%a3%85-powershell>#</a>
+安装 Powershell</h5><blockquote><p>官方有详细的安装文档，见 <a class=link href=https://docs.microsoft.com/zh-cn/powershell/scripting/install/installing-powershell target=_blank rel=noopener>Microsoft DOCS</a></p></blockquote><blockquote><p>建议参考官方文档选择适合自己的方式安装，我目前系统中的WT是作为dotnet CLI 全局工具安装的</p></blockquote><p>我使用下载-安装的方式而没有使用包管理器。</p><ol><li><p>从<a class=link href=https://github.com/PowerShell/PowerShell/releases/ target=_blank rel=noopener>GitHub 的 Release</a>中下载<code>PowerShell-7.1.0-win-x64.msi</code>；
+<img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/04.webp loading=lazy alt=Release页面></p></li><li><p>下载完成后找到下载的文件夹，双击运行；</p><blockquote><p>如果提示 “不是有效的 WIN32 应用程序” 请返回刚才的 Release 页面下载<code>PowerShell-7.1.0-win-x86.msi</code></p></blockquote></li><li><p>一直点击"Next"，直到安装完成，点击"Finish"。
+<img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/05.webp loading=lazy alt=安装PSCore></p></li></ol><h4 id=配置-powershell-core><a href=#%e9%85%8d%e7%bd%ae-powershell-core>#</a>
+配置 PowerShell Core</h4><h5 id=准备><a href=#%e5%87%86%e5%a4%87>#</a>
+准备</h5><h6 id=安装模块><a href=#%e5%ae%89%e8%a3%85%e6%a8%a1%e5%9d%97>#</a>
+安装模块</h6><p>打开 PowerShell 7，输入以下命令：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-ps data-lang=ps><span class=line><span class=cl><span class=nf>Install-Module</span> <span class=nf>posh-git</span> <span class=nf>-Scope</span> <span class=nf>CurrentUser</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-ps data-lang=ps><span class=line><span class=cl><span class=nf>Install-Module</span> <span class=nf>oh-my-posh</span> <span class=nf>-Scope</span> <span class=nf>CurrentUser</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>先输入一个命令，光标会移动到下一行的最左侧。这时候不要着急输入另一个，稍等一会如果出现提示那么就按<code>Y</code>。安装完成（左侧有显示"PS xxx"字样）再安装另外一个。两个不分先后。</p></blockquote><h6 id=安装-powerline-字体><a href=#%e5%ae%89%e8%a3%85-powerline-%e5%ad%97%e4%bd%93>#</a>
+安装 PowerLine 字体</h6><p>这一部分微软官方文档有写，详见 <a class=link href=https://docs.microsoft.com/zh-cn/windows/terminal/tutorials/powerline-setup target=_blank rel=noopener>Microsoft Docs</a></p><ol><li><p>打开 Cascadia Code <a class=link href=https://github.com/microsoft/cascadia-code/releases target=_blank rel=noopener>GitHub 发布页</a>，下载最新的 Release <code>CascadiaCode-2009.22.zip</code>；</p></li><li><p>下载完成后解压文件，进入<code>解压后的文件夹->ttf</code>，双击里面<code>.ttf</code>结尾的文件，安装。</p></li></ol><h6 id=配置><a href=#%e9%85%8d%e7%bd%ae>#</a>
+配置</h6><ol><li><p>从菜单栏打开安装好的 PowerShell 7。如果电脑安装有 Visual Studio Code 的话在里面输入以下内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-ps data-lang=ps><span class=line><span class=cl><span class=nf>code</span> <span class=nf>$profile</span>
+</span></span></code></pre></td></tr></table></div></div><p><img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/06.webp loading=lazy alt=code效果>
+如果你没有安装或者不知道什么是 Visual Studio Code 的话输入以下内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-ps data-lang=ps><span class=line><span class=cl><span class=nf>notepad</span> <span class=nf>$profile</span>
+</span></span></code></pre></td></tr></table></div></div><p><img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/07.webp loading=lazy alt=notepad效果></p></li><li><p>输入完成后按下回车，VSCode（或记事本）将会打开一个文件（可能是空的），在里面输入以下内容后保存</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-ps data-lang=ps><span class=line><span class=cl><span class=nf>#</span> <span class=nf>by</span> <span class=nf>Gaein</span> <span class=nf>nidb</span> <span class=nf>,</span> <span class=nf>https:</span><span class=err>/</span><span class=nv>/www.Gaein.cn</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>Clear-Host</span>                  <span class=nf>#</span> <span class=nf>清除屏幕</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>$time</span> <span class=nf>=</span>  <span class=nf>Get-date</span> <span class=nf>-Format</span> <span class=nf>&#34;现在是yyyy年MM月dd日</span> <span class=nf>HH时mm分&#34;</span>
+</span></span><span class=line><span class=cl><span class=nf>$path</span> <span class=nf>=</span> <span class=nf>$pwd.path</span>           <span class=nf>#</span> <span class=nf>获取路径</span>
+</span></span><span class=line><span class=cl><span class=nf>if</span> <span class=s>( $path.split(&#34;</span><span class=se>\</span><span class=s>&#34;)[-1] -eq &#34;Windows&#34; -xor $path.split(&#34;</span><span class=se>\</span><span class=s>&#34;)[-1] -eq &#34;System32&#34;)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nf>##</span> <span class=nf>默认路径为桌面</span>
+</span></span><span class=line><span class=cl>    <span class=nf>$desktop</span> <span class=nf>=</span> <span class=nf>&#34;C:\Users\&#34;</span> <span class=nf>+</span> <span class=nf>$env:UserName</span> <span class=nf>+</span> <span class=nf>&#34;\Desktop\&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nf>##</span> <span class=nf>切换到桌面</span>
+</span></span><span class=line><span class=cl>    <span class=nf>Set-Location</span> <span class=nf>$desktop</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nf>Write-Output</span> <span class=nf>$time</span>
+</span></span><span class=line><span class=cl><span class=nf>$motdPath</span> <span class=nf>=</span> <span class=nf>&#34;C:\Users\&#34;</span> <span class=nf>+</span> <span class=nf>$env:UserName</span> <span class=nf>+</span> <span class=nf>&#34;\Documents\PowerShell\motd.txt&#34;</span>
+</span></span><span class=line><span class=cl><span class=nf>Get-Content</span> <span class=nf>$motdPath</span>   <span class=nf>#</span> <span class=nf>欢迎消息</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>#</span> <span class=nf>导入模块</span>
+</span></span><span class=line><span class=cl><span class=nf>Import-Module</span> <span class=nf>posh-git</span>
+</span></span><span class=line><span class=cl><span class=nf>Import-Module</span> <span class=nf>oh-my-posh</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>#</span> <span class=nf>设置主题</span>
+</span></span><span class=line><span class=cl><span class=nf>Set-Theme</span> <span class=nf>PowerLine</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>如果你想自定义的话建议先备份后修改。</p></blockquote></li><li><p>在<code>此电脑->文档->PowerShell</code>文件夹，点击<code>新建文本文档</code>，文件名为"motd.txt"，写入以下内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-txt data-lang=txt><span class=line><span class=cl>PowerShell 7.1.0 (Windows10专业版 x64 20H2)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>* 终端: https://docs.microsoft.com/zh-cn/powershell/
+</span></span><span class=line><span class=cl>* 系统: https://support.microsoft.com/zh-cn/windows/
+</span></span><span class=line><span class=cl>* 指令: https://docs.microsoft.com/zh-cn/dotnet/api/
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>欢迎使用PowerShell Core
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>这里的内容是完全自定义的，算是欢迎消息，即打开 PowerShell 输出的一段话。你可以随便写。</p></blockquote></li></ol><h4 id=配置-windows-terminal><a href=#%e9%85%8d%e7%bd%ae-windows-terminal>#</a>
+配置 Windows Terminal</h4><h5 id=自定义设置><a href=#%e8%87%aa%e5%ae%9a%e4%b9%89%e8%ae%be%e7%bd%ae>#</a>
+自定义设置</h5><ol><li><p>打开 Windows Terminal，点击 <code>下箭头->设置</code> 或按下 <code>Win+,</code> 打开设置文件
+<img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/08.webp loading=lazy alt=打开的setting.json></p></li><li><p>向设置文件写入以下内容：</p><blockquote><p>注意，现在打开默认是图形化设置，需要进入图形设置再点击左侧栏目下方的设置图标。</p></blockquote><p>首先修改全局设置（即 <code>profiles.defaults</code> 节点）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=s2>&#34;defaults&#34;</span><span class=err>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 默认设置
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;acrylicOpacity&#34;</span><span class=p>:</span> <span class=mf>0.75</span><span class=p>,</span> <span class=c1>// 不透明度
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;closeOnExit&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span> <span class=c1>// 退出时关闭
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;colorScheme&#34;</span><span class=p>:</span> <span class=s2>&#34;Campbell&#34;</span><span class=p>,</span> <span class=c1>// 配色方案
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;cursorColor&#34;</span><span class=p>:</span> <span class=s2>&#34;#FFFFFF&#34;</span><span class=p>,</span> <span class=c1>// 颜色
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;cursorShape&#34;</span><span class=p>:</span> <span class=s2>&#34;bar&#34;</span><span class=p>,</span> <span class=c1>// bar
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;fontFace&#34;</span><span class=p>:</span> <span class=s2>&#34;Cascadia Code PL&#34;</span><span class=p>,</span> <span class=c1>// 字体
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;fontSize&#34;</span><span class=p>:</span> <span class=mi>10</span><span class=p>,</span> <span class=c1>// 字号
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;historySize&#34;</span><span class=p>:</span> <span class=mi>9001</span><span class=p>,</span> <span class=c1>// 历史记录
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;padding&#34;</span><span class=p>:</span> <span class=s2>&#34;0, 0, 0, 0&#34;</span><span class=p>,</span> <span class=c1>// 内部显示位置
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;snapOnInput&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span> <span class=c1>// ?
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;startingDirectory&#34;</span><span class=p>:</span> <span class=s2>&#34;./&#34;</span><span class=p>,</span> <span class=c1>// 打开目录
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;useAcrylic&#34;</span><span class=p>:</span> <span class=kc>true</span> <span class=c1>// 使用亚克力效果
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span><span class=err>,</span>
+</span></span></code></pre></td></tr></table></div></div><p>然后添加Python控制台，并将不想看到的自动生成的三个的 <code>hidden</code> 属性设置为 <code>true</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// Python Console
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;guid&#34;</span><span class=p>:</span> <span class=s2>&#34;{de7c0f31-aa6b-c0f6-44a8-fe162d8f31fc}&#34;</span><span class=p>,</span> <span class=c1>// 随机生成一个guid即可
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;hidden&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;Python 3.9&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;icon&#34;</span><span class=p>:</span> <span class=s2>&#34;C:\\Users\\Gaein\\Documents\\WindowsTerminal\\python-logo.png&#34;</span><span class=p>,</span> <span class=c1>// 自定义python图标
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;commandline&#34;</span><span class=p>:</span> <span class=s2>&#34;C:\\Program Files\\Python39\\python.exe&#34;</span> <span class=c1>// python路径
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span><span class=err>,</span>
+</span></span></code></pre></td></tr></table></div></div><p>整个配置文件如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=c1>// 文档: https://aka.ms/terminal-documentation
+</span></span></span><span class=line><span class=cl><span class=c1>// 默认设置在点击设置按钮时按住&#34;Alt&#34;键
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// by Gaein nidb, https://www.gaein.cn
+</span></span></span><span class=line><span class=cl><span class=c1>// rev 1.0.0
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 全局设置
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;$schema&#34;</span><span class=p>:</span> <span class=s2>&#34;https://aka.ms/terminal-profiles-schema&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;defaultProfile&#34;</span><span class=p>:</span> <span class=s2>&#34;{574e775e-4f2a-5b96-ac1e-a2962a402336}&#34;</span><span class=p>,</span> <span class=c1>// 默认打开的
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;copyOnSelect&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span> <span class=c1>// 自动复制选中的内容到剪切板
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;copyFormatting&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span> <span class=c1>// 复制格式，将选中文字的颜色、背景等也复制
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;initialCols&#34;</span><span class=p>:</span> <span class=mi>120</span><span class=p>,</span> <span class=c1>// 初始化大小（栏）
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;initialRows&#34;</span><span class=p>:</span> <span class=mi>38</span><span class=p>,</span> <span class=c1>// 初始化大小（行）
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 打开的选项的设置，文档: https://aka.ms/terminal-profile-settings
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;profiles&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;defaults&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=c1>// 默认设置
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;acrylicOpacity&#34;</span><span class=p>:</span> <span class=mf>0.75</span><span class=p>,</span> <span class=c1>// 不透明度
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;closeOnExit&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span> <span class=c1>// 退出时关闭
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;colorScheme&#34;</span><span class=p>:</span> <span class=s2>&#34;Campbell&#34;</span><span class=p>,</span> <span class=c1>// 配色方案
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;cursorColor&#34;</span><span class=p>:</span> <span class=s2>&#34;#FFFFFF&#34;</span><span class=p>,</span> <span class=c1>// 颜色
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;cursorShape&#34;</span><span class=p>:</span> <span class=s2>&#34;bar&#34;</span><span class=p>,</span> <span class=c1>// bar
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;fontFace&#34;</span><span class=p>:</span> <span class=s2>&#34;Cascadia Code PL&#34;</span><span class=p>,</span> <span class=c1>// 字体
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;fontSize&#34;</span><span class=p>:</span> <span class=mi>10</span><span class=p>,</span> <span class=c1>// 字号
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;historySize&#34;</span><span class=p>:</span> <span class=mi>9001</span><span class=p>,</span> <span class=c1>// 历史记录
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;padding&#34;</span><span class=p>:</span> <span class=s2>&#34;0, 0, 0, 0&#34;</span><span class=p>,</span> <span class=c1>// 内部显示位置
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;snapOnInput&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span> <span class=c1>// ?
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;startingDirectory&#34;</span><span class=p>:</span> <span class=s2>&#34;./&#34;</span><span class=p>,</span> <span class=c1>// 打开目录
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nt>&#34;useAcrylic&#34;</span><span class=p>:</span> <span class=kc>true</span> <span class=c1>// 使用亚克力效果
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;list&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// PowerShell Core
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nt>&#34;guid&#34;</span><span class=p>:</span> <span class=s2>&#34;{574e775e-4f2a-5b96-ac1e-a2962a402336}&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;hidden&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;PowerShell Core&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;commandline&#34;</span><span class=p>:</span> <span class=s2>&#34;pwsh.exe -NoLogo&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// Python Console
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nt>&#34;guid&#34;</span><span class=p>:</span> <span class=s2>&#34;{de7c0f31-aa6b-c0f6-44a8-fe162d8f31fc}&#34;</span><span class=p>,</span> <span class=c1>// 随机生成一个guid即可
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nt>&#34;hidden&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;Python 3.9&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;icon&#34;</span><span class=p>:</span> <span class=s2>&#34;C:\\Users\\Gaein\\Documents\\WindowsTerminal\\python-logo.png&#34;</span><span class=p>,</span> <span class=c1>// 自定义python图标
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nt>&#34;commandline&#34;</span><span class=p>:</span> <span class=s2>&#34;C:\\Program Files\\Python39\\python.exe&#34;</span> <span class=c1>// python路径
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 自带的旧版PowerShell
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nt>&#34;guid&#34;</span><span class=p>:</span> <span class=s2>&#34;{61c54bbd-c2c6-5271-96e7-009a87ff44bf}&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;hidden&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;PowerShell(旧版)&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;commandline&#34;</span><span class=p>:</span> <span class=s2>&#34;powershell.exe -NoLogo&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 命令提示符
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nt>&#34;guid&#34;</span><span class=p>:</span> <span class=s2>&#34;{0caa0dad-35be-5f56-a8ff-afceeeaa6101}&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;hidden&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;命令提示符(cmd)&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;commandline&#34;</span><span class=p>:</span> <span class=s2>&#34;cmd.exe&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 默认生成的Azure Cloud Shell
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nt>&#34;guid&#34;</span><span class=p>:</span> <span class=s2>&#34;{b453ae62-4e3d-5e58-b989-0a998ec441b8}&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;hidden&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;Azure Cloud Shell&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;source&#34;</span><span class=p>:</span> <span class=s2>&#34;Windows.Terminal.Azure&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Add custom color schemes to this array.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// To learn more about color schemes, visit https://aka.ms/terminal-color-schemes
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;schemes&#34;</span><span class=p>:</span> <span class=p>[],</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// Add custom actions and keybindings to this array.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// To unbind a key combination from your defaults.json, set the command to &#34;unbound&#34;.
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// To learn more about actions and keybindings, visit https://aka.ms/terminal-keybindings
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nt>&#34;actions&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Copy and paste are bound to Ctrl+Shift+C and Ctrl+Shift+V in your defaults.json.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// These two lines additionally bind them to Ctrl+C and Ctrl+V.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// To learn more about selection, visit https://aka.ms/terminal-selection
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;command&#34;</span><span class=p>:</span> <span class=p>{</span> <span class=nt>&#34;action&#34;</span><span class=p>:</span> <span class=s2>&#34;copy&#34;</span><span class=p>,</span> <span class=nt>&#34;singleLine&#34;</span><span class=p>:</span> <span class=kc>false</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;keys&#34;</span><span class=p>:</span> <span class=s2>&#34;ctrl+c&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nt>&#34;command&#34;</span><span class=p>:</span> <span class=s2>&#34;paste&#34;</span><span class=p>,</span> <span class=nt>&#34;keys&#34;</span><span class=p>:</span> <span class=s2>&#34;ctrl+v&#34;</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// Press Ctrl+Shift+F to open the search box
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>{</span> <span class=nt>&#34;command&#34;</span><span class=p>:</span> <span class=s2>&#34;find&#34;</span><span class=p>,</span> <span class=nt>&#34;keys&#34;</span><span class=p>:</span> <span class=s2>&#34;ctrl+shift+f&#34;</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// Press Alt+Shift+D to open a new pane.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// - &#34;split&#34;: &#34;auto&#34; makes this pane open in the direction that provides the most surface area.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// - &#34;splitMode&#34;: &#34;duplicate&#34; makes the new pane use the focused pane&#39;s profile.
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// To learn more about panes, visit https://aka.ms/terminal-panes
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;command&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;action&#34;</span><span class=p>:</span> <span class=s2>&#34;splitPane&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;split&#34;</span><span class=p>:</span> <span class=s2>&#34;auto&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;splitMode&#34;</span><span class=p>:</span> <span class=s2>&#34;duplicate&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;keys&#34;</span><span class=p>:</span> <span class=s2>&#34;alt+shift+d&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>可以按需进行修改</p></blockquote></li></ol><h5 id=添加到右键菜单><a href=#%e6%b7%bb%e5%8a%a0%e5%88%b0%e5%8f%b3%e9%94%ae%e8%8f%9c%e5%8d%95>#</a>
+添加到右键菜单</h5><blockquote><p>注意：这部分可能不再需要。貌似现在的wt装完之后自动添加了右键菜单。</p></blockquote><ol><li><code>Win + R</code> 输入 <code>regedit</code> 打开注册表编辑器；</li><li>转到<code>计算机\HKEY_CLASSES_ROOT\Directory\Background\shell</code>；</li><li>新建项<code>Terminal</code>，将默认值修改为<code>在此处打开 Windows Terminal</code>；
+<img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/09.webp loading=lazy alt=修改值></li><li><a class=link href=https://static.cdn.gaein.cn/website_used/files/WT-Icon/wt.ico target=_blank rel=noopener>下载图标(从Gaein.cn)</a>，保存到某个路径；</li><li>在<code>Terminal</code>里新建字符串，名字为<code>icon</code>，右键->修改，值为图标的路径；
+<img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/10.webp loading=lazy alt=设置图标>
+<img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/11.webp loading=lazy alt=设置图标路径></li><li>在<code>Terminal</code>新建项，名字为<code>command</code>，值为<code>wt.exe</code>
+<img src=https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/12.webp loading=lazy alt=命令></li></ol><h2 id=参考><a href=#%e5%8f%82%e8%80%83>#</a>
+参考</h2><ol><li><a class=link href=https://docs.microsoft.com/zh-cn/windows/terminal/ target=_blank rel=noopener>Microsoft Docs:Windows Terminal</a></li><li><a class=link href="https://docs.microsoft.com/zh-cn/powershell/scripting/install/migrating-from-windows-powershell-51-to-powershell-7?view=powershell-7.1" target=_blank rel=noopener>Microsoft Docs:从 PowerShell5 迁移到 7</a></li><li><a class=link href=https://zhuanlan.zhihu.com/p/144612614 target=_blank rel=noopener>知乎 @tnnmigga:Windows Terminal 终端入门</a></li><li><a class=link href=https://www.jianshu.com/p/95c5194857b7 target=_blank rel=noopener>简书 @码农小胖哥:Windows 命令行终端 PowerShell 美化计划</a></li></ol></section><footer class=article-footer><section class=article-tags><a href=/tags/%E8%BD%AF%E4%BB%B6%E4%BB%8B%E7%BB%8D/>软件介绍</a>
+<a href=/tags/%E8%BD%AF%E4%BB%B6%E6%95%99%E7%A8%8B/>软件教程</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/vscode-c-installer/><div class=article-details><h2 class=article-title>VSCode 一键配置 C/C++环境程序</h2></div></a></article><article><a href=/passages/configure-zerotier-moon/><div class=article-details><h2 class=article-title>配置 ZeroTier 私人节点</h2></div></a></article><article><a href=/passages/openfile-in-rightway/><div class=article-details><h2 class=article-title>打开文档公式乱码的解决办法——使用正确的软件</h2></div></a></article><article><a href=/passages/wtg-on-surface/><div class=article-details><h2 class=article-title>在surface pro上使用WindowsToGo - surface pro启动win to go</h2></div></a></article><article><a href=/passages/introductions-of-browser/><div class=article-details><h2 class=article-title>简析当前主流浏览器与内核</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.21/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2024 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.25.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

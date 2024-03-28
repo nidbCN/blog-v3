@@ -1,0 +1,111 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="注意：此内容已过期。Adobe Premiere 不能导入的本质原因的 PR 2020 前的版本不支持 HEVC/H.265 编码。旧版本使用 ffmpeg 进行转码即可正常使用，新版本没有此问题。 # mkv mkv"><title>【过期内容】Adobe Premiere 导入 mkv 格式的视频</title>
+<link rel=canonical href=https://demo.stack.jimmycai.com/passages/_adobe-premiere-import-mkv/><link rel=stylesheet href=/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css><meta property='og:title' content="【过期内容】Adobe Premiere 导入 mkv 格式的视频"><meta property='og:description' content="注意：此内容已过期。Adobe Premiere 不能导入的本质原因的 PR 2020 前的版本不支持 HEVC/H.265 编码。旧版本使用 ffmpeg 进行转码即可正常使用，新版本没有此问题。 # mkv mkv"><meta property='og:url' content='https://demo.stack.jimmycai.com/passages/_adobe-premiere-import-mkv/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='视频剪辑'><meta property='article:tag' content='软件教程'><meta property='article:tag' content='工具'><meta property='article:tag' content='杂记'><meta property='article:published_time' content='2021-05-12T22:32:26+00:00'><meta property='article:modified_time' content='2021-05-12T22:32:26+00:00'><meta name=twitter:title content="【过期内容】Adobe Premiere 导入 mkv 格式的视频"><meta name=twitter:description content="注意：此内容已过期。Adobe Premiere 不能导入的本质原因的 PR 2020 前的版本不支持 HEVC/H.265 编码。旧版本使用 ffmpeg 进行转码即可正常使用，新版本没有此问题。 # mkv mkv"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu9ab209e57fee5d3324dd782f157f4448_18058_300x0_resize_q75_h2_box_2.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#mkv>mkv</a></li><li><a href=#工具>工具</a><ol><li><a href=#mkvtoolnix>MKVToolNix</a></li><li><a href=#mkvextractgui2>MKVExtractGUI2</a></li></ol></li><li><a href=#提取音视频>提取音视频</a></li><li><a href=#提取音视频命令行>提取音视频（命令行）</a></li><li><a href=#导入pr>导入PR</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E8%BD%AF%E4%BB%B6%E6%95%99%E7%A8%8B/>软件教程</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/_adobe-premiere-import-mkv/>【过期内容】Adobe Premiere 导入 mkv 格式的视频</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2021 May 12</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 3 分钟</time></div></footer></div></header><section class=article-content><blockquote><p>注意：此内容已过期。Adobe Premiere 不能导入的本质原因的 PR 2020 前的版本不支持 HEVC/H.265 编码。旧版本使用 ffmpeg 进行转码即可正常使用，新版本没有此问题。</p></blockquote><h2 id=mkv><a href=#mkv>#</a>
+mkv</h2><p>mkv格式本身是一个“容器”，它包括了视频、音频、章节等，其实，不需要转码，只需要把需要的视频和音频“拆”出来即可。</p><h2 id=工具><a href=#%e5%b7%a5%e5%85%b7>#</a>
+工具</h2><h3 id=mkvtoolnix><a href=#mkvtoolnix>#</a>
+MKVToolNix</h3><p>该工具用于操作mkv文件（虽然我们只需要其中的解包部分）</p><ul><li>官网：https://mkvtoolnix.download/</li><li>Windows下载：https://www.fosshub.com/MKVToolNix.html</li></ul><h3 id=mkvextractgui2><a href=#mkvextractgui2>#</a>
+MKVExtractGUI2</h3><p>图形化界面的解包mkv的程序，需要放置在 MKVToolNix 的根目录下。</p><p>目录结构如下：</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/AdobePr-import-mkv/01.webp loading=lazy alt=Dir></p><ul><li>sourceforge：https://sourceforge.net/projects/mkvextractgui-2/</li></ul><h2 id=提取音视频><a href=#%e6%8f%90%e5%8f%96%e9%9f%b3%e8%a7%86%e9%a2%91>#</a>
+提取音视频</h2><p>可以直接双击点开 <code>MKVExtractGUI2</code> ，选择 <code>input</code> ，下面的框中将显示出来 Tracks，选择需要的然后导出即可。</p><blockquote><p>可惜我的并不能用，它什么也不显示，只能手动来一波了。</p></blockquote><h2 id=提取音视频命令行><a href=#%e6%8f%90%e5%8f%96%e9%9f%b3%e8%a7%86%e9%a2%91%e5%91%bd%e4%bb%a4%e8%a1%8c>#</a>
+提取音视频（命令行）</h2><p>实际上 MKVExtractGUI2 也是调用的 MKVToolNix 命令行来提取的，而 MKVToolNix 的图形化又比较复杂，不会用。直接使用命令行甚至会方便一些。</p><p>在当前目录打开 powershell 后，输入：</p><p><code>.\mkvinfo.exe "&lt;mkv文件路径>"</code> ，比如我这个是 <code>.\mkvinfo.exe "C:\Users\Gaein_nidb\Videos\High School Fleet [01].mkv"</code></p><p><img src=https://img.cdn.gaein.cn/website_used/blog/AdobePr-import-mkv/02.webp loading=lazy alt=Output></p><p>以VCB-S压制的 High School Fleet/高校舰队 为例，程序会输出一大坨mkv的信息，我们需要关注的为 <code>Tracks</code> ，其中的每一个 <code>Track</code> 为一条轨道，其中包括：</p><ul><li><code>Track number</code>：轨道ID（在mkvextract工具中轨道ID从0开始）</li><li><code>Track type</code>：轨道的类型（视频或音频等）</li><li><code>Codec ID</code>：编码ID</li></ul><blockquote><p>以上均用 &ldquo;//&rdquo; 做了伪注释</p></blockquote><p>以及一些其它重要信息</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>|+ Tracks
+</span></span><span class=line><span class=cl>| + Track   // 第一条轨道
+</span></span><span class=line><span class=cl>|  + Track number: 1 (track ID for mkvmerge &amp; mkvextract: 0)    // 在mkvextract工具中轨道ID为0
+</span></span><span class=line><span class=cl>|  + Track UID: 16171542915234837125
+</span></span><span class=line><span class=cl>|  + Track type: video  // 视频
+</span></span><span class=line><span class=cl>|  + &#34;Lacing&#34; flag: 0
+</span></span><span class=line><span class=cl>|  + Minimum cache: 1
+</span></span><span class=line><span class=cl>|  + Codec ID: V_MPEGH/ISO/HEVC // 格式为HEVC
+</span></span><span class=line><span class=cl>|  + Language: und
+</span></span><span class=line><span class=cl>|  + Video track
+</span></span><span class=line><span class=cl>|   + Pixel width: 1920
+</span></span><span class=line><span class=cl>|   + Pixel height: 1080
+</span></span><span class=line><span class=cl>|   + Display width: 1920
+</span></span><span class=line><span class=cl>|   + Display height: 1080
+</span></span><span class=line><span class=cl>|  + Codec&#39;s private data: size 1151 (HEVC profile: Main 10 @L4.1)
+</span></span><span class=line><span class=cl>|  + Default duration: 00:00:00.041708333 (23.976 frames/fields per second for a video track)
+</span></span><span class=line><span class=cl>| + Track   // 第二条轨道
+</span></span><span class=line><span class=cl>|  + Track number: 2 (track ID for mkvmerge &amp; mkvextract: 1)    // ID为1
+</span></span><span class=line><span class=cl>|  + Track UID: 11899936184913956278
+</span></span><span class=line><span class=cl>|  + Track type: audio  // 音频
+</span></span><span class=line><span class=cl>|  + Codec ID: A_FLAC   // 格式为flac
+</span></span><span class=line><span class=cl>|  + Codec&#39;s private data: size 113
+</span></span><span class=line><span class=cl>|  + Default duration: 00:00:00.085333333 (11.719 frames/fields per second for a video track)
+</span></span><span class=line><span class=cl>|  + Language: jpn
+</span></span><span class=line><span class=cl>|  + Audio track
+</span></span><span class=line><span class=cl>|   + Sampling frequency: 48000
+</span></span><span class=line><span class=cl>|   + Channels: 2
+</span></span><span class=line><span class=cl>|   + Bit depth: 24
+</span></span><span class=line><span class=cl>| + Track   // 第三条轨道
+</span></span><span class=line><span class=cl>|  + Track number: 3 (track ID for mkvmerge &amp; mkvextract: 2)    // ID为2
+</span></span><span class=line><span class=cl>|  + Track UID: 10563629169812897935
+</span></span><span class=line><span class=cl>|  + Track type: audio  // 音频
+</span></span><span class=line><span class=cl>|  + &#34;Default track&#34; flag: 0
+</span></span><span class=line><span class=cl>|  + Codec ID: A_AAC    // 格式为ACC
+</span></span><span class=line><span class=cl>|  + Codec&#39;s private data: size 2
+</span></span><span class=line><span class=cl>|  + Default duration: 00:00:00.021333333 (46.875 frames/fields per second for a video track)
+</span></span><span class=line><span class=cl>|  + Language: jpn
+</span></span><span class=line><span class=cl>|  + Audio track
+</span></span><span class=line><span class=cl>|   + Sampling frequency: 48000
+</span></span><span class=line><span class=cl>|   + Channels: 2
+</span></span></code></pre></td></tr></table></div></div><p>那么我们需要提取的有：</p><ol><li>HEVC视频，轨道0</li><li>FLAC音频，轨道1</li></ol><p>当然你想要ACC不要FLAC也行，咋都行，看需求而来</p><p>使用 <code>mkvextract</code> 工具来解mkv文件，输入命令：</p><p><code>.\mkvextract.exe "&lt;mkv文件>" tracks 0:video.hevc 1:audio.flac</code></p><p>其中，tracks后面的参数为 <code>&lt;轨道ID>:&lt;输出文件></code> ，根据你想解的轨道，输入上面看信息看到的轨道ID即可。</p><p>然后，在这个文件夹中，我们得到了 <code>video.hevc</code> 和 <code>audio.flac</code> 两个文件。</p><h2 id=导入pr><a href=#%e5%af%bc%e5%85%a5pr>#</a>
+导入PR</h2><p>尽管我们已经解开了，但是仍然不能导入，PR会说不支持的文件格式。</p><p>对于视频来说，解决的方法很简单：更改后缀名为PR能识别的，比如 <code>mp4</code></p><p>对于flac音频来说：更改后缀名为 <code>wav</code></p></section><footer class=article-footer><section class=article-tags><a href=/tags/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/>视频剪辑</a>
+<a href=/tags/%E8%BD%AF%E4%BB%B6%E6%95%99%E7%A8%8B/>软件教程</a>
+<a href=/tags/%E5%B7%A5%E5%85%B7/>工具</a>
+<a href=/tags/%E6%9D%82%E8%AE%B0/>杂记</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/home-network/><div class=article-details><h2 class=article-title>J1900软路由+小米AC2100 / OpenWRT —— 我的家庭网络方案</h2></div></a></article><article><a href=/passages/hello-markdown/><div class=article-details><h2 class=article-title>认识与入门MarkDown</h2></div></a></article><article><a href=/passages/ms-account-integrated-signin-via-cssharp/><div class=article-details><h2 class=article-title>C#实现使用微软账户集成登录</h2></div></a></article><article><a href=/passages/public-dns-and-configure-dns/><div class=article-details><h2 class=article-title>常见公共DNS服务&amp;Linux和Windows下修改DNS的方法</h2></div></a></article><article><a href=/passages/minecraft-login/><div class=article-details><h2 class=article-title>Minecraft启动器正版登录原理</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.21/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2024 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.25.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
