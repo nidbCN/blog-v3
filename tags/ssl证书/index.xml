@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SSL证书 on Gaein nidb 的博客</title><link>https://demo.stack.jimmycai.com/tags/ssl%E8%AF%81%E4%B9%A6/</link><description>Recent content in SSL证书 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 19 Jan 2019 01:44:54 +0000</lastBuildDate><atom:link href="https://demo.stack.jimmycai.com/tags/ssl%E8%AF%81%E4%B9%A6/index.xml" rel="self" type="application/rss+xml"/><item><title>使用DNSPOD API申请Let's Encrypt通配符SSL证书</title><link>https://demo.stack.jimmycai.com/passages/get-lets-encrypt/</link><pubDate>Sat, 19 Jan 2019 01:44:54 +0000</pubDate><guid>https://demo.stack.jimmycai.com/passages/get-lets-encrypt/</guid><description>&lt;p>从CSDN转载
+原文：《Let&amp;rsquo;s Encrypt 申请通配符证书（使用DnsPod解析的域名操作）》
+链接：https://blog.csdn.net/wr410/article/details/79559369
+作者：wr410
+遵守作者提出的“原创文章，转载请注明来源。”要求&lt;/p>
+&lt;p>DNSPOD API TOKEN快速的申请了一个，当然前提是域名使用DNSPOD解析，签发速度还是非常快的
+通配符证书这次只接受ACMEv2协议申请，也就意味着需要通过客户端来申请了。&lt;/p>
+&lt;h2 id="1部署客户端">1、部署客户端
+&lt;/h2>&lt;h3 id="1a下载">1A、下载：
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wget https://get.acme.sh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>默认下载出来的文件名是index.html，自己加参数或者重命名什么的自己看着办吧！&lt;/p>
+&lt;h3 id="1b执行">1B、执行：
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">bash index.html
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>是的，我就是这么懒。&lt;/p>
+&lt;h3 id="1c安装">1C、安装：
+&lt;/h3>&lt;p>脚本会去github上下载客户端，稍等片刻，会安装到home目录下，中间会有红字告警，可以忽略。&lt;/p>
+&lt;p>安装完成后会添加cron记录，自己可以通过crontab查看处理。&lt;/p>
+&lt;h2 id="2准备工作">2、准备工作
+&lt;/h2>&lt;p>客户端支持的域名注册商（本文只用DNSPOD演示）&lt;/p>
+&lt;p>基本原理就是通过DNS域名的API调用进行所有权确权&lt;/p>
+&lt;h3 id="2a域名服务商-申请api权限">2A、域名服务商-申请API权限
+&lt;/h3>&lt;p>进入控制台的用户中心-安全设置，最底下申请API TOKEN。&lt;/p>
+&lt;p>填写名称，提交后就会得到ID和TOKEN（注意不要动）敲黑板！敲黑板！敲黑板！&lt;/p>
+&lt;p>保持姿势，把得到的ID和TOKEN以你最快的速度保存下来，
+可以选择复制（←正常人）或者截屏（←高手），一旦关掉就没了。&lt;/p>
+&lt;p>Get-Lets-Encrypt&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Get-Lets-Encrypt/01.webp"
+loading="lazy"
+alt="1"
+>&lt;/p>
+&lt;h3 id="2b客户端环境变量">2B、客户端环境变量
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">DP_Id&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">DP_Key&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;token&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我们需要设置两个环境变量，分别是2A中获得的ID和TOKEN&lt;/p>
+&lt;h3 id="3申请签发">3、申请签发
+&lt;/h3>&lt;p>之前安装好客户端之后会更新PATH，所以自己刷新或者重新登录一下服务器吧！&lt;/p>
+&lt;p>&lt;code>acme.sh --issue --dns dns_dp -d *.wrui.cf --debug&lt;/code>&lt;/p>
+&lt;p>脚本说明就自己打help看，如果没有什么特殊需要（例如什么ECC的什么4096的奇葩用户）的话，就按上面这条命令来就好了。&lt;/p>
+&lt;p>参数说明：
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Get-Lets-Encrypt/02.webp"
+loading="lazy"
+alt="2"
+>&lt;/p>
+&lt;p>&amp;ndash;dns 是指定域名服务商，dp就是dnspod，-d是需要签发的域名可以有多个-d参数&lt;/p>
+&lt;p>&amp;ndash;debug参数和多数命令的verbose一样会显示详细日志，当然如果没有需要，不想看着刷屏的话就去掉吧！&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Get-Lets-Encrypt/04.webp"
+loading="lazy"
+alt="4"
+>&lt;/p>
+&lt;p>申请过程中会有120秒的等待DNS时间，稍安勿躁，等待提示Success之后就可以到提示的路径下获得证书啦！&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Get-Lets-Encrypt/03.webp"
+loading="lazy"
+alt="3"
+>&lt;/p></description></item></channel></rss>

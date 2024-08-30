@@ -1,0 +1,304 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 数组 7 - 数"><title>C#中数组的使用 - C#笔记</title>
+<link rel=canonical href=https://demo.stack.jimmycai.com/passages/csharp-note5-array/><link rel=stylesheet href=/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css><meta property='og:title' content="C#中数组的使用 - C#笔记"><meta property='og:description' content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 数组 7 - 数"><meta property='og:url' content='https://demo.stack.jimmycai.com/passages/csharp-note5-array/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='笔记'><meta property='article:tag' content='编程'><meta property='article:tag' content='CSharp'><meta property='article:tag' content='dotNET'><meta property='article:published_time' content='2021-05-03T14:31:30+00:00'><meta property='article:modified_time' content='2021-05-03T14:31:30+00:00'><meta name=twitter:title content="C#中数组的使用 - C#笔记"><meta name=twitter:description content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 数组 7 - 数"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu3638370076040586706.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#目录>目录</a></li><li><a href=#数组>数组</a><ol><li><a href=#7---数组>7 - 数组</a><ol><li><a href=#71---相同类型的多个对象>7.1 - 相同类型的多个对象</a></li><li><a href=#72---简单数组>7.2 - 简单数组</a></li><li><a href=#73---多维数组>7.3 - 多维数组</a></li><li><a href=#74---锯齿数组>7.4 - 锯齿数组</a></li><li><a href=#75---array-类>7.5 - Array 类</a></li><li><a href=#76---数组作为参数>7.6 - 数组作为参数</a></li><li><a href=#77---数组协变>7.7 - 数组协变</a></li><li><a href=#78---枚举>7.8 - 枚举</a></li><li><a href=#79---结构比较>7.9 - 结构比较</a></li><li><a href=#710---span>7.10 - Span</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/csharp-note5-array/>C#中数组的使用 - C#笔记</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2021 May 03</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 8 分钟</time></div></footer></div></header><section class=article-content><h2 id=目录>目录</h2><ul><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note1-Basic/ target=_blank rel=noopener>C#基础</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note2-OOP/ target=_blank rel=noopener>C#面向对象</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note3-Generics-Type/ target=_blank rel=noopener>C#泛型</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note4-Operators-and-TypeCasts/ target=_blank rel=noopener>C#运算符和强制类型转换</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note5-Array/ target=_blank rel=noopener>C#中数组的使用</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note6-Delegates-lambda-Expressions-and-Events/ target=_blank rel=noopener>C#的委托、lambda 表达式和事件</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note7-String-and-Regular/ target=_blank rel=noopener>C#字符串和正则表达式</a></li></ul><h2 id=数组>数组</h2><h3 id=7---数组>7 - 数组</h3><h4 id=71---相同类型的多个对象>7.1 - 相同类型的多个对象</h4><p>可以使用集合和数组，对于数量固定的可以使用数组。</p><p>对于多个不同类型的对象可以使用类、结构或元组。</p><h4 id=72---简单数组>7.2 - 简单数组</h4><p>数组是一种数据结构，它可以包含同一类型的多个元素。</p><h5 id=721---数组的声明>7.2.1 - 数组的声明</h5><p>使用类型紧跟一对中括号来声明数组，后面跟标识符。比如，下面的代码声明了一个 <code>int</code> 类型的数组：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span><span class=p>[]</span> <span class=n>array</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=722---数组的初始化>7.2.2 - 数组的初始化</h5><p>数组是引用类型，所以必须给它分配堆上的内存。应该使用 <code>new</code> 运算符，指定元素的类型和数量来初始化数组的变量：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span><span class=p>[]</span> <span class=n>array</span> <span class=p>=</span> <span class=k>new</span> <span class=kt>int</span><span class=p>[</span><span class=m>8</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><p>上面的代码中 <code>array</code> 引用了一个包含8个 <code>int</code> 类型的元素的数组，它们位于托管堆上。</p><blockquote><p>注意：在指定了数组的大小后，如果不复制其中的所有元素就不能调整大小。而对于很大的数组来说复制数组是一场性能灾难，如果事先不知道包含多少个元素，应该使用集合。</p></blockquote><p>还可以使用数组初始化器为每个元素复制，数组初始化器只能在声明数组的时候使用，不能在声明之后使用。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span><span class=p>[]</span> <span class=n>array</span> <span class=p>=</span> <span class=k>new</span> <span class=kt>int</span><span class=p>[</span><span class=m>4</span><span class=p>]</span> <span class=p>{</span><span class=m>2</span><span class=p>,</span> <span class=m>4</span><span class=p>,</span> <span class=m>6</span><span class=p>,</span> <span class=m>8</span><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果使用了初始化器（花括号那个）来初始化数组，可以不指定数组的大小，由编译器自动计算：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span><span class=p>[]</span> <span class=n>daysOfMonthTable</span> <span class=p>=</span> <span class=k>new</span> <span class=kt>int</span><span class=p>[]</span> <span class=p>{</span><span class=m>31</span><span class=p>,</span> <span class=m>28</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>30</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>30</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>30</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>30</span><span class=p>,</span> <span class=m>31</span><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>当然，使用花括号可以同时声明和初始化数组：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span><span class=p>[]</span> <span class=n>daysOfMonthTable</span> <span class=p>=</span> <span class=p>{</span><span class=m>31</span><span class=p>,</span> <span class=m>28</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>30</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>30</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>30</span><span class=p>,</span> <span class=m>31</span><span class=p>,</span> <span class=m>30</span><span class=p>,</span> <span class=m>31</span><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=723-访问数组元素>7.2.3 访问数组元素</h5><p>通过索引器传递元素编号，就可以访问数组。索引器总是从0开始，<code>array[0]</code> 表示 <code>array</code> 数组的第一个元素。</p><p>如果不知道数组中元素的个数，又想遍历数组，可以在 <code>for</code> 使用 <code>array.Length</code> 属性：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>for</span> <span class=p>(</span><span class=kt>var</span> <span class=n>i</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span> <span class=n>i</span> <span class=p>&lt;</span> <span class=n>array</span><span class=p>.</span><span class=n>Length</span><span class=p>;</span> <span class=p>++</span><span class=n>i</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>array</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>当然，也可以使用 <code>foreach</code> 语句，但是 <code>foreach</code> 不能更改其中的元素：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>foreach</span><span class=p>(</span><span class=kt>var</span> <span class=n>item</span> <span class=k>in</span> <span class=n>array</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=724---使用引用类型>7.2.4 - 使用引用类型</h5><p>除了能声明预定义类型的数组，还可以声明自定义类型的数组，语法同上：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>Student</span><span class=p>[]</span> <span class=n>stu</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Student</span><span class=p>[</span><span class=m>60</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><p>声明完后每个元素的引用都是 <code>null</code> ，因此，需要使用从0开始的索引器，可以为数组每个元素分配内存：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>stu</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Student</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Name</span> <span class=p>=</span> <span class=s>&#34;Jack&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Class</span> <span class=p>=</span> <span class=s>&#34;5&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>stu</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Student</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Name</span> <span class=p>=</span> <span class=s>&#34;John&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Class</span> <span class=p>=</span> <span class=s>&#34;2&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// ...</span>
+</span></span></code></pre></td></tr></table></div></div><p>当然，也可以使用数组初始化器。</p><h4 id=73---多维数组>7.3 - 多维数组</h4><p>正如前面所见的，一维数组使用一个整数来索引，而多维数组使用多个整数来索引（比如我们可以用两个整数分别索引行和列）。</p><p>在CSharp中声明一个二维数组可以在方括号中间加上一个逗号，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span><span class=p>[,]</span> <span class=n>matrix</span> <span class=p>=</span> 
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=m>1</span><span class=p>,</span> <span class=m>2</span><span class=p>,</span> <span class=m>3</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=m>4</span><span class=p>,</span> <span class=m>5</span><span class=p>,</span> <span class=m>6</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=m>7</span><span class=p>,</span> <span class=m>8</span><span class=p>,</span> <span class=m>9</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>显而易见，适用于一维数组的初始化器也能用。</p><h4 id=74---锯齿数组>7.4 - 锯齿数组</h4><p>锯齿数组的大小设置比较灵活，不像二维数组那样必须是“方方正正”的，锯齿数组中每一行都可以有不同的大小：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span><span class=p>[][]</span> <span class=n>array</span> <span class=p>=</span> <span class=k>new</span> <span class=kt>int</span><span class=p>[</span><span class=m>3</span><span class=p>][];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>array</span><span class=p>[</span><span class=m>0</span><span class=p>]</span> <span class=p>=</span> <span class=k>new</span> <span class=kt>int</span><span class=p>[</span><span class=m>4</span><span class=p>]</span> <span class=p>{</span><span class=m>1</span><span class=p>,</span> <span class=m>2</span><span class=p>,</span> <span class=m>3</span><span class=p>,</span> <span class=m>4</span><span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=n>array</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>=</span> <span class=k>new</span> <span class=kt>int</span><span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>{</span><span class=m>16</span><span class=p>,</span> <span class=m>32</span><span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=n>array</span><span class=p>[</span><span class=m>2</span><span class=p>]</span> <span class=p>=</span> <span class=k>new</span> <span class=kt>int</span><span class=p>[</span><span class=m>1</span><span class=p>]</span> <span class=p>{</span><span class=m>114514</span><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>定义时，第一个方括号里写行数，第二个留空。</p><p>可以看作每个元素都是另外一个数组吧。</p><h4 id=75---array-类>7.5 - Array 类</h4><p>用方括号声明数组是CSharp中 <code>Array</code> 类的表示法。在后台使用 <code>CSharp</code> 语法，会创建一个派生自抽象基类 <code>Array</code> 的新类。这样，就可以使用 <code>Array</code> 类中的方法和属性了。</p><h5 id=751---创建数组>7.5.1 - 创建数组</h5><p>除了可以使用CSharp语法来创建数组实例之外，还可以使用静态方法 <code>Array.CreateInstance</code> 来创建数组。如果事先不知道元素的类型，该静态方法就非常有用，因为类型可以作为 <code>Type</code> 对象传递给 <code>CreateInstance</code> 方法。</p><p>还可以将用 <code>CreateInstance</code> 方法创建好的数组强制转换为 <code>int</code> 数组：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>array</span> <span class=p>=</span> <span class=n>Array</span><span class=p>.</span><span class=n>CreateInstance</span><span class=p>(</span><span class=k>typeof</span><span class=p>(</span><span class=kt>int</span><span class=p>),</span> <span class=m>6</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>arrayAfterConvert</span> <span class=p>=</span> <span class=p>(</span><span class=kt>int</span><span class=p>[])</span><span class=n>array</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=752---复制数组>7.5.2 - 复制数组</h5><p>因为数组是引用类型，所以将数组的一个变量赋值给另外一个变量，得到是引用同一个数组的变量。使用 <code>Clone</code> 方法可以复制数组：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>array1</span> <span class=p>=</span> <span class=p>{</span><span class=m>1</span><span class=p>,</span> <span class=m>2</span><span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>array2</span> <span class=p>=</span> <span class=p>(</span><span class=kt>int</span><span class=p>[])</span><span class=n>array1</span><span class=p>.</span><span class=n>Clone</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>Clone</code> 方法是浅复制，也就是说，如果数组的元素的引用类型，则仅复制引用而不深入复制值。</p><p>还可以使用 <code>Array.Copy</code> 方法创建浅表副本，与 <code>Clone</code> 的区别是， <code>Copy</code> 方法需要传递一个阶数仙童并且足够大的数组作为参数，而不是像 <code>Clone</code> 创建并返回一个新数组。</p><h5 id=753---排序>7.5.3 - 排序</h5><p><code>Array</code> 类使用快排算法来对数组中的元素进行排序。<code>Sort</code> 方法需要数组中的元素实现 <code>IComparable</code> 接口。在简单类型中已经实现了该接口，所以可以直接进行排序。</p><p>如果对数组使用自定义类，就实现 <code>IComparable</code> 接口（或者它的泛型版本），这个接口定义了方法：<code>Compare</code> ，该方法接受一个要被用来比较的对象作为参数：</p><ul><li>如果要比较的对象的相等，就返回0。</li><li>如果该实例排在参数对象的前面，就返回小于0的值。</li><li>如果该实例排在参数对象的后面，就返回大于0的值。</li></ul><p>如果对象的排序方法与上述不同，或者不能修改数组元素中用作元素的类（即修改元素的类并添加继承自 <code>IComparable</code> ），就可以考虑另外一个类（比如 <code>Comparer</code> ）实现 <code>IComparer</code> 接口或者其泛型版本。这两个接口定义了方法 <code>Compare</code> ，这个方法接受两个参数：</p><ul><li>如果两个参数对象相等，就返回0。</li><li>如果第一个参数在第二个参数前面，则返回小于0的值。</li><li>如果第一个参数在第二个参数后面，则返回大于0的值。</li></ul><blockquote><p>Tips：<code>Array</code> 类提供了 <code>Sort</code> 方法，需要传递一个委托i作为参数，而不需要依赖 <code>IComparer</code> 接口或者 <code>IComparable</code> 接口。</p></blockquote><h4 id=76---数组作为参数>7.6 - 数组作为参数</h4><p>要把数组传递给方法，就按着你想象的来就行了。将参数声明为数组：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>static</span> <span class=k>void</span> <span class=n>DisplayStudents</span><span class=p>(</span><span class=n>Student</span><span class=p>[]</span> <span class=n>stu</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// code</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=77---数组协变>7.7 - 数组协变</h4><p>数组支持协变，也就是说，可以把数组声明为基类，其它派生类的对象可以被赋予数组：</p><blockquote><p>注意：数组协变只能用于引用类型不能用于值类型。</p></blockquote><h4 id=78---枚举>7.8 - 枚举</h4><p>在 <code>foreach</code> 语句中使用枚举，可以迭代集合中的元素，且不需要知道集合中的元素个数。数组和集合实现了带 <code>GetEnumerator</code> 方法的 <code>IEnumerable</code> 接口。 <code>GetEnumerator</code> 方法返回一个实现 <code>IEnumerable</code> 接口的枚举。接着 <code>foreach</code> 语句就可以使用 <code>IEnumerable</code> 接口迭代集合了。</p><h5 id=781---ienumerator-接口>7.8.1 - <code>IEnumerator</code> 接口</h5><p><code>foreach</code> 语句使用 <code>IEnumerator</code> 接口的方法和属性，迭代集合中的所有元素。为此接口定义了 <code>Current</code> 用来返回当前迭代的元素。</p><p><code>MoveNext</code> 方法移动到下一个元素上，如果没有下一个元素则返回 <code>false</code> ，移动成功则返回 <code>true</code> 。</p><h5 id=782---foreach-语句>7.8.2 - <code>foreach</code> 语句</h5><p><code>foreach</code> 首先调用 <code>GetEnumerator</code> 方法获取一个枚举器，并且当 <code>MoveNext</code> 方法返回 <code>true</code> 时进行迭代。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>foreach</span><span class=p>(</span><span class=kt>var</span> <span class=n>person</span> <span class=k>in</span> <span class=n>people</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>person</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>相当于：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>IEnumerator</span><span class=p>&lt;</span><span class=n>Person</span><span class=p>&gt;</span> <span class=n>enumerator</span> <span class=p>=</span> <span class=n>people</span><span class=p>.</span><span class=n>GetEnumerator</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=k>while</span><span class=p>(</span><span class=n>enumerator</span><span class=p>.</span><span class=n>MoveNext</span><span class=p>())</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>person</span> <span class=p>=</span> <span class=n>enumerator</span><span class=p>.</span><span class=n>Current</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>enumerator</span><span class=p>.</span><span class=n>Current</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=783-yield-语句>7.8.3 <code>yield</code> 语句</h5><p><code>yield return</code> 语句返回集合的一个元素，并移动到下一个元素上。<code>yield break</code> 可停止迭代。</p><blockquote><p>Tips：包含 <code>yield</code> 语句的方法或属性也成为迭代块。迭代块必须声明为返回 <code>IEnumerator</code> 或 <code>IEnumerable</code> 接口，或者这写接口的泛型版本。这个块可以包含多条 <code>yield return</code> 语句或 <code>yield break</code> 语句，但不能包含 <code>return</code> 语句。</p></blockquote><h6 id=1-迭代集合的不同方式>1. 迭代集合的不同方式</h6><h6 id=2-用-yield-return-返回枚举器>2. 用 <code>yield return</code> 返回枚举器</h6><p>常见的使用方法是，用一个循环来迭代集合，然后每一次迭代来一个 <code>yield return</code> 语句，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>using</span> <span class=nn>System</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>using</span> <span class=nn>System.Collections.Generic</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>Test</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>Program</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kd>private</span> <span class=kd>static</span> <span class=k>void</span> <span class=n>Main</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=kt>var</span> <span class=n>school</span> <span class=p>=</span> <span class=k>new</span> <span class=n>School</span><span class=p>(</span><span class=m>10</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=n>school</span><span class=p>.</span><span class=n>Add</span><span class=p>(</span><span class=k>new</span> <span class=n>Student</span><span class=p>(</span><span class=s>&#34;Jack&#34;</span><span class=p>,</span> <span class=m>1</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>            <span class=n>school</span><span class=p>.</span><span class=n>Add</span><span class=p>(</span><span class=k>new</span> <span class=n>Student</span><span class=p>(</span><span class=s>&#34;Jan&#34;</span><span class=p>,</span> <span class=m>2</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>            <span class=n>school</span><span class=p>.</span><span class=n>Add</span><span class=p>(</span><span class=k>new</span> <span class=n>Student</span><span class=p>(</span><span class=s>&#34;John&#34;</span><span class=p>,</span> <span class=m>3</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>            <span class=n>school</span><span class=p>.</span><span class=n>Add</span><span class=p>(</span><span class=k>new</span> <span class=n>Student</span><span class=p>(</span><span class=s>&#34;Mack&#34;</span><span class=p>,</span> <span class=m>4</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>            <span class=n>school</span><span class=p>.</span><span class=n>Add</span><span class=p>(</span><span class=k>new</span> <span class=n>Student</span><span class=p>(</span><span class=s>&#34;Ann&#34;</span><span class=p>,</span> <span class=m>5</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=k>foreach</span> <span class=p>(</span><span class=kt>var</span> <span class=n>student</span> <span class=k>in</span> <span class=n>school</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>student</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>Student</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=n>Student</span><span class=p>(</span><span class=kt>string</span> <span class=n>name</span><span class=p>,</span> <span class=kt>uint</span> <span class=n>grade</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>Name</span> <span class=p>=</span> <span class=n>name</span> <span class=p>??</span>
+</span></span><span class=line><span class=cl>                   <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>name</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>            <span class=n>Grade</span> <span class=p>=</span> <span class=n>grade</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kd>override</span> <span class=kt>string</span> <span class=n>ToString</span><span class=p>()</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=s>$&#34;{Name} in {Grade}&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kt>string</span> <span class=n>Name</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kt>uint</span> <span class=n>Grade</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>School</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=n>School</span><span class=p>(</span><span class=kt>uint</span> <span class=n>count</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>Count</span> <span class=p>=</span> <span class=n>count</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>Students</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Student</span><span class=p>[</span><span class=n>Count</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kd>private</span> <span class=kt>int</span> <span class=n>_currentIndex</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kt>uint</span> <span class=n>Count</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=n>Student</span><span class=p>[]</span> <span class=n>Students</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=cs>/// &lt;summary&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=cs>/// Add a student to school</span>
+</span></span><span class=line><span class=cl>        <span class=cs>/// &lt;/summary&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=cs>/// &lt;param name=&#34;stu&#34;&gt;Student Object&lt;/param&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=k>void</span> <span class=n>Add</span><span class=p>(</span><span class=n>Student</span> <span class=n>stu</span><span class=p>)</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=n>Students</span><span class=p>[</span><span class=n>_currentIndex</span><span class=p>++]</span> <span class=p>=</span> <span class=n>stu</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=n>IEnumerator</span><span class=p>&lt;</span><span class=n>Student</span><span class=p>&gt;</span> <span class=n>GetEnumerator</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=p>(</span><span class=kt>var</span> <span class=n>i</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span> <span class=n>i</span> <span class=p>&lt;</span> <span class=n>Count</span><span class=p>;</span> <span class=n>i</span><span class=p>++)</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>yield</span> <span class=k>return</span> <span class=n>Students</span><span class=p>[</span><span class=n>i</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>首先，定义了一个学生类 <code>Student</code> ，其中含有学生的基础信息和一个用于实例化的构造函数以及重写的 <code>ToString</code> 方法。</p><p>然后，定义了另外一个类 <code>School</code> ，在学校类中写了 <code>Add</code> 方法来添加学生。另外实现了 <code>GetEnumerator</code> 方法，由于在 <code>foreach</code> 中的元素是 <code>Student</code> 类的实例，因此类型为泛型的 <code>IEnumerator&lt;Student></code> 。<code>yield return</code> 返回每一次迭代的结果即可。</p><h4 id=79---结构比较>7.9 - 结构比较</h4><p>数组和元组都实现了接口 <code>IStructuralEquatable</code> （用于进行内容比较是否相等）和 <code>IStructuralComparable</code> （用于在排序时进行比较决定顺序）。这两个接口不仅可以比较引用，还可以比较内容。</p><p>可以让需要的结构实现 <code>IEquatable</code> 接口，这个接口定义了一个强化的 <code>Equals</code> 方法。这个方法接收两个参数，第一个是 <code>object</code> ，第二个是 <code>IEquatableComparer</code> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>if</span> <span class=p>((</span><span class=n>people</span> <span class=k>as</span> <span class=n>IEquatable</span><span class=p>).</span><span class=n>Equals</span><span class=p>(</span><span class=n>people2</span><span class=p>,</span> <span class=n>EqualityComparer</span><span class=p>&lt;</span><span class=n>Person</span><span class=p>&gt;.</span><span class=n>Default</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>&#34;Same&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=710---span>7.10 - Span</h4><p>为了快速访问连续内存，可以使用 <code>Span&lt;T></code> 结构。一个可以使用 <code>Span&lt;T></code> 的例子是数组； <code>Span&lt;T></code> 结构在后台保存在连续的内存中。</p><p>使用 <code>Span&lt;T></code> 可以直接访问数组元素。数组的元素没有复制，可以直接使用，这比复制要快（废话）。</p><p><code>Span</code> 结构有个构造函数，把数组传参进去就行了，就能获得一个 <code>Span</code>。</p><h5 id=7101---创建切片>7.10.1 - 创建切片</h5><p><code>Span&lt;T></code> 的一个强大功特性是，可以使用它创建访问数组的一部分或者是切片。使用切片时，不会复制数组元素，它们是从 <code>Span</code> 直接访问的。</p><p>调用 <code>Slice</code> 方法，也可以从 <code>Span&lt;T></code> 对象中创建一个切片。该方法接受两个参数：切片开始的索引号以及切片的长度。当然，也可以使用 <code>Span</code> 的构造函数创建一个切片：第一个参数是数组，后面是切片开始的索引号和长度。</p><p>如果以后不需要修改 <code>Span</code> 引用的内容，可以使用 <code>ReadOnlySpan</code> 这个类型，转换是隐式进行的。</p><blockquote><p>注意：<code>Span&lt;T></code> 是安全的，不会出界破坏其它内存中的数据。如果创建的 <code>Span</code> 超出了数组的长度，则会抛出 <code>ArgumentOutOfRangeException</code> 异常。</p></blockquote><h5 id=7102---使用-span-改变值>7.10.2 - 使用 <code>Span</code> 改变值</h5><p>调用 <code>Clear</code> 方法，使用 <code>0</code> 填充 <code>Span&lt;int></code> 。</p><p>调用 <code>Fill</code> 方法，使用传递的参数填充 <code>Span&lt;T></code> 。</p><p>调用 <code>CopyTo</code> 方法，将一个 <code>Span</code> 复制到另一个 <code>Span</code> 中，如果目标不够大则会抛出 <code>ArgumentException</code> 异常。调用 <code>TryCopyTo</code> 方法来避免发生异常：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>span</span><span class=p>.</span><span class=n>TryCopyTo</span><span class=p>(</span><span class=n>newSpan</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>&#34;COPY SUCCESS&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=7103---只读的-span>7.10.3 - 只读的 <code>Span</code></h5><p>如上文所说，对于不需要修改的 <code>Span</code> 可以使用 <code>ReadOnlySpan&lt;T></code> 类型，这种类型没有 <code>Clear</code> 和 <code>Fill</code> 等方法，但是可以调用 <code>CopyTo</code> 复制到新的 <code>Span</code> 。</p><h5 id=711---数组池>7.11 - 数组池</h5><p>如果一个应用程序创建、销毁了很多数组，那么GC酱就会很累。可以通过 <code>ArrayPool</code> 类创建数组池。</p><h6 id=7111---创建数组池>7.11.1 - 创建数组池</h6><p>通过调用静态的 <code>Create</code> 方法，就可以创建 <code>ArrayPool&lt;T></code> 。使用 <code>Create</code> 方法可以在创建之前定义最大的数组长度和数组的数量：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>arrPool</span> <span class=p>=</span> <span class=n>ArrayPool</span><span class=p>&lt;</span><span class=kt>int</span><span class=p>&gt;.</span><span class=n>Create</span><span class=p>(</span><span class=n>maxArrayLength</span><span class=p>:</span> <span class=m>8192</span><span class=p>,</span> <span class=n>maxArraysPerBucket</span><span class=p>:</span> <span class=m>4096</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>maxArrayLength</code> 的默认值是 1024x1024 字节，<code>maxArraysPerBucket</code> 的默认值是 50 。数组池使用了多个桶，以便使用多个数组时更快。只要还没有达到数组的最大数量，大小类似的数组就尽可能保存在一个桶里。</p><h5 id=1122---从池中租借内存>1.12.2 - 从池中租借内存</h5><p>调用 <code>Rent</code> 方法从池中租借内存。该方法接受应请求的最小数组长度。<code>Rent</code> 方法返回一个数组，其中至少包含所请求的元素个数。返回的数组可能有更多的可用内存：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>arrayPool</span> <span class=p>=</span> <span class=n>ArrayPool</span><span class=p>&lt;</span><span class=kt>int</span><span class=p>&gt;.</span><span class=n>Create</span><span class=p>(</span><span class=n>maxArrayLength</span><span class=p>:</span> <span class=m>8192</span><span class=p>,</span> <span class=n>maxArraysPerBucket</span><span class=p>:</span> <span class=m>4096</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>array</span> <span class=p>=</span> <span class=n>arrayPool</span><span class=p>.</span><span class=n>Rent</span><span class=p>(</span><span class=m>20</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>array</span><span class=p>.</span><span class=n>Length</span><span class=p>);</span>    <span class=c1>// output: 32</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=1123---将内存返回给池>1.12.3 - 将内存返回给池</h5><p>不再需要数组的时候，可以把内存返回回去。数组返回后，稍后可以使用一个 <code>Rent</code> 来重用这些内存。</p><p>调用数组池的 <code>Return</code> 方法并将数组作为参数传递给它。这样返回后不会清除数组内的数据，也就是下次 <code>Rent</code> 后还可以访问其中的数据。为此该方法还有一个可选参数，指定在返回池之前是否清空它。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a>
+<a href=/tags/%E7%BC%96%E7%A8%8B/>编程</a>
+<a href=/tags/csharp/>CSharp</a>
+<a href=/tags/dotnet/>DotNET</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/csharp-note6-delegates-lambda-expressions-and-events/><div class=article-details><h2 class=article-title>C#的委托、lambda 表达式和事件 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note7-string-and-regular/><div class=article-details><h2 class=article-title>C#字符串和正则表达式 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note3-generics-type/><div class=article-details><h2 class=article-title>C#中的泛型 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note2-oop/><div class=article-details><h2 class=article-title>C#面向对象——对象和类型与继承 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note1-basic/><div class=article-details><h2 class=article-title>C#编程基础 - C#笔记</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.21/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2024 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.26.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
