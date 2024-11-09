@@ -21,14 +21,6 @@ jobs:
               with:
                 submodules: 'recursive'
 
-            - name: Cache Hugo resources
-              uses: actions/cache@v3
-              env:
-                  cache-name: cache-hugo-resources
-              with:
-                  path: resources
-                  key: ${{ env.cache-name }}
-
             - uses: actions/setup-go@v4
               with:
                   go-version: "^1.17.0"
@@ -52,6 +44,7 @@ jobs:
                 port: 22
                 source: "public/*"
                 target: ${{ vars.DEPLOY_PATH }}
+                
             - name: Deploy to Pages
               uses: JamesIves/github-pages-deploy-action@v4
               with:
