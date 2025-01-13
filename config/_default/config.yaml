@@ -1,0 +1,9 @@
+baseurl: "https://blog.gaein.cn"
+languageCode: "zh-cn"
+title: "Gaein nidb 的博客"
+timeZone: "Asia/Shanghai"
+defaultContentLanguage: "zh-cn"
+hasCJKLanguage: true
+disqusShortname: "hugo-theme-stack"
+pagination:
+  pagerSize: 15
