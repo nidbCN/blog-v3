@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>WTG on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/wtg/</link><description>Recent content in WTG on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 02 Feb 2020 08:25:08 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/wtg/index.xml" rel="self" type="application/rss+xml"/><item><title>在surface pro上使用WindowsToGo - surface pro启动win to go</title><link>https://blog.gaein.cn/passages/wtg-on-surface/</link><pubDate>Sun, 02 Feb 2020 08:25:08 +0800</pubDate><guid>https://blog.gaein.cn/passages/wtg-on-surface/</guid><description>&lt;p>在上一篇博客中我介绍了WindowsToGo，那么如何在surface上面使用WTG呢？我重复设置了很多次也参考了网上设置surface Book的教程，终于找到了完美的解决方案。&lt;/p>
+&lt;!-- more -->
+&lt;blockquote>
+&lt;p>传送门：世界那么大，旅行时别忘了带上Windows——windows to go 入坑 &lt;a class="link" href="https://blog.gaein.cn/passages/windows-to-go/" target="_blank" rel="noopener"
+>https://blog.gaein.cn/passages/windows-to-go/&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h2 id="进入uefi固件设置bios设置">进入UEFI固件设置（BIOS设置）
+&lt;/h2>&lt;p>方法一：在关机时候进入UEFI固件设置&lt;/p>
+&lt;ol>
+&lt;li>关闭 Surface，然后等待大约 10 秒钟以确保其处于关闭状态。&lt;/li>
+&lt;li>按住 Surface 上的调高音量按钮，同时按下并释放电源按钮。&lt;/li>
+&lt;li>屏幕上会显示 Microsoft 或 Surface 徽标。继续按住调高音量按钮。显示 UEFI 屏幕后，释放此按钮。&lt;/li>
+&lt;/ol>
+&lt;p>方法二：通过 Windows 加载 UEFI 固件设置菜单&lt;/p>
+&lt;ol>
+&lt;li>选择“开始”菜单&amp;gt;“设置”&amp;gt;“更新和安全”&amp;gt;“恢复”。&lt;/li>
+&lt;li>在“高级启动”下，选择“立即重启”。
+&lt;img src="https://s2.ax1x.com/2020/02/05/1ruAnx.png"
+loading="lazy"
+alt="设置菜单"
+>&lt;/li>
+&lt;li>在“选择一个选项”下，选择“疑难解答”&amp;gt;“高级选项”&amp;gt;“UEFI固件设置”，然后选择“重启”&lt;/li>
+&lt;/ol>
+&lt;h2 id="操作系统设置">操作系统设置
+&lt;/h2>&lt;ol>
+&lt;li>打开“此电脑”观察系统盘图标上面是否有一个小锁的标准如果有，继续，没有则重启进入BIOS。&lt;/li>
+&lt;li>右键系统盘&amp;gt;“取消或关闭BitLocker”&lt;/li>
+&lt;/ol>
+&lt;h2 id="uefi固件设置">UEFI固件设置
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>关闭TPM&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>更改启动顺序，将usb调到ssd之前
+如图所示（别问我怎么拍照的，我扫描仪扫的）&lt;/p>
+&lt;blockquote>
+&lt;p>注意：我使用的是surface pro3，固件设置和后续的pro4、5、6、7图形界面有很大区别，但是选项是相通的嘛&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/05/1ruaCQ.jpg"
+loading="lazy"
+alt="UEFI固件设置"
+>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="插入u盘重新启动即可进入wtg系统">插入U盘，重新启动即可进入WTG系统
+&lt;/h2></description></item><item><title>世界那么大，旅行时别忘了带上Windows——windows to go 入坑</title><link>https://blog.gaein.cn/passages/windows-togo/</link><pubDate>Fri, 24 Jan 2020 23:38:30 +0800</pubDate><guid>https://blog.gaein.cn/passages/windows-togo/</guid><description>&lt;p>Windows to go，说白了就是在U盘里面装Windows，随身带着Windows操作系统和软件。只要在BIOS里面设置了U盘启动就能进入U盘里面的Windows系统。&lt;/p>
+&lt;!-- more -->
+&lt;p>官方说明详见 &lt;a class="link" href="https://docs.microsoft.com/zh-cn/windows/deployment/planning/windows-to-go-overview" target="_blank" rel="noopener"
+>https://docs.microsoft.com/zh-cn/windows/deployment/planning/windows-to-go-overview&lt;/a> （机翻）&lt;/p>
+&lt;h2 id="准备">准备
+&lt;/h2>&lt;ol>
+&lt;li>如果使用Windows自带的Windows to go软件，需使用移动硬盘（插上电脑显示在设备和驱动器里，而不是可移动驱动器）&lt;/li>
+&lt;li>最好选购USB3.1或者USB3.0接口的移动硬盘或U盘，USB2.0由于速度瓶颈会严重影响使用体验&lt;/li>
+&lt;li>移动硬盘或U盘的容量在64GB及以上，32G可能无法正常运行（我选择的是256G的SSFD，读写可到2000MB/S）&lt;/li>
+&lt;li>电脑有键盘，用于修改BIOS&lt;/li>
+&lt;li>Windows系统安装ISO镜像文件（我选择的是Windows10 企业版）&lt;/li>
+&lt;/ol>
+&lt;h2 id="优缺点">优缺点
+&lt;/h2>&lt;ol>
+&lt;li>优点：便携性&lt;/li>
+&lt;li>缺点：对U盘有一定要求，数据不是很安全，容易遭到破坏，而BitLocker又不能兼容IOS系统&lt;/li>
+&lt;/ol>
+&lt;h2 id="软件">软件
+&lt;/h2>&lt;ol>
+&lt;li>官方工具&lt;/li>
+&lt;li>萝卜头出品的WTGA&lt;/li>
+&lt;/ol>
+&lt;h2 id="制作">制作
+&lt;/h2>&lt;p>基本上是下一步无脑操作，网上有很多类似帖子&lt;/p>
+&lt;h2 id="开机">开机
+&lt;/h2>&lt;p>开机按DEL进入主板BIOS，在BOOT中将U盘启动调到硬盘或者Windows boot manager前面，保存并退出
+如果不希望更改BIOS，可以在启动列表中直接选择U盘&lt;/p></description></item></channel></rss>

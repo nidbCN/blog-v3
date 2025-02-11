@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Lua on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/lua/</link><description>Recent content in Lua on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 26 Jul 2022 12:25:44 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/lua/index.xml" rel="self" type="application/rss+xml"/><item><title>lua语言编程基础 - lua笔记</title><link>https://blog.gaein.cn/passages/lua-note1-basic/</link><pubDate>Tue, 26 Jul 2022 12:25:44 +0800</pubDate><guid>https://blog.gaein.cn/passages/lua-note1-basic/</guid><description>&lt;h2 id="前言">前言
+&lt;/h2>&lt;blockquote>
+&lt;p>最近实在太摸辣！
+前景提要：收了个 小米AC2100 刷了 OpenWrt 系统，那个固件带了一个微信推送，但是我觉得不是特别好用，准备自己弄一个 基于 &lt;code>linux netlink&lt;/code>、&lt;code>ASP.NET Core&lt;/code> 做后端，使用 &lt;code>MQTT&lt;/code> 或者 &lt;code>Google FCM&lt;/code> &lt;code>Mi Push&lt;/code> 做推送。&lt;code>Luci&lt;/code> 用 &lt;code>lua&lt;/code> 脚本编写插件，反正也没什么事就来看看 &lt;code>lua&lt;/code> 吧！
+&lt;del>为什么叫lua不叫rua&lt;/del>&lt;/p>&lt;/blockquote>
+&lt;h2 id="关于-lua">关于 lua
+&lt;/h2>&lt;p>Lua 是一种轻量小巧的脚本语言，用标准C语言编写并以源代码形式开放， 其设计目的是为了嵌入应用程序中，从而为应用程序提供灵活的扩展和定制功能。&lt;/p>
+&lt;p>lua 很轻量、与 C/C++ 交互方便、支持 面向过程 or 函数式 编程。&lt;/p>
+&lt;h2 id="环境安装">环境安装
+&lt;/h2>&lt;p>直接摁包管理器！&lt;/p>
+&lt;p>Scoop: &lt;code>scoop install lua&lt;/code>&lt;/p>
+&lt;p>如果包管理器没有就解压扔环境变量呗&lt;/p>
+&lt;h2 id="运行方式">运行方式
+&lt;/h2>&lt;h3 id="脚本运行">脚本运行
+&lt;/h3>&lt;p>lua 脚本是文本文件&lt;/p>
+&lt;p>script:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#!/usr/local/bin/lua&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Hello world&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>script.lua:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;hello world&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>还可以在命令行中输入 &lt;code>lua -i&lt;/code> 来使用 lua REPL&lt;/p>
+&lt;h3 id="数据类型">数据类型
+&lt;/h3>&lt;p>lua 语言有如下几种数据类型&lt;/p>
+&lt;ul>
+&lt;li>nil: null，未定义的变量为 &lt;code>nil&lt;/code>，同样，可以给变量赋值 &lt;code>nil&lt;/code> 来“销毁” 它&lt;/li>
+&lt;li>boolean: true / false，条件表达式中只有 &lt;code>nil&lt;/code> 和 &lt;code>false&lt;/code> 为否，其余（包括数字 &lt;code>0&lt;/code> 皆为是&lt;/li>
+&lt;li>number: 数字类型，双精度浮点实数，所有的数字都是 &lt;code>number&lt;/code> 类型&lt;/li>
+&lt;li>string: 字符串，使用 &lt;code>&amp;quot;&lt;/code> 或 &lt;code>'&lt;/code> 包裹，&lt;code>..&lt;/code> 连接。多行字符串可以使用 &lt;code>[[&lt;/code> 和 &lt;code>]]&lt;/code> 包裹&lt;/li>
+&lt;li>function: C 或 lua 函数（可以类似于委托来使用）&lt;/li>
+&lt;li>userdata: 用户类型&lt;/li>
+&lt;li>thread: 用于协程&lt;/li>
+&lt;li>table: 表，类似于 PHP 中的 “数组”，可以存储数组或键值对之类的&lt;/li>
+&lt;/ul>
+&lt;h4 id="获取类型">获取类型
+&lt;/h4>&lt;p>在 lua 中，可以使用 &lt;code>type()&lt;/code> 函数来获取类型，比如&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">type&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;str&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">-- string&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">type&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">114514&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">-- number&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">type&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">unknow&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">-- nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">type&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">-- boolean&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在上述案例中，&lt;code>unknow&lt;/code> 未定义，所以输出为 &lt;code>nil&lt;/code>&lt;/p>
+&lt;p>注意，判断 &lt;code>nil&lt;/code> 时候应该加上引号，因为 &lt;code>typeof&lt;/code> 的结果是字符串类型：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">if&lt;/span> &lt;span class="n">typeof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;nil&amp;#34;&lt;/span> &lt;span class="kr">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;x is null!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="string-类型">string 类型
+&lt;/h4>&lt;p>string 就是字符串，很正常的一个字符串。转义字符也都一样。&lt;/p>
+&lt;h5 id="string-初始化">string 初始化
+&lt;/h5>&lt;p>前面说过了，可以用双引号也可以用单引号：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">str&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;hello&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">str&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;hello&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">str&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">[[
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">{
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s"> &amp;#34;message&amp;#34;: &amp;#34;hello&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">}]]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>当然，用 &lt;code>[[&lt;/code> 和 &lt;code>]]&lt;/code> 包裹显示 “多行字符串” 或者 “原字符串”，类似于 C# 中的 &lt;code>@&amp;quot;&amp;quot;&lt;/code> 或者 python 中的 &lt;code>r&amp;quot;&amp;quot;&lt;/code>。&lt;/p>
+&lt;h5 id="string-相关函数使用">string 相关函数使用
+&lt;/h5>&lt;ol>
+&lt;li>字符串连接：&lt;code>..&lt;/code>；&lt;/li>
+&lt;li>大小写转换：&lt;code>string.upper(str)&lt;/code> 和 &lt;code>string.lower(arg)&lt;/code>；&lt;/li>
+&lt;li>替换：&lt;code>string.gsub(str, search, replace, [times])&lt;/code>，次数省略为不限次数；&lt;/li>
+&lt;li>查找：&lt;code>string.find(str, search, [init, [regxp]])&lt;/code>，返回两个值：起始位置和结束位置；&lt;/li>
+&lt;li>反转：&lt;code>string.reverse(str)&lt;/code>；&lt;/li>
+&lt;li>格式化：&lt;code>string.format(...)&lt;/code>，格式化规则类似于 &lt;code>printf&lt;/code>；&lt;/li>
+&lt;li>字符与 ASCII 代转换：&lt;code>string.char(nums)&lt;/code> 字符串中的字符转 ASCII 码返回，&lt;code>string.byte(str, [index])&lt;/code>；&lt;/li>
+&lt;li>计算长度：&lt;code>string.len(str)&lt;/code> 或 &lt;code>#&lt;/code>，例如 &lt;code>#str&lt;/code>；&lt;/li>
+&lt;li>重复字符串：&lt;code>string.rep(str, times)&lt;/code>，重复 &lt;code>times&lt;/code> 次字符串 &lt;code>str&lt;/code>；&lt;/li>
+&lt;li>正则字符串：&lt;code>string.match(str, pregxp, init)&lt;/code> 只寻找源字串str中的第一个配对并返回结果，找不到时返回 &lt;code>nil&lt;/code>；&lt;/li>
+&lt;/ol>
+&lt;p>你说 number 转 string? 使用数字运算符的时候会自动尝试将 string 转为 number，所以可以写类似于&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;3&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">5&lt;/span> &lt;span class="c1">-- 8&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;5&amp;#34;&lt;/span> &lt;span class="c1">-- 8&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;3&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;5&amp;#34;&lt;/span> &lt;span class="c1">-- 8&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;test&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">5&lt;/span> &lt;span class="c1">-- stdin:1: attempt to add a &amp;#39;string&amp;#39; with a &amp;#39;number&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>当然，单纯需要转换的话可以使用 &lt;code>tostring()&lt;/code> 和 &lt;code>tonumber()&lt;/code> 函数。&lt;/p>
+&lt;p>更多字符串操作参考 &lt;a class="link" href="https://www.lua.org/manual/5.4/manual.html#6.4" target="_blank" rel="noopener"
+>Lua 5.4 官方文档&lt;/a>&lt;/p>
+&lt;h4 id="table-类型">table 类型
+&lt;/h4>&lt;p>这个 &lt;code>table&lt;/code> 很神奇，反正类比一下 PHP 的 “数组”，这玩意也是一个 “什么都能塞” 的角&lt;/p>
+&lt;h5 id="table-的初始化">table 的初始化
+&lt;/h5>&lt;p>table 使用初始化器 &lt;code>{}&lt;/code> 来初始化，如下代码初始化了一个 table:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">t&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在初始化时候，如果需要指定索引的键，则可以使用 &lt;code>[]&lt;/code> 索引器，说起来有点抽象，看看代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">t&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{[&lt;/span>&lt;span class="s2">&amp;#34;k&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;arr&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">},&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">t&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;k&amp;#34;&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="c1">-- &amp;#34;value&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>没错，&lt;code>[]&lt;/code>不仅在索引时候用，在创建的时候还可以用来表示键，虽然我不知道这时候他叫什么。不过，为了方便起见，索引 key 为字符串的时候，可以省略掉 &lt;code>[]&lt;/code> 而使用 &lt;code>.&lt;/code>，比如&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">t.k&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>创建的时候也可以省略 &lt;code>[]&lt;/code>，比如&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">t&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">k&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">arr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">},&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>哦对了，还有一个很生草的事情，在 &lt;code>lua&lt;/code> 中，索引是从 &lt;code>1&lt;/code> 开始的，这一点也不反人类但是反程序员。&lt;/p>
+&lt;p>其他类型不再赘述&lt;/p>
+&lt;h5 id="table-相关函数使用">table 相关函数使用
+&lt;/h5>&lt;ol>
+&lt;li>连接各元素：&lt;code>table.concat(table, [sep , [start ,[end]]])&lt;/code>，实际上有些像 &lt;code>string.Join&lt;/code> 的功能，将各元素连接起来；&lt;/li>
+&lt;li>插入元素：&lt;code>table.insert(table, [pos] ,value)&lt;/code>，在 &lt;code>pos&lt;/code> 位置插入 &lt;code>value&lt;/code>，省略默认为尾部插入；&lt;/li>
+&lt;li>删除元素：&lt;code>table.remove (table, [pos])&lt;/code> 删除 &lt;code>pos&lt;/code> 位置的值，并返回，省略默认为尾部删除；&lt;/li>
+&lt;li>排序：&lt;code>table.sort (table, [comp])&lt;/code> 默认为升序排序；&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>或许大概没准是由于 table 存的东西奇奇怪怪，Lua 并没有提供计算长度的函数，用 &lt;code>#&lt;/code> 运算符也会有问题，那就手搓遍历罢（悲&lt;/p>&lt;/blockquote>
+&lt;h4 id="function-类型">function 类型
+&lt;/h4>&lt;p>函数作为一个基础类型出现在这里，可以类比委托或者类似于 js 的 function 那样，既可以调用也可以作为一个变量/参数传递。&lt;/p>
+&lt;p>首先是函数定义：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">function&lt;/span> &lt;span class="nf">writeLine&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arg&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arg&lt;/span>&lt;span class="o">..&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>需要局部函数可以在 &lt;code>function&lt;/code> 前面加修饰符 &lt;code>local&lt;/code>，返回值可以有多个。&lt;/p>
+&lt;p>可变参数 function：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">function&lt;/span> &lt;span class="nf">printf&lt;/span>&lt;span class="p">(...)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">arg&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{...}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="o">#&lt;/span>&lt;span class="n">arg&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="kr">then&lt;/span> &lt;span class="c1">-- 或用 select(&amp;#34;#&amp;#34;,...) 获取参数数量&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arg&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">string.format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arg&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>将函数赋值给变量：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">func&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">func&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">114514&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>基础用法大概差不多这样，其它类型留到以后再说或者不再赘述。&lt;/p>
+&lt;h3 id="运算符">运算符
+&lt;/h3>&lt;h4 id="算术运算符">算术运算符
+&lt;/h4>&lt;p>除了常规的 &lt;code>+&lt;/code> &lt;code>-&lt;/code> &lt;code>*&lt;/code> &lt;code>/&lt;/code> &lt;code>%&lt;/code> 之外，还有 &lt;code>^&lt;/code>（幂）和 &lt;code>//&lt;/code>（整除）&lt;/p>
+&lt;h4 id="关系运算符">关系运算符
+&lt;/h4>&lt;p>常规的 &lt;code>==&lt;/code> &lt;code>&amp;lt;=&lt;/code> &lt;code>&amp;gt;=&lt;/code> &lt;code>&amp;lt;&lt;/code> &lt;code>&amp;gt;&lt;/code> 之外，不等于用 &lt;code>~=&lt;/code>&lt;/p>
+&lt;h4 id="逻辑运算符">逻辑运算符
+&lt;/h4>&lt;p>不是 &lt;code>||&lt;/code> 这些符号，而是类似于 &lt;code>python&lt;/code>，用 &lt;code>and&lt;/code> &lt;code>or&lt;/code> &lt;code>not&lt;/code>&lt;/p>
+&lt;h4 id="其他运算符">其他运算符
+&lt;/h4>&lt;p>一个是计算长度用的 &lt;code>#&lt;/code>，一个是连接字符串的 &lt;code>..&lt;/code>（其实这大概也算是算术运算符？）&lt;/p>
+&lt;h3 id="流程控制">流程控制
+&lt;/h3>&lt;p>流程控制嘛其实说白了就是 if-else，具体使用代码如下所示：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">if&lt;/span> &lt;span class="n">type&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;nil&amp;#34;&lt;/span> &lt;span class="kr">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;x is null&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;x not null&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>有些类似于 SQL 中的判断嘛&lt;/p>
+&lt;p>Lua 的 if-else 可以嵌套使用 &lt;del>废话&lt;/del>&lt;/p>
+&lt;h3 id="循环">循环
+&lt;/h3>&lt;h4 id="while-循环">while 循环
+&lt;/h4>&lt;p>如下所示&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">while&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">refresh&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="for-循环">for 循环
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">for&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="kr">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>说说这个 &lt;code>for&lt;/code> 吧，&lt;code>for&lt;/code> 后面是 &lt;code>var=exp1,exp2,exp3&lt;/code> 其中表达式1是初始值，表达式2是终止值，表达式3为步长，比如我要输出 100 以内 可以被 3 整除的数，可以这么写：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">for&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">3&lt;/span> &lt;span class="kr">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>另外很重要一个用途就是遍历 table 之类的，这玩意叫“泛型 for 循环”，实际上很类似于 &lt;code>foreach&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">studentList&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;Wang&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;Li&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;Zhang&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">for&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">name&lt;/span> &lt;span class="kr">in&lt;/span> &lt;span class="n">ipairs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">studentList&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kr">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>至于这个 &lt;code>ipairs()&lt;/code> 函数，是 Lua 的一个迭代器，后续细说怎么个回事。&lt;/p>
+&lt;h4 id="repeatuntil类似-do-while-循环">repeat&amp;hellip;until（类似 do-while 循环）
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">repeat&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">refersh&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">until&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">stop&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>很类似 do-while 的一个玩意&lt;/p>
+&lt;blockquote>
+&lt;p>果然各种语言里面最花的都是 &lt;code>for&lt;/code> 嘛
+pythone: 喵喵喵？？&lt;/p>&lt;/blockquote>
+&lt;h3 id="变量">变量
+&lt;/h3>&lt;p>标识符的规则和关键字不再赘述了，各家都大同小异的&lt;/p>
+&lt;p>另外就是 Lua 有全局变量和局部变量，默认的变量是全局变量，用 &lt;code>local&lt;/code> 关键字修饰后才是局部变量，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">function&lt;/span> &lt;span class="nf">homo&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">var1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">114514&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">var2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1919810&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">function&lt;/span> &lt;span class="nf">test&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">var1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">9&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">var2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">homo&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">var1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">var2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">test&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>写的有点乱反正就是这么回事（摆烂&lt;/p></description></item></channel></rss>

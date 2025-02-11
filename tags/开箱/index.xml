@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>开箱 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E5%BC%80%E7%AE%B1/</link><description>Recent content in 开箱 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 28 Feb 2020 14:23:25 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E5%BC%80%E7%AE%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>最新版surface pro7键盘盖兼容pro3！实测</title><link>https://blog.gaein.cn/passages/newtypecover-on-surfacepro3/</link><pubDate>Fri, 28 Feb 2020 14:23:25 +0800</pubDate><guid>https://blog.gaein.cn/passages/newtypecover-on-surfacepro3/</guid><description>&lt;p>尽管全网都在说surface pro7的键盘盖不支持pro3，但是我还是义务反顾买了一个，结果发现，完美兼容！&lt;/p>
+&lt;!-- more -->
+&lt;blockquote>
+&lt;p>surface pro3的键盘盖终于被我玩坏了，考虑到暑假也许会买pro7（和laptop3纠结半天了）所以我准备先买一个键盘盖防止到时候纠结（我真是个机灵鬼）看了一下官方的介绍，支持pro3.于是淘宝找了一家店准备入手，结果卖家告诉我不支持pro3，百度一番也都说支持到pro4。但是我给微软打电话后，微软肯定的告诉我支持pro3并且硬核告诉我其他渠道不用参考（是真的“巨硬”）。尽管卖家一再跟我说他们是实测的，我还是买了，不行就吃半年灰呗，早晚也要用到的啊！&lt;/p>&lt;/blockquote>
+&lt;h2 id="配置">配置
+&lt;/h2>&lt;p>说说我实测成功的pro3吧
+最低配
+Microsoft surface pro3 i3 64G
+系统是Windows 10 1909（Surface OEM版本）&lt;/p>
+&lt;blockquote>
+&lt;p>我觉得他们不能兼容的或许就是自己重装的系统的问题，没法识别type cover。我的surface pro3收来的时候是w10专业版，我自己重装了OEM系统（就为了surface的LOGO！）&lt;/p>&lt;/blockquote>
+&lt;h2 id="上图">上图
+&lt;/h2>&lt;p>即使是老款的surface pro3，她仍然是那么漂亮!
+&lt;img src="https://s2.ax1x.com/2020/02/28/3DFlBq.md.jpg"
+loading="lazy"
+alt="3DFlBq.jpg"
+>
+surface pro3的背面还是“surface”，到了pro4就改成了标志性的巨硬四方格标&lt;/p>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3DFQun.md.jpg"
+loading="lazy"
+alt="3DFQun.jpg"
+>
+键盘材质非常棒，是微软大肆宣传的新一代 Alcantara 材质，摸上去确实很像皮革，非常舒服！据说还是非常耐脏的！
+&lt;img src="https://s2.ax1x.com/2020/02/28/3DFGNT.md.jpg"
+loading="lazy"
+alt="3DFGNT.jpg"
+>
+说好的完美兼容，就要连大小都一样！下面的标已经是Microsoft了，pro3的键盘盖还是surface
+&lt;img src="https://s2.ax1x.com/2020/02/28/3DFUgJ.md.jpg"
+loading="lazy"
+alt="3DFUgJ.jpg"
+>
+键程适中的键盘，非常有感觉，比起pro3的键盘进步很大了（毕竟好多年了），pro3的键盘，几乎没有手感可言。而pro7的键盘，我感觉已经对得起她的价格了！另外锁定Fn也是一个非常实用的功能。&lt;/p>
+&lt;p>如图是我的系统配置，丝毫不吹，完美兼容!
+&lt;img src="https://s2.ax1x.com/2020/02/28/3DF1H0.md.jpg"
+loading="lazy"
+alt="3DF1H0.jpg"
+>&lt;/p></description></item><item><title>Sueface二手电脑验机步骤 - 二手surface怎么验机</title><link>https://blog.gaein.cn/passages/sechand-surface-testing/</link><pubDate>Sat, 16 Mar 2019 16:34:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/sechand-surface-testing/</guid><description>&lt;p>半个月前购入了一台Surface Pro 3 (i3/4G/64G)这里呢，贴一下验机步骤备用。最近两周一直在研究Surface系统（
+我在Microsoft官网下载的Surface恢复系统没有简体中文）&lt;/p>
+&lt;!-- more -->
+&lt;h2 id="前言">前言
+&lt;/h2>&lt;blockquote>
+&lt;p>半个月前购入了一台Surface Pro 3 (i3/4G/64G)这里呢，贴一下验机步骤备用。最近两周一直在研究Surface系统（我在Microsoft官网下载的Surface恢复系统没有简体中文）&lt;/p>&lt;/blockquote>
+&lt;h2 id="外观">外观
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>检查划痕，磕碰&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>检查成色是否符合卖家描述&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>检测背部可调节支架调节是否流畅&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="屏幕">屏幕
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>关机后检查是否有斑点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>对着灯（最好是我这样的条形LED）检查屏幕划痕&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>开机后使用软件检测屏幕是否有坏点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>开机后在画图中检测触控是否完美&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>使用触控笔和Surface自带的FreshPaint检测触控笔触控和压感是否正常&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="真伪">真伪
+&lt;/h2>&lt;blockquote>
+&lt;p>目前基本没有伪造的Surface（一般人轻易搞不了）所以这里是针对更换屏幕、硬盘的&lt;/p>&lt;/blockquote>
+&lt;ol>
+&lt;li>使用软件检测配置，正品的屏幕一般是三星，硬盘是海力士&lt;/li>
+&lt;/ol>
+&lt;h2 id="其它">其它
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>在此电脑&amp;gt;属性中查看是否为Surface OEM系统&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在微软官网 &lt;a class="link" href="https://support.microsoft.com/zh-cn/devices?brand=surface" target="_blank" rel="noopener"
+>https://support.microsoft.com/zh-cn/devices?brand=surface&lt;/a> 页面注册Surface（序列号在背面，或者在“Surfcae”软件中查看）&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>检查电池情况&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>值得一试：阿斯加特 AN2 石墨烯黑科技固态开箱评测</title><link>https://blog.gaein.cn/passages/asgord-m2-an2-ssd/</link><pubDate>Fri, 07 Dec 2018 21:34:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/asgord-m2-an2-ssd/</guid><description>&lt;p>随着SSD价格的回落，越来越多的人选择入手了新的固态硬盘。考虑到老的东芝 A100 实在是有些慢了，于是权衡了影驰和阿斯加特后入手了阿斯加特 AN2 SSD(250G)。这款硬盘采用石墨烯散热，薄薄的一层黑色片代替以前厚重的金属散热。速度也很可观，于是便从某宝入手了。&lt;/p>
+&lt;p>目前在阿斯加特官网上面只有 AN 系列和雷赤系列，没有找到新的 AN2。&lt;/p>
+&lt;h2 id="包装">包装
+&lt;/h2>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/01.webp"
+loading="lazy"
+alt="包装盒"
+>&lt;/p>
+&lt;p>阿斯加特 AN2 的盒子以黑色为主色调，辅之以红色，非常帅气。正面写有白字的 Asgord AN series M.2 NVMe SSD，侧面有 Asgord 标识。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/02.webp"
+loading="lazy"
+alt="背面包装"
+>&lt;/p>
+&lt;p>背面则是介绍和基本的一些信息（比如容量等）&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/03.webp"
+loading="lazy"
+alt="信息"
+>&lt;/p>
+&lt;h2 id="内部">内部
+&lt;/h2>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/04.webp"
+loading="lazy"
+alt="内部"
+>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/05.webp"
+loading="lazy"
+alt="内部-拆开"
+>&lt;/p>
+&lt;p>拆开包装后，里面就是主角啦！&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/06.webp"
+loading="lazy"
+alt="工具"
+>&lt;/p>
+&lt;p>另外还有说明书、螺丝以及螺丝刀&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/07.webp"
+loading="lazy"
+alt="所有"
+>&lt;/p>
+&lt;p>全家福qwq&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/08.webp"
+loading="lazy"
+alt="说明书"
+>&lt;/p>
+&lt;p>说明书里面内容比较详细，带图片说明了安装方法等&lt;/p>
+&lt;h2 id="硬盘">硬盘
+&lt;/h2>&lt;p>再来仔细的端详一下硬盘&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/09.webp"
+loading="lazy"
+alt="硬盘"
+>&lt;/p>
+&lt;p>硬盘表面是磨砂质感的黑色散热，上面有红色的 Asgord LOGO&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/10.webp"
+loading="lazy"
+alt="背面"
+>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/11.webp"
+loading="lazy"
+alt="背面详细"
+>&lt;/p>
+&lt;p>背面和外包装大致相同，写了一些基本的信息和防伪查询码&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/12.webp"
+loading="lazy"
+alt="侧面"
+>&lt;/p>
+&lt;p>这张图可以看出散热非常的薄，侧面几乎看不出&lt;/p>
+&lt;h2 id="测试">测试
+&lt;/h2>&lt;p>是骡子是马应该拉出来溜溜才对&lt;/p>
+&lt;p>官方宣传的速度是：&lt;/p>
+&lt;ul>
+&lt;li>READ:2100MB/S&lt;/li>
+&lt;li>WRITE:1800MB/S&lt;/li>
+&lt;/ul>
+&lt;p>因为主板没有 M.2 接口，只能用 PCI- E转接卡，没有 nvme 协议肯定会有所损失，另外主板的接口还是 PCIE2.0&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/13.webp"
+loading="lazy"
+alt="硬盘和卡"
+>&lt;/p>
+&lt;p>PCIE-M.2 是某宝花了几十买的，据说浦科特的那个非常好，只不过转接卡快赶上我固态的价格了&amp;hellip;&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/14.webp"
+loading="lazy"
+alt="接口"
+>&lt;/p>
+&lt;p>仔细看看做工还算可以，一开始这个 SATA 吓我一大跳，仔细一看，一个是基于 SATA 的，另一个是 PCIE 的&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/15.webp"
+loading="lazy"
+alt="安装硬盘"
+>&lt;/p>
+&lt;p>非常轻松的按照说明书按照 SSD，第一次装 M.2 的固态，感觉有点像笔记本内存的装法？？？&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/16.webp"
+loading="lazy"
+alt="安装完成"
+>&lt;/p>
+&lt;p>安装完成&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/17.webp"
+loading="lazy"
+alt="总体"
+>&lt;/p>
+&lt;p>安装到电脑的 PCIE 插槽上面，至少需要 PCIE X4 才能发挥出来它的性能，还好 ROG 有四个槽，我插在了 PCIE X8/X16 上面，应该是没有问题的了&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Asgord-M2-AN2-SSD/18.webp"
+loading="lazy"
+alt="速度测试"
+>&lt;/p>
+&lt;p>随便用了两个比较常见的软件进行测试，结果总结如下，可见比较 SATA SSD 来说， M.2 的优势是显而易见的。不过并没有达到官方宣传速度。&lt;/p>
+&lt;p>测试平台：&lt;/p>
+&lt;ul>
+&lt;li>CPU: AMD FX8300&lt;/li>
+&lt;li>Mother Board: ASUS Republic Of Gamers Crosshair V Formula&lt;/li>
+&lt;li>Graphics Card: DATALAND RX 460 X-serial 4G&lt;/li>
+&lt;li>OS: Windows 10 x64&lt;/li>
+&lt;/ul></description></item></channel></rss>

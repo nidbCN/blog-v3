@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>开源工具 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/</link><description>Recent content in 开源工具 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 30 Aug 2024 11:32:27 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml"/><item><title>将 Certbot/ACME.sh 自动化申请的证书自动部署到阿里云 CDN</title><link>https://blog.gaein.cn/passages/auto-deploy-cert-to-alicdn/</link><pubDate>Tue, 02 Jul 2024 19:54:27 +0800</pubDate><guid>https://blog.gaein.cn/passages/auto-deploy-cert-to-alicdn/</guid><description>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Auto-Deploy-Cert-to-AliCdn/banner.webp" alt="Featured image of post 将 Certbot/ACME.sh 自动化申请的证书自动部署到阿里云 CDN" />&lt;h2 id="功能">功能
+&lt;/h2>&lt;p>定期检查阿里云CDN所使用的SSL证书是否临近到期，如果临近到期则使用本地的签发的证书进行更新。&lt;/p>
+&lt;p>证书的签发仍由 certbot 或 acme.sh 等工具完成，这里只涉及到将本地的证书文件部署到 阿里云CDN。&lt;/p>
+&lt;p>项目地址：&lt;a class="link" href="https://github.com/nidbCN/AliCdnSSLWorker" target="_blank" rel="noopener"
+>nidbCN/AliCdnSSLWorker: 自动读取证书文件并上传到阿里云CDN&lt;/a>&lt;/p>
+&lt;h2 id="使用场景">使用场景
+&lt;/h2>&lt;p>没错，阿里云ECS、阿里云DNS、阿里云CDN，但是问题来了——签不起阿里云的证书了。&lt;/p>
+&lt;p>之前阿里云的免费证书随便签，再后来改成一年20个，这都没啥，毕竟在阿里云的控制台里面手动签一个也没啥麻烦，但是从今年开始，证书的有效期变成了仨月，加之这么多证书签发的时间也不尽相同，这就让我不得不经常性的去签发、更新证书。&lt;/p>
+&lt;p>在懒得换证书导致网站宕了一阵时间后，准备把证书换到 Let&amp;rsquo;s Encrypt 签发的 SSL 证书了。签发之类的自然有脚本，也可以用阿里云DNS进行验证。我使用的是 &lt;a class="link" href="https://nginxproxymanager.com/" target="_blank" rel="noopener"
+>Nginx Proxy Manager&lt;/a> 里面内建的 ACME，由于我不想破坏这个程序的环境，不愿意再里面再去植入签发完成后去调用我的程序上传等，因此我决定使用挂载证书目录，定期检查实际部署证书的有效期实际再扫描内部证书文件并上传的方法。&lt;/p>
+&lt;p>当然，也预留了 HTTP 接口，可以在证书签发完成后通过 curl 等命令调用去更新所有受管理的证书。&lt;/p>
+&lt;h2 id="使用方法">使用方法
+&lt;/h2>&lt;h3 id="安装">安装
+&lt;/h3>&lt;h4 id="使用二进制">使用二进制
+&lt;/h4>&lt;p>Github 上没有提供预编译的二进制 &lt;del>因为我懒&lt;/del> &lt;del>有空传好吧&lt;/del> 因此需要使用 .NET SDK8 进行编译。&lt;/p>
+&lt;p>进入项目目录后使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">dotnet publish -c Release
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>即可编译并创建发布，当然如果临时调试等使用可以使用 &lt;code>dotnet run&lt;/code> 运行。&lt;/p>
+&lt;h4 id="使用-docker">使用 docker
+&lt;/h4>&lt;p>使用 &lt;code>docker build -t &amp;lt;tag&amp;gt; .&lt;/code> 即可编译容器。&lt;/p>
+&lt;p>或使用 &lt;code>docker pull registry.cn-beijing.aliyuncs.com/nidb-cr/alicdn-ssl-worker:git&lt;/code> 拉取编译好的镜像。&lt;/p>
+&lt;p>按照 “配置” 章节的内容配置好选项。&lt;/p>
+&lt;p>拉取完成后使用 &lt;code>docker run&lt;/code> 运行即可。参数自行编写，如果不会推荐使用下面的 docker compose。&lt;/p>
+&lt;h4 id="使用-docker-compose">使用 docker compose
+&lt;/h4>&lt;p>以下为示例 docker compose 文件，将其内容写入到 &lt;code>docker-compose.yaml&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">ssl_data&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">driver&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">local&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">driver_opts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">none&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">o&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">bind&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">device&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;/data/example/letsencrypt&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">alicdn-ssl.conf&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">file&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;./alicdn-ssl/appsettings.json&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cdn-ssl&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;registry.cn-beijing.aliyuncs.com/nidb-cr/alicdn-ssl-worker:git&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">environment&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">TZ&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;Asia/Shanghai&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">5057&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">5057&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">depends_on&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">nginx&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">restart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">unless-stopped&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ssl_data:/data/ssl&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">source&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">alicdn-ssl.conf&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">target&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;/app/appsettings.json&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>需要修改的地方为 &lt;code>volumes.ssl_data.driver_opts.device&lt;/code> ，将 &lt;code>/data/example/letsencrypt&lt;/code> 改为存放你 acme.sh 签发证书的目录，该目录下通常有 &lt;code>keys&lt;/code> 和 &lt;code>lives&lt;/code> 等子目录。&lt;/p>
+&lt;p>按照 “配置” 章节的内容配置好选项。&lt;/p>
+&lt;p>使用 &lt;code>docker compose up -d .&lt;/code> 启动服务。&lt;/p>
+&lt;h3 id="配置">配置
+&lt;/h3>&lt;p>配置使用标准的 .NET IConfiguration 框架，配置文件由命令行参数、环境变量、.NET secret以及配置文件等提供，详细内容可见微软文档：&lt;a class="link" href="https://learn.microsoft.com/zh-cn/dotnet/core/extensions/configuration" target="_blank" rel="noopener"
+>配置 - .NET | Microsoft Learn&lt;/a>。&lt;/p>
+&lt;p>推荐使用命令行参数、环境变量和配置文件 &lt;code>appsettings.json&lt;/code>。其中命令行参数比较多用于临时调试等。多种方式可以组合使用且配置节点名称（即 key-value 中的 key）一致。当某个参数被重复配置时，优先级为 “命令行参数 &amp;gt; 环境变量 &amp;gt; 配置文件”。&lt;/p>
+&lt;p>以下为配置文件 &lt;code>appsettings.json&lt;/code> 的样例和说明：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;Logging&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;LogLevel&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;Default&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Information&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;Microsoft.Hosting.Lifetime&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Information&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span> &lt;span class="c1">// Logging 参考 https://learn.microsoft.com/zh-cn/dotnet/core/extensions/logging?tabs=command-line#configure-logging-without-code
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;CertConfig&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;CertFileName&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;fullchain.pem&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 证书公钥文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;PrivateKeyFileName&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;privkey.pem&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 证书私钥文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;CertSerchPath&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;/data/ssl/live&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 证书文件的目录（挂载在docker里面的目录），程序会扫描该目录所有子目录中的文件，查找在以上两个选项中配置的证书文件名
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;IntervalHour&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;12&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 每次检查的间隔，每隔{IntervalHour}执行一次检查，若当前HTTPS证书在{IntervalHour}内过期则会更新（小时）
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;CacheTimeoutMin&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;30&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 文件缓存间隔，若上次读取证书文件超过{CacheTimeoutMin}则重新读取（分钟）
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;DomainList&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span> &lt;span class="c1">// 交给程序管理的域名列表
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="s2">&amp;#34;blog.gaein.cn&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;img.cdn.gaein.cn&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;static.cdn.gaein.cn&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;AliCdnConfig&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;AccessKeyId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;LTA*********************&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 阿里云 AK ID
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;AccessKeySecret&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;*****************************&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 阿里云 AK Secret
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;Endpoint&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;cdn.aliyuncs.com&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;ApiConfig&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;IpAddress&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;0.0.0.0&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// HTTP API 监听地址
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;Port&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">5057&lt;/span> &lt;span class="c1">// HTTP API 监听端口
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>以上所有配置节点均可通过命令行和环境变量复写，如不改变配置文件将 HTTP 端口更改为 &lt;code>8001&lt;/code>：&lt;/p>
+&lt;ul>
+&lt;li>环境变量：&lt;code>export ApiConfig_Port=8001&lt;/code> (bash)&lt;/li>
+&lt;li>命令行参数：&lt;code>./AliCdnSSLWorker --ApiConfig:Port 8001&lt;/code> 或 &lt;code>ApiConfig:Port=8001&lt;/code>、 &lt;code>/ApiConfig:Port 8001&lt;/code>。使用 &lt;code>dotnet run&lt;/code> 启动同样也可以使用命令行参数。&lt;/li>
+&lt;/ul>
+&lt;p>详见：&lt;a class="link" href="https://learn.microsoft.com/zh-cn/dotnet/core/extensions/configuration-providers" target="_blank" rel="noopener"
+>配置提供程序 - .NET | Microsoft Learn&lt;/a>&lt;/p>
+&lt;h3 id="使用">使用
+&lt;/h3>&lt;p>其实不用干什么哒！让它跑着就行了。&lt;/p>
+&lt;h4 id="web-api">Web API
+&lt;/h4>&lt;p>为了方便控制，该项目启动了一个 HTTP 服务器并暴露了 WebAPI&lt;/p>
+&lt;h5 id="强制上传所有证书">强制上传所有证书
+&lt;/h5>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">HTTP GET &amp;lt;IpAddress&amp;gt;:&amp;lt;Port&amp;gt;/force_refresh/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>你可以使用你喜欢的 HTTP 客户端发送请求，如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">curl http://&amp;lt;ipaddress&amp;gt;:&amp;lt;port&amp;gt;/force_refresh/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或使用命令行参数 &lt;code>--refresh&lt;/code> 或 &lt;code>-r&lt;/code> 启动二进制发送更新指令，如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo docker &lt;span class="nb">exec&lt;/span> alicdn-ssl dotnet AliCdnSSLWorker.dll -r
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>该命令会从之前的配置中读取 HTTP API 监听的 IP 地址和端口，并向该端口发送请求。&lt;/p>
+&lt;p>如刷新成功你将会获得一个 &lt;code>HTTP 200 OK&lt;/code> 的响应。&lt;/p>
+&lt;p>export Ali_Key=&amp;quot;&lt;key>&amp;quot;
+export Ali_Secret=&amp;quot;&lt;secret>&amp;quot;&lt;/p>
+&lt;p>./acme.sh &amp;ndash;issue &amp;ndash;dns dns_ali -d gaein.cn -d &lt;a class="link" href="https://www.gaein.cn" target="_blank" rel="noopener"
+>www.gaein.cn&lt;/a> -d v4-cn-bjs3.gaein.cn -d api.gaein.cn -d img.cdn.gaein.cn -d static.cdn.gaein.cn&lt;/p>
+&lt;p>./acme.sh&lt;/p></description></item></channel></rss>

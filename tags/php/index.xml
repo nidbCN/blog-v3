@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>PHP on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/php/</link><description>Recent content in PHP on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 16 Apr 2020 15:40:30 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/php/index.xml" rel="self" type="application/rss+xml"/><item><title>CentOS配置PHP+Nginx+MySQL——记一次环境配置的过程</title><link>https://blog.gaein.cn/passages/config-lnmp-on-centos/</link><pubDate>Thu, 16 Apr 2020 15:40:30 +0800</pubDate><guid>https://blog.gaein.cn/passages/config-lnmp-on-centos/</guid><description>&lt;h2 id="缘由">缘由
+&lt;/h2>&lt;blockquote>
+&lt;p>最近阿里云的服务器到期了，由于阿里云学生机活动规则更改了，而我手里的服务器已经升级无法再使用优惠价格续费。只好中转其它服务器，再将手里的第二台服务器退款。总之是很折腾的&lt;/p>&lt;/blockquote>
+&lt;h2 id="过程">过程
+&lt;/h2>&lt;p>我选择的安装方式并不是一键安装包、也没有用面板。总感觉那些东西安装完成之后不在自己习惯的位置。用着很不舒服，改配置文件还要搜索。所以我使用熟悉的yum来进行安装&lt;/p>
+&lt;h3 id="使用我自己写的脚本">使用我自己写的脚本
+&lt;/h3>&lt;p>&lt;code>wget https://res.gaein.cn/files/bash/init.sh&amp;amp;&amp;amp;sudo ./init/sh&lt;/code>&lt;/p>
+&lt;p>进行自动化安装
+（如果提示未知命令请先安装wget，参考下文）&lt;/p>
+&lt;blockquote>
+&lt;p>脚本因为用不到所以删了&lt;/p>&lt;/blockquote>
+&lt;h3 id="安装基础软件i">安装基础软件I
+&lt;/h3>&lt;p>包括&lt;/p>
+&lt;ul>
+&lt;li>wget (下载)&lt;/li>
+&lt;li>tmux (终端复用)。&lt;/li>
+&lt;/ul>
+&lt;p>没有他们无法完成下一步的配置yum源。&lt;/p>
+&lt;h4 id="安装wget">安装wget
+&lt;/h4>&lt;p>使用命令 &lt;code>wget&lt;/code>&lt;/p>
+&lt;p>如果输出&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wget: missing URL
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Usage: wget &lt;span class="o">[&lt;/span>OPTION&lt;span class="o">]&lt;/span>... &lt;span class="o">[&lt;/span>URL&lt;span class="o">]&lt;/span>...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Try &lt;span class="s1">&amp;#39;wget --help&amp;#39;&lt;/span> &lt;span class="k">for&lt;/span> more options.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>则已经安装wget。&lt;/p>
+&lt;p>如果输出未知命令之类的，则使用 &lt;code>yum install -y wget&lt;/code> 安装wget。&lt;/p>
+&lt;h4 id="安装tmux">安装tmux
+&lt;/h4>&lt;blockquote>
+&lt;p>tmux是一款优秀的终端复用神器，它可以在后端运行。也就是在里面运行的进程不会在你关闭SSH时结束。对于压缩转移大文件、下载大文件很有用（比如稍后我们安装MySQL用到将近一个小时，就是在tmux里面操作的）同时tmux还提供窗口切分、切换，让我们更方便的使用终端。&lt;/p>&lt;/blockquote>
+&lt;p>&lt;strong>目前已知tmux和lrzsz不兼容&lt;/strong>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-LNMP-On-CentOS/01.webp"
+loading="lazy"
+alt="tmux截屏"
+>&lt;/p>
+&lt;p>使用命令 &lt;code>tmux --help&lt;/code> 来查看是否安装了tmux。如果输出&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">usage: tmux &lt;span class="o">[&lt;/span>-2CluvV&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-c shell-command&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-f file&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>-L socket-name&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">[&lt;/span>-S socket-path&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>&lt;span class="nb">command&lt;/span> &lt;span class="o">[&lt;/span>flags&lt;span class="o">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>则已经安装，输出未知指令之类的，则使用 &lt;code>yum install -y tmux&lt;/code> 进行安装&lt;/p>
+&lt;h5 id="使用tmux">使用tmux
+&lt;/h5>&lt;p>tmux采用快捷键 &lt;code>Ctrl+B&lt;/code> 来激活控制台。同时按下键盘上面的&lt;code>Ctrl&lt;/code> 和 &lt;code>B&lt;/code> ，然后在按键盘就是tmux命令（快捷键）了。注意，使用 &lt;code>Ctrl+C&lt;/code> 无法强制结束tmux，只会结束里面的任务。
+&lt;code>Ctrl+B&lt;/code> 后的常用快捷键（注意先按Ctrl+B再按下快捷键！）&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>D&lt;/code>隐藏tmux（类似于windows的最小化，隐藏窗口而不退出，里面的进程继续）&lt;/li>
+&lt;li>&lt;code>X&lt;/code>关闭tmux当前窗口（需要输入 &lt;code>y/n&lt;/code> 确定或取消）&lt;/li>
+&lt;li>&lt;code>N&lt;/code>下一个窗口&lt;/li>
+&lt;li>&lt;code>P&lt;/code>上一个窗口&lt;/li>
+&lt;li>&lt;code>%&lt;/code>将窗口分为左右两块&lt;/li>
+&lt;li>&lt;code>&amp;quot;&lt;/code>将窗口分为上下两块，注意是英文半角的&amp;quot;&lt;/li>
+&lt;/ul>
+&lt;p>记住这些命令也就暂时够了，其它的以后再研究&lt;/p>
+&lt;h3 id="配置yum源">配置yum源
+&lt;/h3>&lt;p>默认的yum源速度较慢、而且提供的软件不是很多。&lt;/p>
+&lt;h4 id="配置epel">配置epel
+&lt;/h4>&lt;p>使用命令 &lt;code>yum install -y epel-release&lt;/code> 安装epel&lt;/p>
+&lt;h4 id="使用阿里镜像">使用阿里镜像
+&lt;/h4>&lt;p>输入命令&lt;/p>
+&lt;p>&lt;code>wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo&lt;/code>&lt;/p>
+&lt;p>下载repo文件&lt;/p>
+&lt;h4 id="配置webstatic">配置WebStatic
+&lt;/h4>&lt;p>WebStatic提供最高到PHP7.2（目前我就需要PHP,yum默认的是PHP5.6）&lt;/p>
+&lt;p>使用命令&lt;/p>
+&lt;p>&lt;code>yum install -y https://mirror.WebStatic.com/yum/el7/WebStatic-release.rpm &lt;/code>&lt;/p>
+&lt;p>安装rpm包&lt;/p>
+&lt;p>配置完后别忘了使用&lt;/p>
+&lt;p>&lt;code>yum clean all &amp;amp;&amp;amp; yum makecache&lt;/code> 来清空yum的缓存，使用 &lt;code>yum update&lt;/code> 来进行更新。&lt;/p>
+&lt;h3 id="安装基础软件ii">安装基础软件II
+&lt;/h3>&lt;p>操作服务器的一些常用软件。一般来说都预装的。可惜，我这神奇服务器没有。&lt;/p>
+&lt;p>包括：&lt;/p>
+&lt;ul>
+&lt;li>vim(文本编辑)&lt;/li>
+&lt;li>curl(下载)&lt;/li>
+&lt;li>tar(tar压缩)&lt;/li>
+&lt;li>7za(7z压缩)&lt;/li>
+&lt;li>lrzsz(通过XShell终端传输文件)&lt;/li>
+&lt;li>git&lt;/li>
+&lt;/ul>
+&lt;p>对于这些软件我无所谓版本，直接 &lt;code>yum install&lt;/code> 安装就可以(不说都是最新的也旧不了太多吧)&lt;/p>
+&lt;p>这些软件都可以使用yum安装&lt;/p>
+&lt;p>&lt;code>yum install -y curl lrzsz yum-utils vim p7zip git-core&lt;/code>&lt;/p>
+&lt;h3 id="安装nginx">安装nginx
+&lt;/h3>&lt;p>使用命令&lt;/p>
+&lt;p>&lt;code>wget http://nginx.org/packages/centos/7/x86_64/RPMS/nginx-1.16.1-1.el7.ngx.x86_64.rpm &lt;/code>&lt;/p>
+&lt;p>下载rpm包，然使用命令&lt;/p>
+&lt;p>&lt;code>rpm -ivh nginx-1.16.1-1.el7.ngx.x86_64.rpm&lt;/code>&lt;/p>
+&lt;p>安装nginx官方的rpm（版本1.16.1）需要其它可以自行到官方查看&lt;/p>
+&lt;p>&lt;a class="link" href="https://nginx.org/packages/" target="_blank" rel="noopener"
+>nginx官网&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>注意：使用 &lt;code>yum install nginx&lt;/code> 安装的为WebStatic源中的1.12版&lt;/p>&lt;/blockquote>
+&lt;h4 id="常用命令">常用命令
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">nginx -v &lt;span class="c1">#查看nginx版本&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">service nginx start&lt;span class="p">|&lt;/span>stop&lt;span class="p">|&lt;/span>restart &lt;span class="c1">#启动|停止|重启nginx服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nginx -t &lt;span class="c1">#检查配置文件是否正确&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nginx -s reload &lt;span class="c1">#重载配置文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nginx &lt;span class="c1">#启动nginx&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="安装php">安装PHP
+&lt;/h3>&lt;p>使用命令&lt;/p>
+&lt;p>&lt;code>yum install -y php72w-common php72w-fpm php72w-opcache php72w-gd php72w-mysqlnd php72w-mbstring php72w-pecl-redis php72w-pecl-memcached php72w-devel&lt;/code>&lt;/p>
+&lt;p>进行安装&lt;/p>
+&lt;p>这里安装了PHP PHP-FPM和一些常用模块，可以自行裁决。一般这些模块已经可以完美的支持WordPress、ZBlog等博客程序了&lt;/p>
+&lt;blockquote>
+&lt;p>如果想要安装PHP其它版本，把72w改成版本+w就可以咯&lt;/p>&lt;/blockquote>
+&lt;h3 id="安装mysql">安装MySQL
+&lt;/h3>&lt;p>参考以前写过的文章：&lt;/p>
+&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/MySQL8-CentOS7/" target="_blank" rel="noopener"
+>CentOS部署MySQL8步骤&lt;/a>&lt;/p>
+&lt;p>进行，这里只写主要步骤&lt;/p>
+&lt;p>下载rpm&lt;/p>
+&lt;p>&lt;code>wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm&lt;/code>&lt;/p>
+&lt;p>//由于MySQL的rpm很大，所以采用先下载后安装&lt;/p>
+&lt;p>使用命令导入MySQL rpm&lt;/p>
+&lt;p>&lt;code>sudo rpm -Uvh mysql80-community-release-el7-3.noarch.rpm&lt;/code>&lt;/p>
+&lt;p>使用命令&lt;/p>
+&lt;p>&lt;code>yum install -y mysql-community-server &lt;/code>&lt;/p>
+&lt;p>来安装&lt;/p>
+&lt;h3 id="常用命令-1">常用命令
+&lt;/h3>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-LNMP-On-CentOS/02.webp"
+loading="lazy"
+alt="mysql截屏"
+>&lt;/p>
+&lt;p>更多命令见 &lt;a class="link" href="https://blog.gaein.cn/passages/MySQL-usage/" target="_blank" rel="noopener"
+>MySQL常用命令：导入导出、创建数据库等&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">service mysqld start &lt;span class="c1">##启动&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">service mysqld status &lt;span class="c1">##查看状态&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo grep &lt;span class="s1">&amp;#39;temporary password&amp;#39;&lt;/span> /var/log/mysqld.log &lt;span class="c1">##查看默认密码&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mysql -u root -p &lt;span class="c1">##连接&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-mysql" data-lang="mysql">&lt;span class="line">&lt;span class="cl">&lt;span class="k">ALTER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">USER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;root&amp;#39;&lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="s1">&amp;#39;localhost&amp;#39;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">IDENTIFIED&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">BY&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;pWD123456-&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">#更改密码
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SHOW&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">DATABASES&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">#显示数据库
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">USE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="err">数据库名&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">#切换到数据库
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">exit&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">#退出
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>PHP考勤系统源码 利用PHP实现简单的打卡考勤 超详细教程+实例+代码（一）</title><link>https://blog.gaein.cn/passages/checker-webpage-1/</link><pubDate>Sat, 08 Feb 2020 22:36:25 +0800</pubDate><guid>https://blog.gaein.cn/passages/checker-webpage-1/</guid><description>&lt;p>利用PHP实现简单的考勤打卡、人数统计功能。&lt;/p>
+&lt;blockquote>
+&lt;p>这什么屑玩意啊，黑历史黑历史。&lt;/p>&lt;/blockquote>
+&lt;h2 id="先讲个故事">先讲个故事&amp;hellip;
+&lt;/h2>&lt;p>由于疫情原因，开学延迟，班主任为了监督我们学习，所以叫我们每天打卡。那么就要到群里点人，还要统计，谁打卡了谁没打卡谁迟到&amp;hellip;我一想太麻烦了&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/01.webp"
+loading="lazy"
+alt="截屏1"
+>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/02.webp"
+loading="lazy"
+alt="截屏2"
+>&lt;/p>
+&lt;p>于是我在群里水了一句，要不然开发个考勤系统吧&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/03.webp"
+loading="lazy"
+alt="截屏3"
+>&lt;/p>
+&lt;p>当然我当时的开发指的是“面向百度”编程（就是随便找个什么源码改一下title。&lt;/p>
+&lt;p>结果我发现行不通&amp;hellip;没有符合我要求的源码，只好试试了。&lt;/p>
+&lt;p>我虽然接触了点编程，不过PHP还真没碰过，想想编程语言也都是26个字母只好硬着头皮干了。&lt;/p>
+&lt;h2 id="要求">要求
+&lt;/h2>&lt;p>明确一下自己的期望吧：&lt;/p>
+&lt;ol>
+&lt;li>能记录打卡人（开始就这一个想法）&lt;/li>
+&lt;/ol>
+&lt;p>好的没有了。&lt;/p>
+&lt;p>现在实现的功能（很多都是我晚上在被窝的新奇想法）&lt;/p>
+&lt;ol>
+&lt;li>记录打卡人，打卡时间，自动标注准时或者迟到；&lt;/li>
+&lt;li>打卡成功后返回页面，提示成功与否并且提示信息（非常智障的实现，我跳转了一个html并且get传参信息，当时自己不知道php echo能输出html）；（2021补:什么我为什么要用php echo来输出html？？？）&lt;/li>
+&lt;li>后台统计打卡人数、未打卡人数、迟到人数还有未打卡人名单；&lt;/li>
+&lt;/ol>
+&lt;h2 id="准备">准备
+&lt;/h2>&lt;ol>
+&lt;li>语言：思考来思考去，服务器只装着PHP，空间倒是有 &lt;code>.NET fw&lt;/code>，不过看看还是PHP的网站居多；&lt;/li>
+&lt;li>实现：操作数据库一想就头大了，MySQL这玩意真玩不了，上次导入旧博客数据就差点没玩死我，想想还是直接磁盘上写文件吧；&lt;/li>
+&lt;li>服务器：本来想用我一个虚拟主机来着，不过那玩意权限有问题，写不了文件，无奈搬到网站服务器上面；&lt;/li>
+&lt;li>IDE：没有专门去找PHP的IDE，直接用的vscode+网上随便找一个在线PHP作为调试；&lt;/li>
+&lt;/ol>
+&lt;h2 id="开工">开工
+&lt;/h2>&lt;h3 id="表单页面">表单页面
+&lt;/h3>&lt;h4 id="表单创建">表单创建
+&lt;/h4>&lt;p>想来想去输入一个姓名就可以了，后来又想想需要一个时间，那么html如下:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&amp;lt;!DOCTYPE html&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">html&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">head&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">meta&lt;/span> &lt;span class="na">charset&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;utf-8&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">title&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>考勤打卡&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">title&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">head&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">body&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">form&lt;/span> &lt;span class="na">action&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;process.php&amp;#34;&lt;/span> &lt;span class="na">method&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;post&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 姓名：&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">input&lt;/span> &lt;span class="na">type&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;text&amp;#34;&lt;/span> &lt;span class="na">name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;&lt;/span>&lt;span class="nt">br&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 时间：&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">input&lt;/span> &lt;span class="na">type&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;text&amp;#34;&lt;/span> &lt;span class="na">name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;time&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;&lt;/span>&lt;span class="nt">br&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 日期：&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">input&lt;/span> &lt;span class="na">type&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;text&amp;#34;&lt;/span> &lt;span class="na">name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;filename&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;&lt;/span>&lt;span class="nt">br&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">input&lt;/span> &lt;span class="na">type&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;submit&amp;#34;&lt;/span> &lt;span class="na">value&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;打卡 &amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">form&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">body&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">html&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>看起来是这样的：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/04.webp"
+loading="lazy"
+alt="界面"
+>&lt;/p>
+&lt;p>（丑死了）&lt;/p>
+&lt;p>&lt;code>&amp;lt;!DOCTYPE html&amp;gt;&lt;/code> 和 &lt;code>meta&lt;/code> 是必须的，否则有可能乱码。&lt;/p>
+&lt;p>&lt;code>form&lt;/code> 标签里面是表单，&lt;code>action&lt;/code> 后面是提交到的地址，&lt;code>method&lt;/code> 是方法（别问我为啥用 &lt;code>post&lt;/code> ，因为它看起来好看）&lt;/p>
+&lt;p>&lt;code>input&lt;/code> 中的 &lt;code>type&lt;/code> 是输入的类型，&lt;code>text&lt;/code> 自然就是文本啦，&lt;code>submit&lt;/code> 是提交表单，&lt;code>name&lt;/code> 是参数的名字（我日期参数是 &lt;code>filename&lt;/code> 是因为我想把存储打卡信息的文件用日期命名），&lt;code>value&lt;/code> 是默认的值。&lt;/p>
+&lt;h4 id="时间获取">时间获取
+&lt;/h4>&lt;p>那么又一个问题来了，时间和日期怎么获取？这就要用的&lt;code>javascript&lt;/code> 了，&lt;code>js&lt;/code> 获取时间和日期后再去改动 &lt;code>html&lt;/code>，为了找到他们我把他们用 &lt;code>div&lt;/code> 框起来然后给他们 &lt;code>id&lt;/code> 为 &lt;code>0&lt;/code> 和 &lt;code>1&lt;/code>（懒死了）&lt;/p>
+&lt;p>&lt;code>js&lt;/code> 的时间获取百度一下就有，不过获取的都是浏览网页的人电脑上的时间，我怕别人通过修改本地时间来掩盖自己迟到的事实，所以我要去获取网络时间。&lt;/p>
+&lt;p>我的方法是 &lt;code>get&lt;/code> 请求自己的服务器，在返回的头里面有时间信息（服务器的）。当然，你也可以百度一下时间 &lt;code>api&lt;/code>，调用起来也会很方便的。
+&lt;code>js&lt;/code> 代码如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-javascript" data-lang="javascript">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="nx">script&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span> &lt;span class="nx">getTime&lt;/span>&lt;span class="p">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">ajax&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">function&lt;/span> &lt;span class="nx">ajax&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">option&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">xhr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">XMLHttpRequest&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">xhr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nb">window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">XMLHttpRequest&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="c1">// ie
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">xhr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ActiveObject&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Microsoft&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 通过get的方式请求当前文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;get&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;/&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 监听请求状态变化
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">onreadystatechange&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kd">function&lt;/span>&lt;span class="p">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">time&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">curDate&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">readyState&lt;/span>&lt;span class="o">===&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 获取响应头里的时间戳
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">time&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getResponseHeader&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Date&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">curDate&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nb">Date&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">time&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">//下面修改HTML
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nb">document&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getElementById&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;0&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">innerHTML&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;时间：&amp;lt;input type=&amp;#39;text&amp;#39; name=&amp;#39;time&amp;#39; value=&amp;#39;&amp;#34;&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getHours&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="s2">&amp;#34;:&amp;#34;&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getMinutes&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="s2">&amp;#34;&amp;#39; readonly&amp;gt;&amp;lt;br&amp;gt;&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="c1">//拼接时间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nb">document&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getElementById&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;0&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">innerHTML&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;日期：&amp;lt;input type=&amp;#39;text&amp;#39; name=&amp;#39;filename&amp;#39; value=&amp;#39;&amp;#34;&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getFullYear&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getMonth&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getDate&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="s2">&amp;#34;&amp;#39; readonly&amp;gt;&amp;lt;br&amp;gt;&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="c1">//通过readonly阻止修改时间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">/script&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="页面代码">页面代码
+&lt;/h4>&lt;p>因为HTML是顺序加载的，所以我希望 &lt;code>HTML&lt;/code> 加载完全后再读取&lt;code>js&lt;/code>（否则 &lt;code>js&lt;/code> 会找不到 &lt;code>id&lt;/code> 为 &lt;code>0&lt;/code> 的 &lt;code>div&lt;/code>），所以我们写个 &lt;code>onload&lt;/code>，为了刷新时间我在 &lt;code>getTime&lt;/code> 函数里面利用 &lt;code>setTimeout&lt;/code> 调用它自己实现定时（一分钟）刷新。HTML全文如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&amp;lt;!DOCTYPE html&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">html&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">head&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">meta&lt;/span> &lt;span class="na">charset&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;utf-8&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">title&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>考勤打卡&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">title&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">function&lt;/span> &lt;span class="nx">getTime&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">ajax&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">function&lt;/span> &lt;span class="nx">ajax&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">option&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">xhr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">XMLHttpRequest&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">xhr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nb">window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">XMLHttpRequest&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="c1">// ie
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">xhr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ActiveObject&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Microsoft&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 通过get的方式请求当前文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;get&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;/&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="c1">//可以把/改成https://www.baidu.com/
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 监听请求状态变化
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">onreadystatechange&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kd">function&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">time&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">curDate&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">readyState&lt;/span>&lt;span class="o">===&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 获取响应头里的时间戳
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">time&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">xhr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getResponseHeader&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Date&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">curDate&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nb">Date&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">time&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">//下面修改HTML
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nb">document&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getElementById&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;0&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">innerHTML&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;时间：&amp;lt;input type=&amp;#39;text&amp;#39; name=&amp;#39;time&amp;#39; value=&amp;#39;&amp;#34;&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getHours&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="s2">&amp;#34;:&amp;#34;&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="nx">cur&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">DateGetMinutes&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="s2">&amp;#34;&amp;#39; readonly&amp;gt;&amp;lt;br&amp;gt;&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="c1">//拼接时间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nb">document&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getElementById&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">innerHTML&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;日期：&amp;lt;input type=&amp;#39;text&amp;#39; name=&amp;#39;filename&amp;#39; value=&amp;#39;&amp;#34;&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getFullYear&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getMonth&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="nx">curDate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">getDate&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="s2">&amp;#34;&amp;#39; readonly&amp;gt;&amp;lt;br&amp;gt;&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="c1">//通过readonly阻止修改时间
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">setTimeout&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">getTime&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">60000&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">head&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">body&lt;/span> &lt;span class="na">onload&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;getTime()&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">form&lt;/span> &lt;span class="na">action&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;process.php&amp;#34;&lt;/span> &lt;span class="na">method&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;post&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 姓名：&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">input&lt;/span> &lt;span class="na">type&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;text&amp;#34;&lt;/span> &lt;span class="na">name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;&lt;/span>&lt;span class="nt">br&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">div&lt;/span> &lt;span class="na">id&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;0&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="nt">div&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">div&lt;/span> &lt;span class="na">id&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="nt">div&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">input&lt;/span> &lt;span class="na">type&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;submit&amp;#34;&lt;/span> &lt;span class="na">value&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;打卡 &amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">form&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">body&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">html&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>很可惜在自己家电脑上面是无法完成测试的，&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/05.webp"
+loading="lazy"
+alt="CORS"
+>&lt;/p>
+&lt;p>把html上传到服务器之后效果是这样的:&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/06.webp"
+loading="lazy"
+alt="效果"
+>&lt;/p>
+&lt;p>虽然很丑，但是功能实现了，手动试一试确实无法修改时间、日期，而且时间也会每分钟刷新&lt;/p>
+&lt;h3 id="php页面">PHP页面
+&lt;/h3>&lt;blockquote>
+&lt;p>由于PHP较为奇特的语法，和跟没有一样的报错，坑了我很长时间。PHP中字符串用 &lt;code>.&lt;/code> 拼接、变量无需声明前面加上 &lt;code>$&lt;/code> 即可&amp;hellip;建议先过一遍菜鸟教程或者w3school&lt;/p>&lt;/blockquote>
+&lt;h4 id="参数接收">参数接收
+&lt;/h4>&lt;p>PHP中接收到的POST的参数的值在&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;参数名&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>GET的在&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$_GET&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;参数名&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="参数处理">参数处理
+&lt;/h4>&lt;h5 id="文件名">文件名
+&lt;/h5>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$filename&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;filename&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34;txt&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="c1">//拼接文件名
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h5 id="姓名">姓名
+&lt;/h5>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h5 id="时间">时间
+&lt;/h5>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$time&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">str_replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;:&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;time&amp;#34;&lt;/span>&lt;span class="p">]);&lt;/span>&lt;span class="c1">//把时间里的“:”去除掉
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="nx">int&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="nv">$time&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="mi">730&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="c1">//7:30之后迟到
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34;[迟到]&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34;[准时]&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h5 id="写入文件">写入文件
+&lt;/h5>&lt;p>我使用的是函数&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">file_put_contents&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">文件&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nx">内容&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nx">模式可选&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>文件是文件的路径（字符串），比如/root/test.txt；（没有则创建一个文件）&lt;/p>
+&lt;blockquote>
+&lt;p>注意：当无法创建且无法写入文件时，应该检查是否有权限。当能够创建但是无法写入文件时，应该检查首次写入的字符串是否为空，再检查后续代码是否有相关的操作覆盖了该文件，最后记得check一下你的磁盘空间（真的，我的硬盘满了，我检查了一天代码&amp;hellip;）&lt;/p>&lt;/blockquote>
+&lt;p>内容是需要写入文件的内容；
+模式是写入文件的模式，它包括：&lt;/p>
+&lt;ul>
+&lt;li>FILE_USE_INCLUDE_PATH //检查 &lt;em>filename&lt;/em> 副本的内置路径?&lt;/li>
+&lt;li>FILE_APPEND //添加模式更改文件，向文件的末尾加入字符串&lt;/li>
+&lt;li>LOCK_EX //锁定文件&lt;/li>
+&lt;/ul>
+&lt;p>//如果模式为空则采用覆盖原内容的方式写入&lt;/p>
+&lt;p>它相对于 &lt;code>fopen&lt;/code> 再 &lt;code>write&lt;/code> 再 &lt;code>close&lt;/code>
+来说更简洁，功能上几乎是一样的。
+我们写入的文件要求内容格式大致如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">张三[准时] | 7:25
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">李四[迟到] | 7:33
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样后续我们可以通过计算“|”的数量来得出打卡人数，通过“[迟到]”的数量来得出迟到人数（当然我并不是这么办的，刚想起来这么机智的办法）
+那么下面我们来写入文件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$str&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34; | &amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;time&amp;#34;&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">file_put_contents&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$filename&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nv">$str&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nx">FILE_APPEND&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">echo&lt;/span> &lt;span class="s2">&amp;#34;打卡成功&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>那么PHP的全文是：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;?&lt;/span>&lt;span class="nx">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$filename&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;filename&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34;txt&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="c1">//拼接文件名
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$time&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">str_replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;:&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;time&amp;#34;&lt;/span>&lt;span class="p">]);&lt;/span>&lt;span class="c1">//把时间里的“:”去除掉
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="nx">int&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="nv">$time&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="mi">730&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="c1">//7:30之后迟到
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34;[迟到]&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34;[准时]&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$str&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34; | &amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="nv">$_POST&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;time&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="c1">// \n的目的是在文件里面换行
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">file_put_contents&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$filename&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nv">$str&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nx">FILE_APPEND&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">or&lt;/span> &lt;span class="k">die&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;打卡失败&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">echo&lt;/span> &lt;span class="s2">&amp;#34;打卡成功&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">?&amp;gt;&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>让我们把前面的HTML代码保存到 &lt;code>index.html&lt;/code>，上面的 &lt;code>php&lt;/code> 保存到 &lt;code>process.php&lt;/code>，上传到服务器试试吧！&lt;/p>
+&lt;p>输入姓名提交表单：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/06.webp"
+loading="lazy"
+alt="表单"
+>&lt;/p>
+&lt;p>POST到PHP，输出成功&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/07.webp"
+loading="lazy"
+alt="结果"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>如果PHP不输出任何内容，可以考虑在第一行加入一个 echo &amp;ldquo;test&amp;rdquo;; ，如果仍然不输出任何内容，那么可能是你的代码有问题&lt;/p>&lt;/blockquote>
+&lt;p>打卡前文件列表：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/08.webp"
+loading="lazy"
+alt="列表"
+>&lt;/p>
+&lt;p>打卡后文件列表：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/09.webp"
+loading="lazy"
+alt="列表2"
+>&lt;/p>
+&lt;p>TXT内容：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/10.webp"
+loading="lazy"
+alt="文件内容"
+>&lt;/p>
+&lt;p>（一）完结
+实在是太累了，其他功能在后续的（二）中说&lt;/p>
+&lt;p>代码自己copy，成品会在（二）p.s.也没准是（三）中放出来&lt;/p>
+&lt;p>如果你觉得有用或者有需要补充之处不妨评论一下&lt;/p></description></item></channel></rss>

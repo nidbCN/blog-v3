@@ -1,0 +1,1609 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>语言 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E8%AF%AD%E8%A8%80/</link><description>Recent content in 语言 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 04 Oct 2020 14:43:04 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E8%AF%AD%E8%A8%80/index.xml" rel="self" type="application/rss+xml"/><item><title>比较——零基础学Java语言笔记（二）</title><link>https://blog.gaein.cn/passages/java-note2-compare/</link><pubDate>Sun, 04 Oct 2020 14:43:04 +0800</pubDate><guid>https://blog.gaein.cn/passages/java-note2-compare/</guid><description>&lt;p>距离笔记1大概有两周了，由于Java、C、C++、CSharp都是C like语言，它们的有很多相似之处，因此没有再细致一点点看，而是从数组开始看起，将《零基础学习Java看完》。当然这几节只是非常基础的课程，所以笔记也比较简短。已经了解之处就不再做笔记了。&lt;/p>
+&lt;!--MORE-->
+&lt;blockquote>
+&lt;p>终于没有忍住去跟课程进度，而是去看了上次开课的视频。下一步的计划是看进阶的Java，或者是学习一下python。最近用python写了一个QQ bot，发现很是好用。&lt;/p>&lt;/blockquote>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/Java-Note1-Calculation/" target="_blank" rel="noopener"
+>计算——零基础学Java语言笔记（一）&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记-1">下一篇笔记
+&lt;/h2>&lt;p>暂无&lt;/p>
+&lt;h2 id="21-比较">2.1 比较
+&lt;/h2>&lt;p>Java语言使用&lt;code>// notes&lt;/code>和&lt;code>/*notes*/&lt;/code>来作注释&lt;/p>
+&lt;p>Java语言的关系运算符有&lt;code>&amp;gt;&lt;/code>、&lt;code>&amp;lt;&lt;/code>、&lt;code>==&lt;/code>、&lt;code>&amp;gt;=&lt;/code>、&lt;code>&amp;lt;=&lt;/code>、&lt;code>!=&lt;/code> 6个&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">5&lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">5&lt;/span>&lt;span class="o">&amp;gt;=&lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>所有关系运算符的优先级比算数运算符的低，但比赋值运算符&lt;code>=&lt;/code>高&lt;/p>
+&lt;h2 id="22-判断">2.2 判断
+&lt;/h2>&lt;blockquote>
+&lt;p>建议不管有几条语句在if或else后总要跟上一对花括号，这样利于人类阅读&lt;/p>&lt;/blockquote>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">// if语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">else&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">// if-else语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">else&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件2*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">// if-elseif语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="23-分支">2.3 分支
+&lt;/h2>&lt;p>switch-case&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="k">switch&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*控制表达式，通常是某个变量*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">case&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="cm">/*常量*/&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">break&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">case&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="cm">/*常量*/&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">default&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行完分支中的语句后，如果后面没有&lt;code>break;&lt;/code>，就会进入下面的&lt;code>case&lt;/code>里面去，直到遇到&lt;code>break;&lt;/code>或者&lt;code>switch&lt;/code>结束为止&lt;/p>
+&lt;h2 id="24-判断语句常见错误">2.4 判断语句常见错误
+&lt;/h2>&lt;h2 id="2x-小测验">2.x 小测验
+&lt;/h2>&lt;h6 id="1写出以下代码段的执行结果">1.写出以下代码段的执行结果：
+&lt;/h6>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">34&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">max&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">30&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;gt;=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">max&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;zhang&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;huang&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;zhu&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>huang\n&lt;/p>&lt;/blockquote>
+&lt;h6 id="2写出以下代码段的执行结果">2.写出以下代码段的执行结果：
+&lt;/h6>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">limit&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">100&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">15&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">40&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">limit&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">limit&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;lemon&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;lime&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;grape&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="n">zhu&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>lime\ngrape&lt;/p>&lt;/blockquote>
+&lt;h2 id="第二周编程题">第二周编程题
+&lt;/h2>&lt;h6 id="第一题时间换算">第一题——时间换算
+&lt;/h6>&lt;blockquote>
+&lt;p>题目内容：
+&lt;code>UTC&lt;/code>是世界协调时，&lt;code>BJT&lt;/code>是北京时间，&lt;code>UTC&lt;/code>时间相当于&lt;code>BJT&lt;/code>减去&lt;code>8&lt;/code>。&lt;br>
+现在，你的程序要读入一个整数，表示&lt;code>BJT&lt;/code>的时和分。&lt;br>
+整数的个位和十位表示分，百位和千位表示小时。&lt;br>
+如果小时小于&lt;code>10&lt;/code>，则没有千位部分；如果小时是&lt;code>0&lt;/code>，则没有百位部分；如果分小于&lt;code>10&lt;/code>分，需要保留十位上的&lt;code>0&lt;/code>。 &lt;br>
+如&lt;code>1124&lt;/code>表示&lt;code>11&lt;/code>点&lt;code>24&lt;/code>分，而&lt;code>905&lt;/code>表示&lt;code>9&lt;/code>点&lt;code>5&lt;/code>分，&lt;code>36&lt;/code>表示&lt;code>0&lt;/code>点&lt;code>36&lt;/code>分，&lt;code>7&lt;/code>表示&lt;code>0&lt;/code>点&lt;code>7&lt;/code>分。&lt;br>
+有效的输入范围是&lt;code>0&lt;/code>到&lt;code>2359&lt;/code>，即你的程序不可能从测试服务器读到&lt;code>0&lt;/code>到&lt;code>2359&lt;/code>以外的输入数据。&lt;br>
+你的程序要输出这个时间对应的&lt;code>UTC&lt;/code>时间，输出的格式和输入的相同，即输出一个整数，表示&lt;code>UTC&lt;/code>的时和分。&lt;br>
+整数的个位和十位表示分，百位和千位表示小时。&lt;br>
+如果小时小于&lt;code>10&lt;/code>，则没有千位部分；如果小时是&lt;code>0&lt;/code>，则没有百位部分；如果分小于&lt;code>10&lt;/code>分，需要保留十位上的&lt;code>0&lt;/code>。&lt;br>
+提醒：&lt;strong>要小心跨日的换算。&lt;/strong>&lt;br>
+输入格式:&lt;br>
+一个整数，表示&lt;code>BJT&lt;/code>的时和分。整数的个位和十位表示分，百位和千位表示小时。如果小时小于&lt;code>10&lt;/code>，则没有千位部分；如果小时是&lt;code>0&lt;/code>，则没有百位部分；如果小时不是&lt;code>0&lt;/code>而且分小于&lt;code>10&lt;/code>分，需要保留十位上的&lt;code>0&lt;/code>。&lt;br>
+输出格式： &lt;br>
+一个整数，表示&lt;code>UTC&lt;/code>的时和分。整数的个位和十位表示分，百位和千位表示小时。如果小时小于&lt;code>10&lt;/code>，则没有千位部分；如果小时是&lt;code>0&lt;/code>，则没有百位部分；如果小时不是&lt;code>0&lt;/code>而且分小于&lt;code>10&lt;/code>分，需要保留十位上的&lt;code>0&lt;/code>。&lt;br>
+输入样例：&lt;code>933&lt;/code>&lt;br>
+输出样例：&lt;code>133&lt;/code>&lt;br>
+时间限制：500ms内存限制：32000kb&lt;/p>&lt;/blockquote>
+&lt;p>需要注意的问题：&lt;/p>
+&lt;ol>
+&lt;li>是从BJT转到UTC&lt;/li>
+&lt;li>UTC = BJT - 8&lt;/li>
+&lt;li>跨日期需要加上24小时&lt;/li>
+&lt;/ol>
+&lt;p>提交的代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nn">java.util.Scanner&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">Main&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Args&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">BJT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输入北京时间&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">UTC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">BJT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">800&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 转换成UTC&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">UTC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 判断是否跨日&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">UTC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">2400&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">UTC&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h6 id="第二题信号报告">第二题——信号报告
+&lt;/h6>&lt;blockquote>
+&lt;p>题目内容：
+无线电台的RS制信号报告是由三两个部分组成的：&lt;br>
+&lt;code>R(Readability)&lt;/code> 信号可辨度即清晰度.&lt;br>
+&lt;code>S(Strength)&lt;/code> 信号强度即大小.&lt;br>
+其中&lt;code>R&lt;/code>位于报告第一位，共分5级，用1—5数字表示.&lt;br>
+&lt;code>1---Unreadable&lt;/code>&lt;br>
+&lt;code>2---Barely readable, occasional words distinguishable&lt;/code>&lt;br>
+&lt;code>3---Readable with considerable difficulty&lt;/code>&lt;br>
+&lt;code>4---Readable with practically no difficulty&lt;/code>&lt;br>
+&lt;code>5---Perfectly readable&lt;/code>&lt;br>
+报告第二位是&lt;code>S&lt;/code>，共分九个级别，用1—9中的一位数字表示&lt;br>
+&lt;code>1---Faint signals, barely perceptible&lt;/code>&lt;br>
+&lt;code>2---Very weak signals&lt;/code>&lt;br>
+&lt;code>3---Weak signals&lt;/code>&lt;br>
+&lt;code>4---Fair signals&lt;/code>&lt;br>
+&lt;code>5---Fairly good signals&lt;/code>&lt;br>
+&lt;code>6---Good signals&lt;/code>&lt;br>
+&lt;code>7---Moderately strong signals&lt;/code>&lt;br>
+&lt;code>8---Strong signals&lt;/code>&lt;br>
+&lt;code>9---Extremely strong signals&lt;/code>&lt;br>
+现在，你的程序要读入一个信号报告的数字，然后输出对应的含义。如读到59，则输出：&lt;br>
+&lt;code>Extremely strong signals, perfectly readable.&lt;/code>&lt;br>
+输入格式:&lt;br>
+一个整数，信号报告。整数的十位部分表示可辨度，个位部分表示强度。输入的整数范围是&lt;code>[11,59]&lt;/code>内有效的数字，这个范围外的数字不可能出现在测试数据中。&lt;br>
+输出格式：&lt;br>
+一句话，表示这个信号报告的意义。按照题目中的文字，先输出表示强度的文字，跟上逗号和空格，然后是表示可辨度的文字，跟上句号。注意可辨度的句子的第一个字母是小写的。注意这里的标点符号都是英文的。&lt;br>
+输入样例：&lt;br>
+&lt;code>33&lt;/code>&lt;br>
+输出样例：&lt;br>
+&lt;code>Weak signals, readable with considerable difficulty.&lt;/code>&lt;br>
+时间限制：500ms内存限制：32000kb&lt;/p>&lt;/blockquote>
+&lt;p>需要注意的问题：&lt;/p>
+&lt;ol>
+&lt;li>输出时候先输出S再输出R&lt;/li>
+&lt;li>输出的格式为&lt;code>S,□R.&lt;/code>（“□”代表空格）&lt;/li>
+&lt;li>R的第一个字母要小写&lt;/li>
+&lt;/ol>
+&lt;p>解决方案：&lt;/p>
+&lt;ol>
+&lt;li>获取R和S数字值：
+假设输入的是input，那么我们用input除以10可以得到十位上的数字，对它取余10可以得到个位上的数字
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">r&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>出题者的意图显然是用&lt;code>switch-case&lt;/code>来解决问题，但是未免太麻烦了点，至少看起来很难受。因为懒得用map所以我的解决方案是使用字符串数组，按顺序将字符串放在单元中，然后用&lt;code>s&lt;/code>或者&lt;code>r&lt;/code>减去&lt;code>1&lt;/code>的值作为索引就可以了。&lt;/li>
+&lt;/ol>
+&lt;p>提交的代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nn">java.util.Scanner&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">Main_2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Args&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 获取输入&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">r&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 解析获取R&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 解析获取S&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">rDic&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;unreadable&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;barely readable, occasional words distinguishable&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;readable with considerable difficulty&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;readable with practically no difficulty&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;perfectly readable&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">};&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 定义字符串数组存储R对应的字符串&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sDic&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Faint signals, barely perceptible&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Very weak signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Weak signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Fair signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Fairly good signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Good signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Moderately strong signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Strong signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Extremely strong signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">};&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 定义字符串数组存储S对应的字符串&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">sDic&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">1&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;, &amp;#34;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">rDic&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">r&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">1&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;.&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出结果&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>链表——C语言程序设计笔记（七）</title><link>https://blog.gaein.cn/passages/c-note7-linkedlist/</link><pubDate>Wed, 23 Sep 2020 16:48:50 +0800</pubDate><guid>https://blog.gaein.cn/passages/c-note7-linkedlist/</guid><description>&lt;p>链表是一种实现大小可变的、类似于数组的数据类型，每个node至少包含一个存储的值和指针，指向下一个node&amp;hellip;这样把链表连接起来。其实这东西还是挺烧脑的，后期会把自己尝试写的链表发上来。跟随着翁恺教授的课记了一些笔记。&lt;/p>
+&lt;!--MORE-->
+&lt;h2 id="c语言笔记目录">C语言笔记目录
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note1-Basics/" target="_blank" rel="noopener"
+>基础结构——C语言程序设计笔记（一）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note7-LinkedList/" target="_blank" rel="noopener"
+>链表——C语言程序设计笔记（七）&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="上一篇笔记">上一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/p>
+&lt;h2 id="字符串">字符串
+&lt;/h2>&lt;p>由于这些笔记都是用OneNote手写的，听到那写到那，所以就没有排版可言了（逃&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/C-Notes/C-Note7-LinkedList-notePic.png"
+loading="lazy"
+alt="链表笔记"
+>&lt;/p>
+&lt;h2 id="下载">下载
+&lt;/h2>&lt;p>&lt;a class="link" href="https://static.cdn.gaein.cn/files/Notes/C-Notes/LinkedList.pdf" target="_blank" rel="noopener"
+>LinkedList.pdf|3.99MB&lt;/a>&lt;/p></description></item><item><title>文件——C语言程序设计笔记（六）</title><link>https://blog.gaein.cn/passages/c-note6-file/</link><pubDate>Wed, 23 Sep 2020 16:07:31 +0800</pubDate><guid>https://blog.gaein.cn/passages/c-note6-file/</guid><description>&lt;p>这节课讲了C操作文件的一些方法，包括格式化的输入输出、读写文本和二进制文件等。跟随着翁恺教授的课记了一些笔记。&lt;/p>
+&lt;!--MORE-->
+&lt;h2 id="c语言笔记目录">C语言笔记目录
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note1-Basics/" target="_blank" rel="noopener"
+>基础结构——C语言程序设计笔记（一）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note7-LinkedList/" target="_blank" rel="noopener"
+>链表——C语言程序设计笔记（七）&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="上一篇笔记">上一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note7-LinkedList/" target="_blank" rel="noopener"
+>链表——C语言程序设计笔记（七）&lt;/a>&lt;/p>
+&lt;h2 id="文件">文件
+&lt;/h2>&lt;p>由于这些笔记都是用OneNote手写的，听到那写到那，所以就没有排版可言了（逃&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/C-Notes/C-Note6-File-notePic.png"
+loading="lazy"
+alt="文件笔记"
+>&lt;/p>
+&lt;h2 id="下载">下载
+&lt;/h2>&lt;p>&lt;a class="link" href="https://static.cdn.gaein.cn/files/Notes/C-Notes/File.pdf" target="_blank" rel="noopener"
+>File.pdf|4.31MB&lt;/a>&lt;/p></description></item><item><title>程序结构——C语言程序设计笔记（五）</title><link>https://blog.gaein.cn/passages/c-note5-programstructure/</link><pubDate>Wed, 23 Sep 2020 15:39:27 +0800</pubDate><guid>https://blog.gaein.cn/passages/c-note5-programstructure/</guid><description>&lt;p>程序结构使整个程序变得更加“优雅”、利于后期维护和更新，在做大型程序的时候是不可或缺的。翁恺教授讲解了本地变量、全局变量等以及预编译处理指令、如果编译多个.c文件等等。跟随着翁恺教授的课记了一些笔记。&lt;/p>
+&lt;!--MORE-->
+&lt;h2 id="c语言笔记目录">C语言笔记目录
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note1-Basics/" target="_blank" rel="noopener"
+>基础结构——C语言程序设计笔记（一）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note7-LinkedList/" target="_blank" rel="noopener"
+>链表——C语言程序设计笔记（七）&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="上一篇笔记">上一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/p>
+&lt;h2 id="程序结构">程序结构
+&lt;/h2>&lt;p>由于这些笔记都是用OneNote手写的，听到那写到那，所以就没有排版可言了（逃&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/C-Note5-ProgramStructure/01.webp"
+loading="lazy"
+alt="程序结构笔记"
+>&lt;/p>
+&lt;h2 id="下载">下载
+&lt;/h2>&lt;p>&lt;a class="link" href="https://static.cdn.gaein.cn/files/Notes/C-Notes/ProgramStructure.pdf" target="_blank" rel="noopener"
+>ProgramStructure.pdf|3.66MB&lt;/a>&lt;/p></description></item><item><title>计算——零基础学Java语言笔记（一）</title><link>https://blog.gaein.cn/passages/java-note1-calculation/</link><pubDate>Tue, 22 Sep 2020 20:56:21 +0800</pubDate><guid>https://blog.gaein.cn/passages/java-note1-calculation/</guid><description>&lt;p>那么看完了C语言的课程之后呢，在@&lt;a class="link" href="https://farewell12345.github.io/" target="_blank" rel="noopener"
+>伞菌&lt;/a>大佬的指点下我准备下一步去学习Java语言，至于课程选择嘛我就直接选择了浙江大学翁恺教授的课（毕竟看了有一段时间了有点不舍emm）并且这门课是国家精品课程，不过是面向零基础的。Java和CSharp很像，本来没有想这么细致的去学习，但是碰巧又赶上这门课程在开课，可以去讨论区互动和交作业等，于是便准备养老一般的跟着课程走。&lt;/p>
+&lt;!--MORE-->
+&lt;blockquote>
+&lt;p>那么Java这门语言呢，我准备跟着开课的进度一点一点学。（当然我看了一眼进度有点猴急，准备跟着上一次开课去学，然后跟着这个次开课去做题）。毕竟它和CSharp非常相似，我觉得把课跟下来应该不是特别难，当然，学好是另外一回事了。因为前面几周很多东西都偏基础，所以这些笔记可能会很短、很短&lt;/p>&lt;/blockquote>
+&lt;p>&lt;a class="link" href="https://www.icourse163.org/learn/ZJU-9001" target="_blank" rel="noopener"
+>浙江大学-零基础学习Java&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/Java-Note2-Compare/" target="_blank" rel="noopener"
+>比较——零基础学Java语言笔记（二）&lt;/a>&lt;/p>
+&lt;h2 id="11-第一个java程序">1.1 第一个Java程序
+&lt;/h2>&lt;p>IDEA新建项目、新建模块、然后新建包、新建类，在class中写入&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;HelloWorld&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>来输出HelloWorld，其中main函数是主函数，程序的入口点&lt;/p>
+&lt;p>输出时println函数括号里面的运算要用括号括起来，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;3 + 2 = &amp;#34;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">2&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出32&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;3 + 2 = &amp;#34;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">2&lt;/span>&lt;span class="p">));&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出5&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Java语言使用“+”来拼接字符串&lt;/p>
+&lt;h2 id="12-变量与计算">1.2 变量与计算
+&lt;/h2>&lt;h4 id="121-输入">1.2.1 输入
+&lt;/h4>&lt;p>Java获取输入需要首先定义一个Scanner&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">Scanner&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>并且在前面&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nn">java.util.Scanner&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 自动生成&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextLine&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 读取一行输入&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 读取输入的整数&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 其余类型的类似&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="122-变量">1.2.2 变量
+&lt;/h4>&lt;p>Java是强类型语言，所有的变量在使用前都需要经过定义并且有明确的类型并且被初始化。&lt;/p>
+&lt;p>使用 &amp;quot; 变量类型 + 变量名 &amp;quot; 定义变量，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">myVar&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>变量的名字叫做标识(zhi4)符，只能由字母、数字和下划线，第一个字符只能是字母或下划线，&lt;strong>不能用Java的关键字做标识符&lt;/strong>&lt;/p>
+&lt;p>在一行当中定义多个变量，每一个变量都应该有单独的赋值，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">amount&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">price&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// [!]推荐一行定义一个变量&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">final&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">AMOUNT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 在前面加上final来定义常量&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="123-赋值">1.2.3 赋值
+&lt;/h4>&lt;p>等于号 &amp;quot; = &amp;quot; 是赋值运算，将右边的值给左边&lt;/p>
+&lt;h2 id="13-浮点数计算">1.3 浮点数计算
+&lt;/h2>&lt;h4 id="131-浮点数">1.3.1 浮点数
+&lt;/h4>&lt;p>double用于定义double类型的浮点数变量
+浮点数计算是有误差的&lt;/p>
+&lt;h4 id="132-计算的优先级">1.3.2 计算的优先级
+&lt;/h4>&lt;p>如果不能确定计算的优先级可以加上括号来确保万无一失
+大部分计算的优先级是按照人正常的思维来规定的
+单目运算符只有一个算子，通常单目运算符的优先级较高&lt;/p>
+&lt;h4 id="133-类型的转换">1.3.3 类型的转换
+&lt;/h4>&lt;p>Java使用(类型)进行强制转换（和C一样）
+比如说：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">)((&lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">0&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">2&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">5&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="1x-在中国大学mooc上面提交编程作业">1.x 在中国大学MOOC上面提交编程作业：
+&lt;/h4>&lt;ol>
+&lt;li>需要将 &lt;code>package&lt;/code> 以下的内容复制过去&lt;/li>
+&lt;li>将&lt;code>class&lt;/code>名改为&lt;code>Main&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;h2 id="第一周编程题">第一周编程题
+&lt;/h2>&lt;blockquote>
+&lt;p>题目内容：
+写一个将华氏温度转换成摄氏温度的程序，转换的公式是：&lt;br>
+&lt;code>°F = (9/5)*°C + 32&lt;/code>&lt;br>
+其中C表示摄氏温度，F表示华氏温度。&lt;br>
+程序的输入是一个整数，&lt;strong>表示华氏温度&lt;/strong>。输出对应的摄氏温度，也是一个整数。&lt;br>
+提示，为了把计算结果的浮点数转换成整数，需要使用下面的表达式：&lt;br>
+&lt;code>(int)x;&lt;/code>&lt;br>
+其中x是要转换的那个浮点数。&lt;br>
+注意：除了题目要求的输出，不能输出任何其他内容，比如输入时的提示，输出时的说明等等都不能。&lt;br>
+这道题目要求转换后的数字，程序就只能输出这个数字，除此之外任何内容都不能输出。&lt;br>
+输入格式:&lt;br>
+&lt;code>一个整数&lt;/code>&lt;br>
+输出格式：&lt;br>
+&lt;code>一个整数&lt;/code>&lt;br>
+输入样例：&lt;br>
+&lt;code>100&lt;/code>&lt;br>
+输出样例：&lt;br>
+&lt;code>37&lt;/code>&lt;br>
+时间限制：500ms 内存限制：32000kb&lt;/p>&lt;/blockquote>
+&lt;p>需要注意的问题：&lt;/p>
+&lt;p>给的公式是摄氏度转华氏度，而程序的目的是华氏度转摄氏度&lt;/p>
+&lt;p>提交的代码&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nn">java.util.Scanner&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">Main&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">F&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// F代表读取的华氏度&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">double&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">C&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// C代表读取的摄氏度&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">C&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">F&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">32&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">9&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">5&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">0&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 根据公式运算（需要把公式导一下）&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="n">C&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出，并强制转换为int&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>结构类型——C语言程序设计笔记（四）</title><link>https://blog.gaein.cn/passages/c-note4-struct/</link><pubDate>Tue, 22 Sep 2020 17:23:09 +0800</pubDate><guid>https://blog.gaein.cn/passages/c-note4-struct/</guid><description>&lt;p>从结构类型开始学习了一些自定义的结构，其中struct是较为重要的。跟随着翁恺教授的课记了一些笔记。&lt;/p>
+&lt;!--MORE-->
+&lt;h2 id="c语言笔记目录">C语言笔记目录
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note1-Basics/" target="_blank" rel="noopener"
+>基础结构——C语言程序设计笔记（一）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note7-LinkedList/" target="_blank" rel="noopener"
+>链表——C语言程序设计笔记（七）&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="上一篇笔记">上一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/p>
+&lt;h2 id="结构类型">结构类型
+&lt;/h2>&lt;p>由于这些笔记都是用OneNote手写的，听到那写到那，所以就没有排版可言了（逃&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/C-Note4-Struct/01.webp"
+loading="lazy"
+alt="结构类型笔记"
+>&lt;/p>
+&lt;h2 id="下载">下载
+&lt;/h2>&lt;p>&lt;a class="link" href="https://static.cdn.gaein.cn/files/Notes/C-Notes/Struct.pdf" target="_blank" rel="noopener"
+>Struct.pdf|2.58MB&lt;/a>&lt;/p></description></item><item><title>字符串——C语言程序设计笔记（三）</title><link>https://blog.gaein.cn/passages/c-note3-string/</link><pubDate>Tue, 22 Sep 2020 16:58:09 +0800</pubDate><guid>https://blog.gaein.cn/passages/c-note3-string/</guid><description>&lt;p>C语言的字符串实际上是char数组。跟随着翁恺教授的课记了一些笔记。&lt;/p>
+&lt;h2 id="c语言笔记目录">C语言笔记目录
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note1-Basics/" target="_blank" rel="noopener"
+>基础结构——C语言程序设计笔记（一）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note7-LinkedList/" target="_blank" rel="noopener"
+>链表——C语言程序设计笔记（七）&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="上一篇笔记">上一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/p>
+&lt;h2 id="字符串">字符串
+&lt;/h2>&lt;p>由于这些笔记都是用OneNote手写的，听到那写到那，所以就没有排版可言了（逃&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/C-Note3-String/01.webp"
+loading="lazy"
+alt="字符串笔记"
+>&lt;/p>
+&lt;h2 id="下载">下载
+&lt;/h2>&lt;p>&lt;a class="link" href="https://static.cdn.gaein.cn/files/Notes/C-Notes/String.pdf" target="_blank" rel="noopener"
+>String.pdf|2.65MB&lt;/a>&lt;/p></description></item><item><title>指针——C语言程序设计笔记（二）</title><link>https://blog.gaein.cn/passages/c-note2-pointer/</link><pubDate>Tue, 22 Sep 2020 16:32:51 +0800</pubDate><guid>https://blog.gaein.cn/passages/c-note2-pointer/</guid><description>&lt;p>从指针开始，难度便变高了，因此每一周的课程都做了一些笔记、摘要。虽然以前学C++的时候接触过指针，但是也忘得差不多了。所以课还是要听的。&lt;/p>
+&lt;!--MORE-->
+&lt;h2 id="c语言笔记目录">C语言笔记目录
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note1-Basics/" target="_blank" rel="noopener"
+>基础结构——C语言程序设计笔记（一）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note7-LinkedList/" target="_blank" rel="noopener"
+>链表——C语言程序设计笔记（七）&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="上一篇笔记">上一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note1-Basics/" target="_blank" rel="noopener"
+>基础结构——C语言程序设计笔记（一）&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/p>
+&lt;h2 id="指针">指针
+&lt;/h2>&lt;p>由于这些笔记都是用OneNote手写的，听到那写到那，所以就没有排版可言了（逃&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/C-Note2-Pointer/01.webp"
+loading="lazy"
+alt="指针笔记"
+>&lt;/p>
+&lt;h2 id="下载">下载
+&lt;/h2>&lt;p>&lt;a class="link" href="https://static.cdn.gaein.cn/files/Notes/C-Notes/Pointer.pdf" target="_blank" rel="noopener"
+>Pointer.pdf|1.83MB&lt;/a>&lt;/p></description></item><item><title>基础结构——C语言程序设计笔记（一）</title><link>https://blog.gaein.cn/passages/c-note1-basics/</link><pubDate>Sat, 19 Sep 2020 20:06:23 +0800</pubDate><guid>https://blog.gaein.cn/passages/c-note1-basics/</guid><description>&lt;p>趁着假期呢看了一些中国大学MOOC中浙江大学翁恺教授的C语言程序设计，也算是预习大学课程吧。因为有一点编程基础因此前边一些听起来也不是很吃力，因此前边很多章节都没有记笔记，准备记在一起（其实是懒得记吧hhh）&lt;/p>
+&lt;blockquote>
+&lt;p>趁着假期呢看了一些中国大学MOOC中浙江大学翁恺教授的C语言程序设计，也算是预习大学课程吧。因为有一点编程基础因此前边一些听起来也不是很吃力，因此前边很多章节都没有记笔记，准备记在一起（其实是懒得记吧hhh）&lt;/p>&lt;/blockquote>
+&lt;p>&lt;a class="link" href="https://www.icourse163.org/learn/ZJU-9001" target="_blank" rel="noopener"
+>浙江大学-C语言程序设计&lt;/a>&lt;/p>
+&lt;h2 id="c语言笔记目录">C语言笔记目录
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note1-Basics/" target="_blank" rel="noopener"
+>基础结构——C语言程序设计笔记（一）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note3-String/" target="_blank" rel="noopener"
+>字符串——C语言程序设计笔记（三）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note4-Struct/" target="_blank" rel="noopener"
+>结构类型——C语言程序设计笔记（四）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note5-ProgramStructure/" target="_blank" rel="noopener"
+>程序结构——C语言程序设计笔记（五）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note6-File/" target="_blank" rel="noopener"
+>文件——C语言程序设计笔记（六）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note7-LinkedList/" target="_blank" rel="noopener"
+>链表——C语言程序设计笔记（七）&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/C-Note2-Pointer/" target="_blank" rel="noopener"
+>指针——C语言程序设计笔记（二）&lt;/a>&lt;/p>
+&lt;h2 id="程序设计与c语言">程序设计与C语言
+&lt;/h2>&lt;p>C语言是一门古老的、低级的、底层的、面向过程的语言&lt;/p>
+&lt;h3 id="helloworld">HelloWorld
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span class="cp">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Hello World&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>程序从&lt;code>main函数&lt;/code>开始，如上是最基础的Hello World&lt;/p>
+&lt;p>通常来说C语言是编译-运行的&lt;/p>
+&lt;h3 id="输入输出">输入输出
+&lt;/h3>&lt;p>在C语言中，使用&lt;code>printf()&lt;/code>函数来输出内容，其中，传递给printf的参数是：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">64&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;字符串&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;格式字符，比如%d&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>运行程序会输出：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">&amp;gt;字符串
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;gt;格式字符，比如64
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="格式字符">格式字符
+&lt;/h4>&lt;p>格式字符是%+一个或多个字符，用于控制输出的格式。比如说，后面传入的参数i是int类型的，那么使用%d来输出整数&lt;/p>
+&lt;p>常见的格式字符有：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/C-Note1-Basics/01.webp"
+loading="lazy"
+alt="格式字符"
+>&lt;/p>
+&lt;p>更多的用法：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">64&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">p&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">double&lt;/span> &lt;span class="n">d&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mf">32.64128&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">char&lt;/span> &lt;span class="n">c&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sc">&amp;#39;c&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;HelloWorld&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %s:字符串
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%c&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">c&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %c:字符
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %d:整数（十进制）
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%5d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %5d:五位整数，不足五位前面补充空格
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%05d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %05d:五位整数，不足五位前面补充0
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%-5d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %-5d:五位整数，不足五位后面补充空格
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%u&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %u:打印无符号数
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%x&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %x:整数（十六进制）
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%o&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %o:整数（八进制）
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%f&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %f:浮点数
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%0.0f&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %0.0f不保留小数
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%0.100f&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %0.100保留三位小数
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%p&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// %p取指针的地址
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>输出大致如下（其中%p的例子仅做示范，“□”代表空格）：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">HelloWorld
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">c
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">64
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">□□□64
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">00064
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">64□□□
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">64
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">40
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">100
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">32.64128
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">32
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">32.641
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0x7fff5cc109d4
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>更多情况见&lt;a class="link" href="" >C语言格式字符（还没写先挖坑）&lt;/a>&lt;/p>
+&lt;p>C语言使用&lt;code>scanf()&lt;/code>函数来获取输入，其中的参数是格式字符，另外一个参数是&lt;code>&amp;amp;变量名&lt;/code>（&amp;amp;是取地址）&lt;/p>
+&lt;h4 id="转义逃逸字符">转义（逃逸）字符
+&lt;/h4>&lt;p>常见转义字符有：&lt;/p>
+&lt;p>&lt;code>\n&lt;/code>:&lt;code>换行&lt;/code>&lt;/p>
+&lt;p>&lt;code>\t&lt;/code>:&lt;code>制表符&lt;/code>&lt;/p>
+&lt;p>&lt;code>\&amp;quot;&lt;/code>:&lt;code>&amp;quot;&lt;/code>&lt;/p>
+&lt;p>&lt;code>\'&lt;/code>:&lt;code>'&lt;/code>&lt;/p>
+&lt;p>&lt;code>\\&lt;/code>:&lt;code>\&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/C-Note1-Basics/02.webp"
+loading="lazy"
+alt="转义字符"
+>&lt;/p>
+&lt;h2 id="运算">运算
+&lt;/h2>&lt;p>在C语言中这样定义变量：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">变量类型 变量名;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以在变量定义的时候给其赋值，否则不会初始化&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">myVar&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">64&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在这中等号代表赋值而不是相等&lt;/p>
+&lt;p>变量区分大小写，即MyVar和myVar完全是不同的两个变量&lt;/p>
+&lt;p>使用typeof()函数可以输出变量占据的字节，typeof是静态的，括号里面的运算不会被进行&lt;/p>
+&lt;p>在C语言中有多种运算符常见的有+、-、&lt;em>、\、以及+=、-=、&lt;/em>=、+和++、&amp;ndash;&lt;/p>
+&lt;h2 id="程序流控制">程序流控制
+&lt;/h2>&lt;h3 id="判断">判断
+&lt;/h3>&lt;p>&lt;code>if&lt;/code> 语句用于判断，其结构如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>if&lt;/code> 是可以嵌套的&lt;/p>
+&lt;p>在条件中判断值是否相等使用“==”而不是“=”，单个的等号是赋值运算。括号内1表示是，0表示非。&lt;/p>
+&lt;p>比如说&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>条件成立则3 &amp;lt; 6 的结果为1即result的值为1&lt;/p>
+&lt;p>&lt;code>else if&lt;/code> 等同于：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件1*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件2*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>虽然单行的语句可以不使用{}，但是建议使用&lt;/p>&lt;/blockquote>
+&lt;p>&lt;code>switch case语句&lt;/code>的结构如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">switch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="cm">/*变量*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">case&lt;/span> &lt;span class="sc">&amp;#39;0&amp;#39;&lt;/span>&lt;span class="o">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句1;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">case&lt;/span> &lt;span class="sc">&amp;#39;1&amp;#39;&lt;/span>&lt;span class="o">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句2;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">break&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">default&lt;/span>&lt;span class="o">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>switch的作用是根据变量的值将代码跳转到某个地方，如果case后面没有&lt;code>break;&lt;/code>那么会接着走下一行&lt;/p>
+&lt;h3 id="循环">循环
+&lt;/h3>&lt;h4 id="while">while
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 执行语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>while&lt;/code>循环的过程如下：&lt;/p>
+&lt;ol>
+&lt;li>判断是否满足条件&lt;/li>
+&lt;li>满足条件进入循环体，执行语句；不满足条件则跳出&lt;/li>
+&lt;li>返回1&lt;/li>
+&lt;/ol>
+&lt;h4 id="do-while">do while
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 执行语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>do while&lt;/code>循环的过程如下：&lt;/p>
+&lt;ol>
+&lt;li>执行语句&lt;/li>
+&lt;li>判断是否满足条件，满足条件返回1；不满足条件则跳出&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*表达式1*/&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="cm">/*表达式2*/&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="cm">/*表达式3*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 执行语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>for&lt;/code> 循环是一种古老的循环（所以它看起来比较怪），它的执行过程如下：&lt;/p>
+&lt;ol>
+&lt;li>求解表达式1（通常是初始化计数变量）&lt;/li>
+&lt;li>求解表达式2（其实是条件），符合条件继续运行，不符合则跳出&lt;/li>
+&lt;li>执行语句&lt;/li>
+&lt;li>求解表达式3（通常是计数变量）&lt;/li>
+&lt;li>回到2步执行&lt;/li>
+&lt;/ol>
+&lt;p>也就是 &lt;code>for&lt;/code> 循环改写成 &lt;code>while&lt;/code> 相当于：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 表达式1;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="cm">/*表达式2*/&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 执行语句;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// 表达式3;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在很多时候使用 &lt;code>for循环&lt;/code> 会很方便（虽然我没感觉但是代码短了）&lt;/p>
+&lt;p>比如需要计数时&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">++&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%d&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 从1数到100
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="数据类型">数据类型
+&lt;/h2>&lt;h3 id="整型">整型
+&lt;/h3>&lt;p>&lt;code>char&lt;/code>
+&lt;code>short&lt;/code>
+&lt;code>int&lt;/code>
+&lt;code>long&lt;/code>
+&lt;code>long long&lt;/code>&lt;/p>
+&lt;h4 id="整数的二进制表示">整数的二进制表示
+&lt;/h4>&lt;p>在计算机内部所有变量都是二进制的。&lt;/p>
+&lt;p>为了表示负数，使用了补码，比如：&lt;/p>
+&lt;p>-1为 &lt;code>11111111&lt;/code>&lt;/p>
+&lt;p>1 为 &lt;code>00000001&lt;/code>&lt;/p>
+&lt;p>进行二进制加法时，&lt;code>11111111&lt;/code> + &lt;code>00000001&lt;/code> = &lt;code>100000000&lt;/code>&lt;/p>
+&lt;p>然而，进位上去的1被舍弃了，从而实现 &lt;code>-1&lt;/code> + &lt;code>1&lt;/code> = &lt;code>0&lt;/code>&lt;/p>
+&lt;h4 id="整数的范围">整数的范围
+&lt;/h4>&lt;p>如果某个类型占据n个字节&lt;/p>
+&lt;p>那么它的范围是 -2^(n-1)~2^(n-1)-1&lt;/p>
+&lt;p>&lt;code>// 这里的&amp;quot;^&amp;quot;表示次幂而不是异或&lt;/code>&lt;/p>
+&lt;h4 id="字符类型char">字符类型char
+&lt;/h4>&lt;p>char既是整型数字又是字符，将字符赋值给char时应该用单引号&amp;quot; &amp;rsquo; &amp;ldquo;包裹，比如&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">char&lt;/span> &lt;span class="n">ch&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sc">&amp;#39;a&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以将字符作为整数输出、计算、输入，字符的整数值是它的ASCII码&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/ASCII-Code-Convertor/" target="_blank" rel="noopener"
+>ASCII码对照表和转换器&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h3 id="浮点数">浮点数
+&lt;/h3>&lt;p>&lt;code>float&lt;/code>
+&lt;code>double&lt;/code>
+&lt;code>long double&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/C-Note1-Basics/03.webp"
+loading="lazy"
+alt="浮点类型的选择"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>!注意：浮点数是有精度的，它们可能不是准确的，制作计算器程序应该使用BCD&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>其实个人觉得整型也是一个道理，通常来说只用int就行了&lt;/p>&lt;/blockquote>
+&lt;h3 id="逻辑">逻辑
+&lt;/h3>&lt;h4 id="bool">bool
+&lt;/h4>&lt;p>bool类型只有true和false两个值，使用bool需要添加头文件&lt;code>&amp;lt;stdbool.h&amp;gt;&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/C-Note1-Basics/04.webp"
+loading="lazy"
+alt="bool"
+>&lt;/p>
+&lt;h4 id="逻辑运算">逻辑运算
+&lt;/h4>&lt;p>&lt;code>&amp;amp;&amp;amp;&lt;/code>逻辑且&lt;/p>
+&lt;p>当逻辑且左右的条件全成立时返回1，否则返回0&lt;/p>
+&lt;p>&lt;code>||&lt;/code>逻辑或&lt;/p>
+&lt;p>当逻辑或两侧任意的一个条件成立时返回1，全不成立则返回0&lt;/p>
+&lt;h3 id="数组">数组
+&lt;/h3>&lt;h4 id="数组的定义">数组的定义
+&lt;/h4>&lt;p>可以使用以下形式定义一个数组&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">30&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这个数组具有30个单元，通过&lt;code>arrayInt[i]&lt;/code>来访问，索引从0开始，不能超过30 - 1，否则数组会越界&lt;/p>
+&lt;h4 id="数组的初始化">数组的初始化
+&lt;/h4>&lt;p>可以在定义时去初始化数组：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">4&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">9&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">,};&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这样初始化会使得数组被赋值为大括号中的数字，如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">9&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="cm">/* ... */&lt;/span> &lt;span class="p">};&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>来创建自动设置大小的数组&lt;/p>
+&lt;blockquote>
+&lt;p>!注意：这样的数组大小仍然是固定的，只是在初始化的时候根据大括号内容自动算了大小&lt;/p>&lt;/blockquote>
+&lt;p>使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">,};&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>来创建指定单元被初始化为指定值的数组&lt;/p>
+&lt;p>使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">arrayInt&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,};&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>来让整个数组的每个单元初始化为0（实际上，当大括号内的数字数量比数组的大小小时，会默认填充每个单位为0）&lt;/p>
+&lt;h4 id="数组的运算">数组的运算
+&lt;/h4>&lt;p>数组不能由一个数组赋值给另外一个数组&lt;/p>
+&lt;p>数组的每个单元都可以进行运算&lt;/p>
+&lt;h4 id="二维数组">二维数组
+&lt;/h4>&lt;p>使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>来定义一个二维数组，可以把它看成是一个5行3列表格（或者矩阵）&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>1&lt;/th>
+&lt;th>2&lt;/th>
+&lt;th>3&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>a[0][0]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[0][1]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[0][2]&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>a[1][0]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[1][1]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[1][2]&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>a[2][0]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[2][1]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[2][2]&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>a[3][0]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[3][1]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[3][2]&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>a[4][0]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[4][1]&lt;/code>&lt;/td>
+&lt;td>&lt;code>a[4][2]&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>如表所示&lt;/p>
+&lt;p>数组的遍历，使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">Length&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="o">++&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%d &amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>来完成&lt;/p>
+&lt;h3 id="强制类型转换">强制类型转换
+&lt;/h3>&lt;p>C语言会将小范围-&amp;gt;大范围的做自动类型转换，比如说5/7.0（&lt;code>int\double&lt;/code>）结果是&lt;code>double&lt;/code>&lt;/p>
+&lt;p>在C语言中使用&lt;code>(类型)变量&lt;/code>来做强制类型转换，比如说&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="nf">malloc&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">sizeof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">4&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="函数">函数
+&lt;/h2>&lt;h3 id="函数的定义">函数的定义
+&lt;/h3>&lt;p>其实int main()就是函数&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="nf">myFunc&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">foot&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">inch&lt;/span> &lt;span class="cm">/*参数表*/&lt;/span> &lt;span class="p">)&lt;/span> &lt;span class="c1">// 函数头
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">ret&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">)((&lt;/span>&lt;span class="n">foot&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">inch&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mf">12.0&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mf">0.3&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="c1">// 函数体
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">ret&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>函数由以下内容构成：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">数据类型&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">函数名&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">参数表&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">){&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 语句
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果把函数定义在main函数的后面则需要在main函数的前面声明函数原型（其实就是把函数头copy过去并改成分号结尾）以便于编译器“认出”函数&lt;/p>
+&lt;p>使用 &lt;code>void&lt;/code> 定义一个不返回值的函数，不能用 &lt;code>return&lt;/code> 语句&lt;/p>
+&lt;blockquote>
+&lt;p>注意：请使用 &lt;code>int main&lt;/code> 来定义主函数，没有任何标准规定可以使用 &lt;code>void main&lt;/code> 定义主函数。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>!注意：使用函数时有多个可以return的时候建议遵循单一出口原则，即定义一个本地变量（通常叫做ret）来存储结果，然后最后返回这个本地变量&lt;/p>&lt;/blockquote>
+&lt;p>调用函数时传递的参数是值而不是变量本身，在函数内修改传过去的变量不会对main中的变量造成影响（指针除外）&lt;/p>
+&lt;p>基础部分的笔记到此结束，剩下的我想每周一个文（其实我已经看完了啦啦啦）&lt;/p></description></item><item><title>认识与入门MarkDown</title><link>https://blog.gaein.cn/passages/hello-markdown/</link><pubDate>Sun, 28 Apr 2019 00:23:38 +0800</pubDate><guid>https://blog.gaein.cn/passages/hello-markdown/</guid><description>&lt;p>&lt;a class="link" href="https://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="noopener"
+>Markdown&lt;/a>是一种轻量级的 &lt;strong>「标记语言」&lt;/strong>，它的优点很多，目前也被越来越多的写作爱好&amp;gt;者，撰稿者广泛使用。看到这里请不要被 &lt;strong>「标记」&lt;/strong>、 &lt;strong>「语言」&lt;/strong> 所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分
+轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。&lt;/p>
+&lt;p>根据作者&lt;/p>
+&lt;blockquote>
+&lt;p>转载请注明原作者&lt;/p>&lt;/blockquote>
+&lt;p>转载&lt;/p>
+&lt;p>作者：Te_Lee&lt;/p>
+&lt;p>原文：https://www.jianshu.com/p/1e402922ee32&lt;/p>
+&lt;p>如有侵权请联系删除&lt;/p>
+&lt;p>&lt;strong>转载请注明原作者，如果你觉得这篇文章对你有帮助或启发，也可以来请我&lt;a class="link" href="https://link.jianshu.com?t=http://ww2.sinaimg.cn/large/6aee7dbbjw1eiixgkex2ij21kw0t7wn5.jpg" target="_blank" rel="noopener"
+>喝咖啡&lt;/a>&lt;/strong>&lt;/p>
+&lt;h2 id="导语">导语
+&lt;/h2>&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="noopener"
+>Markdown&lt;/a>是一种轻量级的 &lt;strong>「标记语言」&lt;/strong>，它的优点很多，目前也被越来越多的写作爱好&amp;gt;者，撰稿者广泛使用。看到这里请不要被 &lt;strong>「标记」&lt;/strong>、 &lt;strong>「语言」&lt;/strong> 所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分
+轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://ww3.sinaimg.cn/large/6aee7dbbjw1eqft66xcg3j21kw12mdub.jpg" data-original-src="http://ww3.sinaimg.cn/large/6aee7dbbjw1eqft66xcg3j21kw12mdub.jpg" alt="[Ulysses for Mac](http://www.ulyssesapp.com)" style="cursor: zoom-in;">&lt;div class="image-caption">&lt;a class="link" href="http://www.ulyssesapp.com" target="_blank" rel="noopener"
+>Ulysses for Mac&lt;/a>&lt;/div>&lt;/p>
+&lt;/div>
+&lt;h2>一，认识 Markdown&lt;/h2>
+&lt;p>在刚才的导语里提到，Markdown 是一种用来写作的轻量级&lt;strong>「标记语言」&lt;/strong>，它用简洁的语法代替排版，而不像一般我们用的字处理软件 &lt;em>Word&lt;/em> 或 &lt;em>Pages&lt;/em> 有大量的排版、字体设置。它使我们专心于码字，用「标记」语法，来代替常见的排版格式。例如此文从内容到格式，甚至插图，键盘就可以通通搞定了。目前来看，支持 Markdown 语法的编辑器有很多，包括很多网站（例如&lt;a href="https://www.jianshu.com" target="_blank">简书&lt;/a>）也支持了 Markdown 的文字录入。Markdown 从写作到完成，导出格式随心所欲，你可以导出 HTML 格式的文件用来网站发布，也可以十分方便的导出 PDF 格式，这种格式写出的简历更能得到 HR 的好感。甚至可以利用 &lt;a href="https://link.jianshu.com?t=http://www.getcloudapp.com" target="_blank" rel="nofollow">CloudApp&lt;/a> 这种云服务工具直接上传至网页用来分享你的文章，全球最大的轻博客平台 &lt;a href="https://link.jianshu.com?t=http://te1ee.tumblr.com" target="_blank" rel="nofollow">Tumblr&lt;/a>，也支持 Mou 这类 Markdown 工具的直接上传。&lt;/p>
+&lt;h3>Markdown 官方文档&lt;/h3>
+&lt;blockquote>
+&lt;p>这里可以看到官方的 Markdown 语法规则文档，当然，&lt;strong>后文我也会用自己的方式阐述这些语法的具体用法&lt;/strong>。&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://daringfireball.net/projects/markdown/syntax" target="_blank" rel="nofollow">&lt;em>创始人 John Gruber 的 Markdown 语法说明&lt;/em>&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://wowubuntu.com/markdown/##list" target="_blank" rel="nofollow">&lt;em>Markdown 中文版语法说明&lt;/em>&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3>使用 Markdown 的优点&lt;/h3>
+&lt;ul>
+&lt;li>专注你的文字内容而不是排版样式，安心写作。&lt;/li>
+&lt;li>轻松的导出 HTML、PDF 和本身的 .md 文件。&lt;/li>
+&lt;li>纯文本内容，兼容所有的文本编辑器与字处理软件。&lt;/li>
+&lt;li>随时修改你的文章版本，不必像字处理软件生成若干文件版本导致混乱。&lt;/li>
+&lt;li>可读、直观、学习成本低。&lt;/li>
+&lt;/ul>
+&lt;h3>使用 Markdown 的误区&lt;/h3>
+&lt;blockquote>
+&lt;p>*We believe that writing is about content, about what you want to say – not about fancy formatting. *&lt;/p>
+&lt;/blockquote>
+&lt;p>我们坚信写作写的是内容，所思所想，而不是花样格式。&lt;br>
+— &lt;em>Ulysses for Mac&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Markdown 旨在简洁、高效，也由于 Markdown 的易读易写，人们用不同的编程语言实现了多个版本的解析器和生成器，这就导致了目前不同的 Markdown 工具集成了不同的功能（基础功能大致相同），例如流程图与时序图，复杂表格与复杂公式的呈现，虽然功能的丰富并没有什么本质的缺点，但终归有些背离初衷，何况在编写的过程中很费神，不如使用专业的工具撰写来的更有效率，所以如果你需实现复杂功能，专业的图形界面工具会更加方便。&lt;strong>当然，如果你对折腾这些不同客户端对 Markdown 的定制所带来高阶功能感到愉悦的话，那也是无可厚非的。&lt;/strong>
+&lt;/li>
+&lt;/ul>
+&lt;div class="image-package">
+&lt;img src="https://ww2.sinaimg.cn/large/6aee7dbbgw1eq320claw3j21kw0kjdpc.jpg" data-original-src="http://ww2.sinaimg.cn/large/6aee7dbbgw1eq320claw3j21kw0kjdpc.jpg" alt="[flowchart.js on Github（使用 Markdown 绘制流程图）](https://github.com/adrai/flowchart.js)" style="cursor: zoom-in;">&lt;div class="image-caption">[flowchart.js on Github（使用 Markdown 绘制流程图）](https://github.com/adrai/flowchart.js)&lt;/div>
+&lt;/div>
+&lt;h3>我该用什么工具？&lt;/h3>
+&lt;div class="image-package">
+&lt;img src="https://ww2.sinaimg.cn/large/6aee7dbbgw1esvkj19bqmj20e80e874z.jpg" data-original-src="http://ww2.sinaimg.cn/large/6aee7dbbgw1esvkj19bqmj20e80e874z.jpg" alt="Mou for Mac" style="cursor: zoom-in;">&lt;div class="image-caption">Mou for Mac&lt;/div>
+&lt;/div>
+&lt;ul>
+&lt;li>在 Mac OS X 上，我强烈建议你用 &lt;a href="https://link.jianshu.com?t=http://mouapp.com" target="_blank" rel="nofollow">Mou&lt;/a> 这款免费且十分好用的 Markdown 编辑器，它支持&lt;strong>实时预览&lt;/strong>，既左边是你编辑 Markdown 语言，右边会实时的生成预览效果。不仅如此，Mou 还有一些有趣的偏好设置（&lt;em>Preference&lt;/em>），例如主题（&lt;em>Themes&lt;/em>）与样式（&lt;em>CSS&lt;/em>），它们可以配置出定制化的文本编辑效果与导出效果，如果你对自带的主题与样式不满意还可以到 &lt;a href="https://link.jianshu.com?t=https://github.com/search?utf8=%E2%9C%93&amp;amp;q=Mou" target="_blank" rel="nofollow">GitHub&lt;/a> 上搜索其它爱好者为 Mou 编写的更多主题样式，导入的方式可以在偏好设置的 Themes 或 CSS 选项中 选择 reload。&lt;/li>
+&lt;/ul>
+&lt;div class="image-package">
+&lt;img src="https://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" data-original-src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" alt="Mou 的编写与预览窗口" style="cursor: zoom-in;">&lt;div class="image-caption">Mou 的编写与预览窗口&lt;/div>
+&lt;/div>
+&lt;p>如果你从事文字工作，我强烈建议你购买 &lt;em>&lt;a href="https://link.jianshu.com?t=http://www.ulyssesapp.com" target="_blank" rel="nofollow">Ulysses for Mac&lt;/a>&lt;/em>，这款软件入围了苹果 Mac App Store 的 &lt;em>The Best of 2013&lt;/em>。它支持更多的写作格式、多文档的支持。Mou，iA writer 这些软件都是基于单文档的管理方式，而 Ulysses 支持 Folder、Filter 的管理，一个 Folder 里面可以创建多个 Sheet，Sheet 之间也可以进行 Combine 处理。&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww1.sinaimg.cn/large/6aee7dbbjw1eqgrj7suqoj217a0aiq4u.jpg" data-original-src="http://ww1.sinaimg.cn/large/6aee7dbbjw1eqgrj7suqoj217a0aiq4u.jpg" alt="Mac 上一些 Markdown 编辑器" style="cursor: zoom-in;">&lt;div class="image-caption">Mac 上一些 Markdown 编辑器&lt;/div>
+&lt;/div>
+&lt;ul>
+&lt;li>&lt;p>由于笔者很少接触 Windows，Windows 下的 Markdown 没有过多涉猎，经朋友介绍，有两款还算不错，一款叫做 &lt;a href="https://link.jianshu.com?t=http://www.markdownpad.com" target="_blank" rel="nofollow">MarkdownPad&lt;/a> ，另一款叫做 &lt;a href="https://link.jianshu.com?t=http://code52.org/DownmarkerWPF/" target="_blank" rel="nofollow">MarkPad&lt;/a>。&lt;/p>&lt;/li>
+&lt;li>&lt;p>iOS 端很多 app 早已经支持了 Markdown 录入，例如 Drafts，Day One，iA writer 等，另外 Ulysses for iPad 现在已经上架，可以说是 iOS 平台最好的编辑器了。&lt;/p>&lt;/li>
+&lt;li>&lt;p>在 Web端，我强烈推荐&lt;a href="https://www.jianshu.com" target="_blank">简书&lt;/a>这款产品，上面有无数热爱文字的人在不停的创造，分享。在 Web 端使用 Markdown 没有比简书更舒服的地方了，同样支持左右两栏的实时预览，字体优雅，简洁。&lt;/p>&lt;/li>
+&lt;/ul>
+&lt;div class="image-package">
+&lt;img src="https://ww2.sinaimg.cn/large/6aee7dbbgw1effdkfijo1j21220nigth.jpg" data-original-src="http://ww2.sinaimg.cn/large/6aee7dbbgw1effdkfijo1j21220nigth.jpg" alt="简书的编辑预览模式" style="cursor: zoom-in;">&lt;div class="image-caption">简书的编辑预览模式&lt;/div>
+&lt;/div>
+&lt;h2>二，Markdown 语法的简要规则&lt;/h2>
+&lt;h3>标题&lt;/h3>
+&lt;div class="image-package">
+&lt;img src="https://ww1.sinaimg.cn/large/6aee7dbbgw1effeaclhiyj20eh09cwez.jpg" data-original-src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effeaclhiyj20eh09cwez.jpg" alt="标题" style="cursor: zoom-in;">&lt;div class="image-caption">标题&lt;/div>
+&lt;/div>
+&lt;p>标题是每篇文章都需要也是最常用的格式，在 Markdown 中，如果一段文字被定义为标题，只要在这段文字前加 &lt;code>##&lt;/code> 号即可。&lt;/p>
+&lt;p>&lt;code>## 一级标题&lt;/code>&lt;/p>
+&lt;p>&lt;code>#### 二级标题&lt;/code>&lt;/p>
+&lt;p>&lt;code>###### 三级标题&lt;/code>&lt;/p>
+&lt;p>以此类推，总共六级标题，建议在井号后加一个空格，这是最标准的 Markdown 语法。&lt;/p>
+&lt;h3>列表&lt;/h3>
+&lt;p>熟悉 HTML 的同学肯定知道有序列表与无序列表的区别，在 Markdown 下，列表的显示只需要在文字前加上 &lt;code>-&lt;/code> 或 &lt;code>*&lt;/code> 即可变为无序列表，有序列表则直接在文字前加&lt;code>1.&lt;/code> &lt;code>2.&lt;/code> &lt;code>3.&lt;/code> 符号要和文字之间加上一个字符的空格。&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww4.sinaimg.cn/large/6aee7dbbgw1effew5aftij20d80bz3yw.jpg" data-original-src="http://ww4.sinaimg.cn/large/6aee7dbbgw1effew5aftij20d80bz3yw.jpg" alt="无序列表与有序列表" style="cursor: zoom-in;">&lt;div class="image-caption">无序列表与有序列表&lt;/div>
+&lt;/div>
+&lt;h3>引用&lt;/h3>
+&lt;p>如果你需要引用一小段别处的句子，那么就要用引用的格式。&lt;/p>
+&lt;blockquote>
+&lt;p>例如这样&lt;/p>
+&lt;/blockquote>
+&lt;p>只需要在文本前加入 &lt;code>&amp;gt;&lt;/code> 这种尖括号（大于号）即可&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww3.sinaimg.cn/large/6aee7dbbgw1effezhonxlj20e009c3yu.jpg" data-original-src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effezhonxlj20e009c3yu.jpg" alt="引用" style="cursor: zoom-in;">&lt;div class="image-caption">引用&lt;/div>
+&lt;/div>
+&lt;h3>图片与链接&lt;/h3>
+&lt;p>插入链接与插入图片的语法很像，区别在一个 &lt;code>!&lt;/code>号&lt;/p>
+&lt;p>图片为：&lt;code>![]()&lt;/code>&lt;/p>
+&lt;p>链接为：&lt;code>[]()&lt;/code>&lt;/p>
+&lt;p>插入图片的地址需要图床，这里推荐&lt;a href="https://link.jianshu.com?t=http://weibotuchuang.sinaapp.com" target="_blank" rel="nofollow">围脖图床修复计划&lt;/a> 与 &lt;a href="https://link.jianshu.com?t=http://www.getcloudapp.com" target="_blank" rel="nofollow">CloudApp&lt;/a> 的服务，生成URL地址即可。&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww2.sinaimg.cn/large/6aee7dbbgw1efffa67voyj20ix0ctq3n.jpg" data-original-src="http://ww2.sinaimg.cn/large/6aee7dbbgw1efffa67voyj20ix0ctq3n.jpg" alt="URL 与图片" style="cursor: zoom-in;">&lt;div class="image-caption">URL 与图片&lt;/div>
+&lt;/div>
+&lt;h3>粗体与斜体&lt;/h3>
+&lt;p>Markdown 的粗体和斜体也非常简单，用两个 &lt;code>*&lt;/code> 包含一段文本就是粗体的语法，用一个 &lt;code>*&lt;/code> 包含一段文本就是斜体的语法。&lt;/p>
+&lt;p>例如：&lt;strong>这里是粗体&lt;/strong> &lt;em>这里是斜体&lt;/em>&lt;/p>
+&lt;h3>表格&lt;/h3>
+&lt;p>表格是我觉得 Markdown 比较累人的地方，例子如下：&lt;/p>
+&lt;pre class="hljs ruby">&lt;code class="ruby">&lt;span class="hljs-params">| Tables |&lt;/span> Are &lt;span class="hljs-params">| Cool |&lt;/span>
+&lt;span class="hljs-params">| ------------- |&lt;/span>&lt;span class="hljs-symbol">:-------------&lt;/span>&lt;span class="hljs-symbol">:|&lt;/span> -----&lt;span class="hljs-symbol">:|&lt;/span>
+&lt;span class="hljs-params">| col 3 is |&lt;/span> right-aligned &lt;span class="hljs-params">| $1600 |&lt;/span>
+&lt;span class="hljs-params">| col 2 is |&lt;/span> centered &lt;span class="hljs-params">| $12 |&lt;/span>
+&lt;span class="hljs-params">| zebra stripes |&lt;/span> are neat &lt;span class="hljs-params">| $1 |&lt;/span>
+&lt;/code>&lt;/pre>
+&lt;p>这种语法生成的表格如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Tables&lt;/th>
+&lt;th style="text-align:center">Are&lt;/th>
+&lt;th style="text-align:right">Cool&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>col 3 is&lt;/td>
+&lt;td style="text-align:center">right-aligned&lt;/td>
+&lt;td style="text-align:right">$1600&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>col 2 is&lt;/td>
+&lt;td style="text-align:center">centered&lt;/td>
+&lt;td style="text-align:right">$12&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>zebra stripes&lt;/td>
+&lt;td style="text-align:center">are neat&lt;/td>
+&lt;td style="text-align:right">$1&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3>代码框&lt;/h3>
+&lt;p>如果你是个程序猿，需要在文章里优雅的引用代码框，在 Markdown下实现也非常简单，只需要用两个 ` 把中间的代码包裹起来。图例：&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww3.sinaimg.cn/large/6aee7dbbgw1effg1lsa97j20lt0a8dgs.jpg" data-original-src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effg1lsa97j20lt0a8dgs.jpg" style="cursor: zoom-in;">&lt;div class="image-caption">&lt;/div>
+&lt;/div>
+&lt;p>使用 &lt;code>tab&lt;/code> 键即可缩进。&lt;/p>
+&lt;h3>分割线&lt;/h3>
+&lt;p>分割线的语法只需要三个 &lt;code>*&lt;/code> 号，例如：&lt;/p>
+&lt;hr>
+&lt;blockquote>
+&lt;p>到这里，Markdown 的基本语法在日常的使用中基本就没什么大问题了，只要多加练习，配合好用的工具，写起东西来肯定会行云流水。更多的语法规则，其实 Mou 的 Help 文档栗子很好，当你第一次使用 Mou 时，就会显示该文档。可以用来对用的查找和学习。&lt;/p>
+&lt;/blockquote>
+&lt;div class="image-package">
+&lt;img src="https://ww3.sinaimg.cn/large/6aee7dbbgw1effgmnpgqlj210j0us44j.jpg" data-original-src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effgmnpgqlj210j0us44j.jpg" style="cursor: zoom-in;">&lt;div class="image-caption">&lt;/div>
+&lt;/div>
+&lt;h2>
+&lt;strong>三，相关推荐&lt;/strong>:&lt;/h2>
+&lt;h3>&lt;strong>工具&lt;/strong>&lt;/h3>
+&lt;p>&lt;em>图床工具用来上传图片获取 URL 地址&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://droplr.com" target="_blank" rel="nofollow">Droplr&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://www.getcloudapp.com" target="_blank" rel="nofollow">Cloudapp&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://link.jianshu.com?t=https://itunes.apple.com/cn/app/yi-xiang/id672522335?mt=12&amp;amp;uo=4" target="_blank" rel="nofollow">ezShare for Mac&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://weibotuchuang.sinaapp.com" target="_blank" rel="nofollow">围脖图床修复计划&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>在线好用的Markdown工具，为印象笔记而生&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://maxiang.info" target="_blank" rel="nofollow">马克飞象，专为印象笔记打造的Markdown编辑器，非常推荐&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3>
+&lt;strong>相关文章阅读&lt;/strong>：&lt;/h3>
+&lt;ul>
+&lt;li>&lt;p>&lt;a href="https://www.jianshu.com/p/qqgjln" target="_blank">为什么作家应该用 Markdown 保存自己的文稿&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://www.yangzhiping.com/tech/r-markdown-knitr.html" target="_blank" rel="nofollow">Markdown写作浅谈&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://www.appinn.com/markdown-tools/" target="_blank" rel="nofollow">Markdown 工具补完&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://www.jianshu.com/p/63HYZ6" target="_blank">Drafts + Scriptogr.am + Dropbox 打造移动端 Markdown 风格博客&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://www.ituring.com.cn/article/23" target="_blank" rel="nofollow">图灵社区，怎样使用Markdown&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://news.cnblogs.com/n/139649/" target="_blank" rel="nofollow">为什么我们要学习Markdown的三个理由&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://ibuick.me/?p=4093" target="_blank" rel="nofollow">Markdown 语法写作入门指南 by ibuick&lt;/a>&lt;/p>&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;p>&lt;strong>本文首发在&lt;a href="https://link.jianshu.com?t=http://sspai.com/25137" target="_blank" rel="nofollow">少数派&lt;/a>转载请注明原作者，如果你觉得这篇文章对你有帮助或启发，也可以来请我&lt;a href="https://link.jianshu.com?t=http://ww2.sinaimg.cn/large/6aee7dbbjw1eiixgkex2ij21kw0t7wn5.jpg" target="_blank" rel="nofollow">喝咖啡&lt;/a>。&lt;br>
+利益相关：本篇文章所有涉及到的软件均为笔者日常所用工具，无任何广告费用。&lt;/strong>&lt;/p>
+&lt;pre>&lt;code> &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code>&lt;/pre></description></item></channel></rss>

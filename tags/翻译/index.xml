@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>翻译 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E7%BF%BB%E8%AF%91/</link><description>Recent content in 翻译 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 13 Jan 2025 22:55:00 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E7%BF%BB%E8%AF%91/index.xml" rel="self" type="application/rss+xml"/><item><title>C#解析命令行参数</title><link>https://blog.gaein.cn/passages/command-line-parser/</link><pubDate>Mon, 02 Aug 2021 22:24:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/command-line-parser/</guid><description>&lt;h2 id="版权声明">版权声明
+&lt;/h2>&lt;blockquote>
+&lt;p>&amp;ldquo;&lt;a class="link" href="https://codingblog.carterdan.net/2019/04/12/command-line-parser/" target="_blank" rel="noopener"
+>Command Line Parser for C# | DC Coding&lt;/a>&amp;rdquo; by &lt;a class="link" href="https://codingblog.carterdan.net/About/" target="_blank" rel="noopener"
+>Dan Carter&lt;/a>, ‎translate from original.&lt;/p>
+&lt;p>本文翻译自 &lt;a class="link" href="https://codingblog.carterdan.net/About/" target="_blank" rel="noopener"
+>Dan Carter&lt;/a> 的 &amp;ldquo;&lt;a class="link" href="https://codingblog.carterdan.net/2019/04/12/command-line-parser/" target="_blank" rel="noopener"
+>Command Line Parser for C# | DC Coding&lt;/a>&amp;quot;。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>Anther&amp;rsquo;s permission:
+原作者许可：
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Command-line-Parser/1.webp"
+loading="lazy"
+alt="permission"
+>&lt;/p>&lt;/blockquote>
+&lt;hr>
+&lt;p>我最近正在折腾 Command Line Parser。这是一个处理、解析命令行参数和选项的样板代码 C# 库（可以用 NuGet 来安装）&lt;/p>
+&lt;p>它使用常见的约定来确定选项的处理方式（类似于 C 的 &lt;code>getopt&lt;/code> 函数）。&lt;/p>
+&lt;p>它的 GitHub page 上有很完善的文档，但是我仍然决定在这里分享一下怎么用。&lt;/p>
+&lt;h2 id="简单选项">简单选项
+&lt;/h2>&lt;p>假设我们现在正在创建一个用户获取文件属性（大小、文件类型等）的程序，希望支持以下命令行选项：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>&amp;lt;文件路径&amp;gt;&lt;/code> (必须)&lt;/li>
+&lt;li>&lt;code>-d&lt;/code> 或 &lt;code>--detailed&lt;/code> （如果存在这个参数则输出所有能获取到的文件属性，否则则输出最常用的信息）&lt;/li>
+&lt;li>&lt;code>-o &amp;lt;文件路径&amp;gt;&lt;/code> 或 &lt;code>--output &amp;lt;文件路径&amp;gt;&lt;/code> （指定文件属性输出的位置）&lt;/li>
+&lt;/ul>
+&lt;p>然后我们可以创建一个包括可能的命令行选项的属性类 &lt;code>Options&lt;/code> ，使用特性来修饰期望的具体的用法：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Options&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [Value(0)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">FilePath&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [Option(&amp;#39;d&amp;#39;, &amp;#34;detailed&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">bool&lt;/span> &lt;span class="n">Detailed&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [Option(&amp;#39;o&amp;#39;, &amp;#34;output&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Output&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>Value&lt;/code> 特性定义了按位置识别的参数，&lt;code>Option&lt;/code> 特性定义了按名字识别的参数。&lt;/p>
+&lt;p>然后在主函数中轻轻松松的像下面这样写：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Program&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">static&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">Main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">CommandLine&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Default&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ParseArguments&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Options&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">WithParsed&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Options&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">o&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 解析成功，继续运行app&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">WithNotParsed&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Options&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 解析错误，处理错误&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>Options&lt;/code> 类的实例 &lt;code>o&lt;/code> 将会被用解析的选项填充，你可以使用它来控制你应用程序的行为。&lt;/p>
+&lt;h2 id="动词">动词
+&lt;/h2>&lt;p>这个库也支持类似于“动词”的玩意，比如 Git（一种版本控制软件）有很多你可以执行的特殊的动作（&lt;code>git clone&lt;/code>，&lt;code>git commit&lt;/code>，&lt;code>git pull&lt;/code> 等），分别有它们自己的选项&lt;/p>
+&lt;p>在 Command Line Parser 中，你可以为每个动词创建选项类:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="na">[Verb(&amp;#34;clone&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">CloneOptions&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">[Verb(&amp;#34;commit&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">CommitOptions&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">[Verb(&amp;#34;pull&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">PullOptions&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后在你的主函数中定义你要对每个动词干什么以及如何处理错误：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Program&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">static&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">Main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">CommandLine&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Parser&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Default&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ParseArguments&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">AddOptions&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">CommitOptions&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">CloneOptions&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">MapResult&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">CloneOptions&lt;/span> &lt;span class="n">o&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// clone&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">CommitOptions&lt;/span> &lt;span class="n">o&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// commit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">PullOptions&lt;/span> &lt;span class="n">o&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// pull&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">e&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="自定义">自定义
+&lt;/h2>&lt;p>上面给出 例子使用了 &lt;code>CommandLine.Parser.Default&lt;/code> （默认解析方案），但实际上有很多方法来自定义解析。例如，你可以设置要解析的参数的区域性，或者设置解析时是否区分大小写。&lt;/p>
+&lt;h2 id="帮助文本">帮助文本
+&lt;/h2>&lt;p>Command Line Parser 中一个很棒的功能是它可以为你的应用程序生成帮助文本。你需要做的只有在特性中添加 &lt;code>HelpText&lt;/code> 属性，然后传递 &lt;code>--help&lt;/code> 参数的某人就会获取到帮助文本。&lt;/p>
+&lt;p>例如，之前我们的 &lt;code>Options&lt;/code> 类可以更改为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Options&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [Value(0, HelpText = &amp;#34;The file to display information for.&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">FilePath&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [Option(&amp;#39;d&amp;#39;, &amp;#34;detailed&amp;#34;, HelpText = &amp;#34;Whether to output detailed information about the file.&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">bool&lt;/span> &lt;span class="n">Detailed&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [Option(&amp;#39;o&amp;#39;, &amp;#34;output&amp;#34;, HelpText = &amp;#34;If specified, a file to output the results to.&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Output&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后使用 &lt;code>--help&lt;/code> 参数运行应用程序，将会有以下输出：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">-d, --detailed Whether to output detailed information about the file.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-o, --output If specified, a file to output the results to.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--help Display this help screen.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">--version Display version information.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">value pos. 0 The file to display information for.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这个文本会在解析参数失败的时候自动输出。&lt;/p>
+&lt;p>你也可以给你的应用程序添加一个总结，包括一些使用的例子。这些玩意会被添加到帮助文本中。&lt;/p>
+&lt;h2 id="结论">结论
+&lt;/h2>&lt;p>Command Line Parser 带走了解析命令行选项相关的样板代码。我可以清楚的感觉到，这个库从有几个选项的小程序到巨大的复杂应用程序都很有用。&lt;/p>
+&lt;p>我现在在一个未来博客（指&lt;a class="link" href="https://codingblog.carterdan.net/" target="_blank" rel="noopener"
+>原作者的博客&lt;/a>）可能提到的足球比赛模拟器用到了这个库&amp;hellip;&lt;/p></description></item><item><title>C#实现使用微软账户集成登录</title><link>https://blog.gaein.cn/passages/ms-account-integrated-signin-via-cssharp/</link><pubDate>Fri, 09 Jul 2021 04:49:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/ms-account-integrated-signin-via-cssharp/</guid><description>&lt;h2 id="版权声明">版权声明
+&lt;/h2>&lt;blockquote>
+&lt;p>&amp;ldquo;&lt;a class="link" href="https://anduin.aiursoft.com/post/2020/3/18/microsoft-account-integrated-sign-in-via-c#" target="_blank" rel="noopener"
+>Microsoft account integrated sign in via C#&lt;/a>&amp;rdquo; by &lt;a class="link" href="https://anduin.aiursoft.com/" target="_blank" rel="noopener"
+>Anduin Xue&lt;/a>, used under &lt;a class="link" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"
+>CC AS 4.0&lt;/a>, ‎translate from original.&lt;/p>
+&lt;p>本文翻译自 &lt;a class="link" href="https://anduin.aiursoft.com/" target="_blank" rel="noopener"
+>Anduin Xue&lt;/a> 的 &amp;ldquo;&lt;a class="link" href="https://anduin.aiursoft.com/post/2020/3/18/microsoft-account-integrated-sign-in-via-c#" target="_blank" rel="noopener"
+>Microsoft account integrated sign in via C#&lt;/a>&amp;rdquo; ，依据 &lt;a class="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="noopener"
+>CC AS 4.0&lt;/a> 协议授权。&lt;/p>&lt;/blockquote>
+&lt;hr>
+&lt;p>下面的简单代码说明了如何构建一个支持使用 Microsoft 账户的 OAuth 身份认证。&lt;/p>
+&lt;p>在开始打代码之前，我们需要在你的 Azure portal 中先创建一个App。 &lt;a class="link" href="https://portal.azure.com" target="_blank" rel="noopener"
+>https://portal.azure.com&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/01.webp"
+loading="lazy"
+alt="azure portal"
+>&lt;/p>
+&lt;p>这个名字是你的App显示的名字。选中让你的应用可以访问任何组织账号和个人账号的那项。至于重定向URI，它必须是你的服务器重定向地址，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">https://gateway.aiursoft.com/debug
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/02.webp"
+loading="lazy"
+alt="创建应用"
+>&lt;/p>
+&lt;p>创建完应用后，在这里复制你的 application id：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/03.webp"
+loading="lazy"
+alt="app id"
+>&lt;/p>
+&lt;p>然后创建一个 secret。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/04.webp"
+loading="lazy"
+alt="secret"
+>&lt;/p>
+&lt;p>别忘了复制那个 secret。&lt;/p>
+&lt;p>运行下面说的代码需要一些像 &lt;code>AiurUrl&lt;/code> 和 &lt;code>Aiursoft.XelNaga.Services.HTTPService&lt;/code> 这样的类。运行下面这行命令来获取：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ dotnet add package Aiursoft.XelNaga
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>为了让用户登录，我们需要重定向到微软的登录门户。复制以下的代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">GetBindRedirectLink&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;https://login.microsoftonline.com&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">$&amp;#34;/{_tenant}/oauth2/v2.0/authorize&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MicrosoftAuthAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">_clientId&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://gateway.aiursoft.com/debug&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ResponseType&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;code&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Scope&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;user.read&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">State&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}).&lt;/span>&lt;span class="n">ToString&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftAuthAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;redirect_uri&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;state&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">State&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;scope&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Scope&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;response_type&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ResponseType&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>只需要返回给浏览器一个&lt;code>redirect result&lt;/code> 和从 &lt;code>GetRedirectLink()&lt;/code> 函数获取到的重定向链接。&lt;/p>
+&lt;p>用户成功的登录了他的账户的时候，将会带着一个码重定向回到你设置的 &lt;code>RedirectUri&lt;/code>。这个码正式我们需要的。&lt;/p>
+&lt;p>通过这个码，你可以调用 &lt;code>GetUserDetail()&lt;/code> 方法来获取用户的信息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IUserDetail&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetUserDetail&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">token&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">GetAccessToken&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">_clientId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">_clientSecret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">GetUserInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>_clientId&lt;/code> 和 &lt;code>_clientSecret&lt;/code> 是你创建这个 app 时候复制的。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">private&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetAccessToken&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">clientId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">clientSecret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">apiAddress&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://login.microsoftonline.com&amp;#34;&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="s">$&amp;#34;/{_tenant}/oauth2/v2.0/token&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">url&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">apiAddress&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">form&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MicrosoftAccessTokenAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">clientId&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientSecret&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">clientSecret&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Code&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Scope&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;user.read&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://gateway.aiursoft.com/debug&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">GrantType&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;authorization_code&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">json&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Post&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">response&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">JsonConvert&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DeserializeObject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">AccessTokenResponse&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsNullOrWhiteSpace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AccessToken&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurAPIModelException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ErrorType&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Unauthorized&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Invalid Microsoft crenditial&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AccessToken&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">WebException&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurAPIModelException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ErrorType&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Unauthorized&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Invalid Microsoft API response&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftAccessTokenAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_secret&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientSecret&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;code&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Code&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;scope&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Scope&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;grant_type&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">GrantType&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;redirect_uri&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>GetAccessToken()&lt;/code> 方法能够帮助你获取一个有效的能够让你下载到用户信息的 access token。&lt;/p>
+&lt;p>你拿到了 access token 之后，只需要调用 &lt;code>GetUserInfo()&lt;/code> 即可。下面我们将调用 graph API 来获取当前用户的信息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">private&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">MicrosoftUserDetail&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetUserInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">accessToken&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">apiAddress&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://graph.microsoft.com/v1.0/me&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">request&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HttpRequestMessage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">HttpMethod&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Get&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">apiAddress&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Headers&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Authorization&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">$&amp;#34;Bearer {accessToken}&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">response&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_client&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SendAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsSuccessStatusCode&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">json&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Content&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ReadAsStringAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">user&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">JsonConvert&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DeserializeObject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">MicrosoftUserDetail&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">user&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">WebException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ReasonPhrase&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>返回的用户是一个 &lt;code>MicrosoftUserDetail&lt;/code> 的实例。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftUserDetail&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">IUserDetail&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Id&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;displayName&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">DisplayName&lt;/span>&lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;userPrincipalName&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">UserPrincipalName&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;jobTitle&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">JobTitle&lt;/span>&lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Id 是唯一的，可以使用这个来认证你的用户。&lt;/p>
+&lt;p>最后，构建一个个性化的网页，然后你的app就行力。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/05.webp"
+loading="lazy"
+alt="网页"
+>&lt;/p>
+&lt;p>源代码在这：&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/AiursoftWeb/Nexus/blob/master/Pylon/Services/Authentication/ToMicrosoftServer/MicrosoftService.cs" target="_blank" rel="noopener"
+>https://github.com/AiursoftWeb/Nexus/blob/master/Pylon/Services/Authentication/ToMicrosoftServer/MicrosoftService.cs&lt;/a>&lt;/p>
+&lt;p>This work is licensed under a &lt;a class="link" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"
+>Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a>&lt;/p></description></item><item><title>为 ASP.NET Core 自定义监听 Url 和端口的五种办法</title><link>https://blog.gaein.cn/passages/set-urls-for-aspnetcore/</link><pubDate>Sun, 04 Apr 2021 03:18:28 +0800</pubDate><guid>https://blog.gaein.cn/passages/set-urls-for-aspnetcore/</guid><description>&lt;blockquote>
+&lt;p>文章由我翻译自&lt;a class="link" href="https://andrewlock.net/5-ways-to-set-the-urls-for-an-aspnetcore-app/" target="_blank" rel="noopener"
+>5 ways to set the URLs for an ASP.NET Core app&lt;/a>。本人文化水平不高，可能有误译，但是大致内容应该没有问题，还请多海涵。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>版权声明：本文:&lt;a class="link" href="https://andrewlock.net/5-ways-to-set-the-urls-for-an-aspnetcore-app/" target="_blank" rel="noopener"
+>5 ways to set the URLs for an ASP.NET Core app&lt;/a>为&lt;a class="link" href="https://andrewlock.net/about/" target="_blank" rel="noopener"
+>Andrew Lock&lt;/a>原创，依据 &lt;a class="link" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"
+>CC BY-SA 4.0&lt;/a> 许可证进行授权，转载请附上出处链接及本声明。&lt;/p>&lt;/blockquote>
+&lt;h2 id="为-aspnet-core-自定义监听-url-和端口的五种办法">为 ASP.NET Core 自定义监听 Url 和端口的五种办法
+&lt;/h2>&lt;p>默认情况下，ASP.NET Core应用程序监听以下地址：&lt;/p>
+&lt;ul>
+&lt;li>http://localhost:5000&lt;/li>
+&lt;li>https://localhost:5001&lt;/li>
+&lt;/ul>
+&lt;p>在这篇文章里我将给出 5 种不同的办法来改变你的应用程序监听的地址。&lt;/p>
+&lt;p>在启动程序的时候改变 ASP.NET Core 监听地址有很多种办法。我有一篇&lt;a class="link" href="https://andrewlock.net/configuring-urls-with-kestrel-iis-and-iis-express-with-asp-net-core/" target="_blank" rel="noopener"
+>旧博客&lt;/a>指出了在 ASP.NET Core 1.0 中可选的几种办法，这些办法在 ASP.NET Core 3.x 中大致是相同的：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>UseUrls()&lt;/code> —— 在 &lt;em>Program.cs&lt;/em> 中写死；&lt;/li>
+&lt;li>环境变量 —— 使用 &lt;code>DOTNET_URLS&lt;/code> 或者 &lt;code>ASPNETCORE_URLS&lt;/code> 来设置；&lt;/li>
+&lt;li>命令行参数 —— 从命令行启动时使用 &lt;code>--urls&lt;/code> 参数来设置；&lt;/li>
+&lt;li>使用 &lt;code>launchSettings.json&lt;/code> —— 在 &lt;code>applicationUrl&lt;/code> 这个节点中设置；&lt;/li>
+&lt;li>&lt;code>KestrelServerOptions.Listen()&lt;/code> —— 手动使用 &lt;code>Listen()&lt;/code> 为 Kestrel 服务器设置地址。&lt;/li>
+&lt;/ul>
+&lt;p>在下面我们来看各个办法的详细说明。&lt;/p>
+&lt;h3 id="你能用什么样的urls">你能用什么样的URLs
+&lt;/h3>&lt;p>在这篇文章里我说了你可以监听的 &amp;ldquo;URLs&amp;rdquo;，但是你不可能去使用一个随意的、毫无章法 URL。这有 3 类 URL 可以用来监听。&lt;/p>
+&lt;ul>
+&lt;li>IPv4 和 IPv6 的本机环回地址（例如 &lt;code>http://localhost:5000&lt;/code>）。它的格式为:&lt;code>{协议}://{回路网络接口地址}:{端口}&lt;/code>；&lt;/li>
+&lt;li>你机器上的某个特定 IP 地址（例如 &lt;code>http://192.168.8.31:5005&lt;/code>）。它的格式为:&lt;code>{协议}://{IP地址}:{端口}&lt;/code>；&lt;/li>
+&lt;li>指定端口的全部 IP 地址（例如 &lt;code>http://*:6264&lt;/code>）。它的格式为:&lt;code>{协议}://*:{端口}&lt;/code>。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>port&lt;/code> 在上述模式中也是可选的 —— 如果你省略了它，将会使用方案的默认端口（&lt;code>https&lt;/code> 端口是 &lt;code>80&lt;/code>，&lt;code>https&lt;/code> 的端口是 &lt;code>443&lt;/code>）。&lt;/p>
+&lt;p>上述模式中你选择那种取决于你的部署机制。比方说，你在一台服务器上托管多个应用程序，你需要设置明确的IP地址。如果你在容器中托管，一般来说你可以使用地址 &lt;code>localhost&lt;/code>。&lt;/p>
+&lt;blockquote>
+&lt;p>注意观察 “任意” IP 地址的格式 —— 你不一定必须要用 &lt;code>*&lt;/code>，你可以使用一切不是 IP 地址也不是 &lt;code>localhost&lt;/code> 的地址。也就是说，你可以使用像 &lt;code>http://*&lt;/code>、&lt;code>http://+&lt;/code>，&lt;code>http://mydomain&lt;/code> 或者 &lt;code>http://example.org&lt;/code>。所有这些都会有相同的行为，并且监听任何 IP。如果你只想处理某个特定的域名的请求，你需要额外设置 &lt;a class="link" href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.1##host-filtering" target="_blank" rel="noopener"
+>host filtering&lt;/a>。&lt;/p>&lt;/blockquote>
+&lt;p>当你知道你需要你的程序监听那些 URLs 时，你需要告诉你的程序这些事。在这篇博客里我写了设置这些的 5 种可能的方法。&lt;/p>
+&lt;h3 id="useurls">UseUrls()
+&lt;/h3>&lt;p>第一种、并且也是最简单的设置绑定 URL 的的办法是在 &lt;code>IWebHostBuilder&lt;/code> 中使用 &lt;code>UseUrls()&lt;/code> 写死：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">Program&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">Main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">CreateHostBuilder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">Build&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">Run&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">IHostBuilder&lt;/span> &lt;span class="n">CreateHostBuilder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Host&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">CreateDefaultBuilder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">ConfigureWebHostDefaults&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">webBuilder&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">webBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">UseStartup&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Startup&lt;/span>&lt;span class="p">&amp;gt;();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">webBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">UseUrls&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;http://localhost:5003&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;https://localhost:5004&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>把 URLs 写死看起来并不是一个优雅且可拓展的解决方法，所以这个方法并不怎么用在实际使用中。&lt;/p>
+&lt;p>幸运的是，你仍旧可以从外部配置文件、环境变量活命令行参数中设置 URLs。&lt;/p>
+&lt;h3 id="环境变量">环境变量
+&lt;/h3>&lt;p>.NET Core使用两 &lt;em>种&lt;/em> 设置：&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>App设置&lt;/strong> 是你通常所使用的，并且从 &lt;em>appSettings.json&lt;/em> 、环境变量以及其它地方加载。&lt;/li>
+&lt;li>&lt;strong>Host设置&lt;/strong> 是用来设置基础的东西的，比如 &lt;a class="link" href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1" target="_blank" rel="noopener"
+>hosting环境变量&lt;/a> 和 host 使用的 URL。&lt;/li>
+&lt;/ul>
+&lt;p>当考虑如何为应用程序设置 URLs 时，我们感兴趣的办法是 &lt;em>Host设置&lt;/em> 。默认情况下，host设置的值从三个不同的源读取：&lt;/p>
+&lt;ul>
+&lt;li>带有 &lt;code>DOTNET_&lt;/code> 前缀的环境变量。这些环境变量被去除了前缀添加到集合里面；&lt;/li>
+&lt;li>命令行参数；&lt;/li>
+&lt;li>带有 &lt;code>ASPNETCORE_&lt;/code> 前缀的环境变量，这些环境变量也被添加到了集合里面，仅对 ASP.NET Core 应用程序有作用。如果你创建了一个.NET 通用主机的服务，那么这些环境变量将不会添加；&lt;/li>
+&lt;/ul>
+&lt;p>如果你不手动重写方法 &lt;code>UseUrls()&lt;/code>，ASP.NET Core 将会使用从设置系统中读取的 &lt;code>URLS&lt;/code> 键对应的值。基于前文，你可以使用两个环境变量中的任意一个设置 URLs：&lt;/p>
+&lt;ul>
+&lt;li>DOTNET_URLS&lt;/li>
+&lt;li>ASPNETCORE_URLS&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>如果你同时设置了两个环境变量， &lt;code>ASPNETCORE_URLS&lt;/code> 的参数将会优先被使用。&lt;/p>&lt;/blockquote>
+&lt;p>你可以像通常做的那样在你的环境中设置环境变量。比如，使用命令提示符：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cmd" data-lang="cmd">&lt;span class="line">&lt;span class="cl">setx ASPNETCORE_URLS &lt;span class="s2">&amp;#34;http://localhost:5001&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用PowerShell：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ps1" data-lang="ps1">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$Env&lt;/span>&lt;span class="err">:&lt;/span> &lt;span class="n">ASPNETCORE_URLS&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;http://localhost:5001&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者是在bash里：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">ASPNETCORE_URLS&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;http://localhost:5001;https://localhost:5002&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>就像你在上面看到的那样，你可以通过用分号分割它们来传递多个被监听的地址（用HTTP和HTTPS都行）。&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://disq.us/p/28v6d6c" target="_blank" rel="noopener"
+>Marc在评论中&lt;/a>指出，如果你在 Docker 中运行它，&lt;a class="link" href="https://github.com/dotnet/dotnet-docker/blob/402a1591e224b681015be628986eefa5012e940e/3.1/runtime-deps/alpine3.11/amd64/Dockerfile##L15" target="_blank" rel="noopener"
+>Dockerfile 会将 &lt;code>ASPNETCORE_URLS&lt;/code> 环境变量设置为端口 80&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h3 id="命令行参数">命令行参数
+&lt;/h3>&lt;p>另外一个设置host设置值的办法是使用命令行。如果设置了环境变量则命令行参数会重写它们。只需要使用 &lt;code>--urls&lt;/code> 参数：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">dotnet run --urls &lt;span class="s2">&amp;#34;http://localhost:5100&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>像前面那样，你可以通过用分号分割来传递多个 URLs：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">dotnet run --urls &lt;span class="s2">&amp;#34;http://localhost:5100;https://localhost:5101&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>环境变量和命令行参数可能是生产环境中设置 URLs 用的最多的办法了，但是对于在本地开发来说可能略显繁琐，因此在本地开发通常简单的使用 &lt;em>launchSettings.json&lt;/em>&lt;/p>
+&lt;h3 id="launchsettingsjson">launchSettings.json
+&lt;/h3>&lt;p>大部分 ASP.NET 项目模板在 &lt;code>Properties&lt;/code> 文件夹中包含 &lt;code>launchSettings.json&lt;/code> 文件。这个文件包含了启动 ASP.NET Core 应用程序的几种配置。一个典型的例子是包含从命令行直接启动选项的定义还有一个使用 IIS Express。该文件配置了 Visual Studio 中 Debug 的下拉菜单：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/AspNetCore-Set-Urls/launchsettings.png"
+loading="lazy"
+alt="Visual Studio"
+>&lt;/p>
+&lt;p>&lt;em>launchSettings.json&lt;/em> 通过 &lt;code>applicationUrl&lt;/code> 节点提供了一个设置 URL 的简单办法 —— 你还可以看见 &lt;code>iisSettings&lt;/code> 里面的 IIS express 设置，以及另外一个 &lt;code>TestApp&lt;/code> （应用程序的名称）。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;iisSettings&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;windowsAuthentication&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;anonymousAuthentication&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;iisExpress&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;applicationUrl&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;http://localhost:38327&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;sslPort&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">44310&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;profiles&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;IIS Express&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;commandName&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;IISExpress&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;launchBrowser&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;environmentVariables&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;ASPNETCORE_ENVIRONMENT&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Development&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;TestApp&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;commandName&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Project&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;launchBrowser&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;applicationUrl&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;https://localhost:5001;http://localhost:5000&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;environmentVariables&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;ASPNETCORE_ENVIRONMENT&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Development&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>想要使用这个文件你不需要做任何特别的设置 —— &lt;code>dotnet run&lt;/code> 将会自动使用它。&lt;/p>
+&lt;blockquote>
+&lt;p>launchSettings.json 同时也提供了一种方便简单的办法使用 &lt;code>environmentVariables&lt;/code> 节点来添加环境变量，你可以从上面的文件看出来这点。&lt;/p>&lt;/blockquote>
+&lt;p>当你从命令行使用 &lt;code>dotnet run&lt;/code> 运行你的应用程序，你的程序将会使用上面文件中指定的“项目”中的 &lt;code>applicationUrl&lt;/code> 节点中的 URLs &lt;code>https://localhost:5001;http://localhost:5000&lt;/code>。当你使用 &amp;ldquo;IISExpress&amp;rdquo; 选项的时候，你的应用程序会使用 &lt;code>iisSettings.iisExpress&lt;/code> 中的 &lt;code>applicationUrl&lt;/code>。&lt;/p>
+&lt;p>当你在本地开发时可以使用这个文件非常轻易的修改环境变量。事实上你还可以 &lt;em>不&lt;/em> 使用这个 &lt;em>launchSettings.json&lt;/em> 文件:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">dotnet run --no-launch-profile
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这将会跳过 &lt;code>launchSettings.json&lt;/code> 文件并且使用本机的环境变量来内部确定URLs。&lt;/p>
+&lt;p>所有的这些办法都是简介的对 Kestrel 的间接设置，但你仍然可以直接设置它们。&lt;/p>
+&lt;h3 id="kestrelserveroptionslisten">KestrelServerOptions.Listen()
+&lt;/h3>&lt;p>在大部分ASP.NET Core程序中，&lt;a class="link" href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.1" target="_blank" rel="noopener"
+>Kestrel&lt;/a>被设置为默认的服务器。如果你想的话可以手动设置为 Kestrel 设置端点，或者通过 &lt;code>IConfiguration&lt;/code> 系统去配置 &lt;code>KestrelServerOptions&lt;/code>。&lt;/p>
+&lt;p>我从来没有真正需要去设置这个的时候，并且这个玩意有非常大量的选项可以用。所以，通常情况下我建议&lt;a class="link" href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.1##endpoint-configuration" target="_blank" rel="noopener"
+>参考文档&lt;/a>。举个例子，你可以使用被 &lt;code>KestrelServerOptions&lt;/code> 暴露的 &lt;code>Listen()&lt;/code> 方法。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">Program&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">Main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">CreateHostBuilder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">Build&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">Run&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">IHostBuilder&lt;/span> &lt;span class="n">CreateHostBuilder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Host&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">CreateDefaultBuilder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">ConfigureWebHostDefaults&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">webBuilder&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">webBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">UseStartup&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Startup&lt;/span>&lt;span class="p">&amp;gt;();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">webBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">UseKestrel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">opts&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 直接绑定套接字句柄或者Unix套接字&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// opts.ListenHandle(123554);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// opts.ListenUnixSocket(&amp;#34;/tmp/kestrel-test.sock&amp;#34;);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">opts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Listen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">IPAddress&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Loopback&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">port&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="m">5002&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">opts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ListenAnyIP&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">5003&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">opts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ListenLocalhost&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">5004&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">opts&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">opts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">UseHttps&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">opts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ListenLocalhost&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">5005&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">opts&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">opts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">UseHttps&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这个直接设置 Kestrel 绑定多个地址。尽管它是写死的，但是也可以不是嘛 —— 你可以绑定 &lt;code>IConfiguration&lt;/code> 中的地址。当你使用这个办法去设置 kestrel 的绑定的时候，它将会覆盖你用其它办法配置的 &lt;code>URLS&lt;/code> 设置，比方说环境变量。当这种情况发生的时候，你可以在日志中看到警告。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">warn: Microsoft.AspNetCore.Server.Kestrel[0]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Overriding address(es) &amp;#39;http://localhost:5007&amp;#39;. Binding to endpoints defined in UseKestrel() instead.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">info: Microsoft.Hosting.Lifetime[0]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Now listening on: http://127.0.0.1:5002
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">info: Microsoft.Hosting.Lifetime[0]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Now listening on: http://[::]:5003
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>个人认为，没有必要像这样从 Kestrel 中绑定端点，但是如果你有需要的话，这是一个摆脱 Kestrel 控制的好方法。&lt;/p>
+&lt;h3 id="总结">总结
+&lt;/h3>&lt;p>这篇文章中我给出了五种不同的设置监听的 URLs 的办法。&lt;code>UseUrls()&lt;/code> 是最简单的，但是并不适合在生产环境中使用。&lt;code>--urls&lt;/code> 命令行参数和 &lt;code>ASPNETCORE_&lt;/code> / &lt;code>DOTNET_&lt;/code> 环境变量是在生产环境中设置最有用的办法。&lt;code>launchSettings.json&lt;/code> 文件在开发环境中设置URLs非常有用。如果你需要对配置进行底层的控制，你可以直接使用 Kestrel 的 &lt;code>Listen*&lt;/code> 选项，无论是生产环境开始开发环境它们都可以轻易的设置。&lt;/p></description></item><item><title>Minecraft启动器正版登录原理</title><link>https://blog.gaein.cn/passages/minecraft-login/</link><pubDate>Fri, 08 Feb 2019 21:04:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/minecraft-login/</guid><description>&lt;p>前阵子为了给服务器做个启动器，需要正版登录，于是研究了一下这方面的内容&amp;hellip;结果百度上是千篇一律的：
+&amp;ldquo;向MOJANG服务器POST账号密码&amp;rdquo;
+那么我们的当前的问题是：
+1、接收账号密码的服务器地址/IP是什么
+2、POST的格式
+至于如何POST数据，百度一搜一把
+于是我研究了一下HeyoX的代码，结果&amp;hellip;没看懂
+又是一番艰苦卓绝的百度，终于发现了一些有用的东西
+&lt;a class="link" href="https://blessing.studio/minecraft-yggdrasil-api-third-party-implementation" target="_blank" rel="noopener"
+>https://blessing.studio/minecraft-yggdrasil-api-third-party-implementation&lt;/a>
+原来MOJANG验证系统叫Yggdrasil啊&amp;hellip;或许搜这个能有所帮助
+于是，发现了神级WIKI，正式我需要的！
+&lt;a class="link" href="https://wiki.vg/Authentication" target="_blank" rel="noopener"
+>https://wiki.vg/Authentication&lt;/a>
+这里面详细的写了包括登录、刷新、登出等
+以下是翻译内容(&amp;quot;(?)是当前无法确定的翻译&amp;quot;)：
+从 Minecraft 1.6 起引入了一个名为yggdrasil的新认证方案，它完全取代了以前的认证系统。Mojang的另一个游戏——Scrolls，也使用这种身份验证方法。Mojang表示，每个人都应该使用这个认证系统进行自定义登录，但是不应该从用户那里收集凭证。&lt;/p>
+&lt;h2 id="目录">目录：
+&lt;/h2>&lt;ul>
+&lt;li>1.认证格式&lt;/li>
+&lt;li>2.错误&lt;/li>
+&lt;li>3.登录&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>4.刷新&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>5.生效(?Validate)&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>6.登出&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>7.失效&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>8.加入服务器&lt;/li>
+&lt;/ul>
+&lt;h2 id="请求格式">请求格式
+&lt;/h2>&lt;p>所有发送到ygdrasil的请求都发送到以下服务器：
+&lt;a class="link" href="https://authserver.mojang.com" target="_blank" rel="noopener"
+>https://authserver.mojang.com&lt;/a>
+此外，它们还应遵守以下规则：&lt;/p>
+&lt;ul>
+&lt;li>是POST请求吗？&lt;/li>
+&lt;li>将content-type头设置为&amp;quot;application/json&amp;quot;&lt;/li>
+&lt;li>包含一个JSON编码的字典作为有效负载(?Payload)
+如果请求成功，服务器将响应：&lt;/li>
+&lt;li>HTTP状态码200&lt;/li>
+&lt;li>在下面有一个符合规范的JSON编码字典
+但是，如果请求失败，服务器将响应：&lt;/li>
+&lt;li>适当的非200 HTTP状态代码&lt;/li>
+&lt;li>遵循此格式（见下）的JSON编码字典：
+{
+&amp;ldquo;error&amp;rdquo;:&amp;ldquo;错误的简短描述&amp;rdquo;,
+&amp;ldquo;errormessage&amp;rdquo;:&amp;ldquo;可以向用户显示的较长描述&amp;rdquo;,
+&amp;ldquo;cause&amp;rdquo;:&amp;ldquo;错误原因&amp;rdquo; //可选
+}&lt;/li>
+&lt;/ul>
+&lt;h2 id="错误">错误
+&lt;/h2>&lt;p>以下是可能遇到的一些错误&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>错误&lt;/th>
+&lt;th>原因&lt;/th>
+&lt;th>错误信息&lt;/th>
+&lt;th>笔记&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Method Not Allowed&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>请求中的方法不允许用于请求URL的资源(?)&lt;/td>
+&lt;td>发送了除POST以外方法的请求&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Not Found&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>服务器上未找到任何与URL相匹配的内容&lt;/td>
+&lt;td>发送到了不存在的端点&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>用户迁移异常&lt;/td>
+&lt;td>无效的凭证。用户已迁移，请使用电子邮件作为用户名&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的凭证。用户名或密码错误&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的凭证&lt;/td>
+&lt;td>最近使用此用户名进行的登录尝试太多（详见/authenticate）。请注意，用户名和密码可能仍然有效！&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的令牌&lt;/td>
+&lt;td>accessToken失效&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>访问令牌已经分配了一个配置文件&lt;/td>
+&lt;td>选择配置文件尚未生效&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>凭证空&lt;/td>
+&lt;td>用户名/密码未提交&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的salt版本&lt;/td>
+&lt;td>？？？&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Unsupported Media Type&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>服务器拒绝回复请求，因为请求的格式不受请求方法的支持&lt;/td>
+&lt;td>数据未作为&amp;quot;application/json&amp;quot;提交&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="登录">登录
+&lt;/h2>&lt;p>使用用户的密码进行登录&lt;/p>
+&lt;h4 id="端点">端点
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">/authenticate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="有效负载">有效负载
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;agent&amp;#34;: { //默认是Minecraft
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;name&amp;#34;: &amp;#34;Minecraft&amp;#34;, //为了登录MOJANG的另外一款游戏Scrolls，应该使用&amp;#34;Scrolls&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;version&amp;#34;: 1 //数字可能会增长
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> //未来的普通客户端(?by the vanilla client in the future)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;username&amp;#34;: &amp;#34;MOJANG账户名&amp;#34;, //可以是电子邮件或者玩家名
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> //未迁移的账户（使用玩家名）
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;password&amp;#34;: &amp;#34;MOJANG账户的密码&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;clientToken&amp;#34;: &amp;#34;客户端标识符(client identifier)&amp;#34;,//可选
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;requestUser&amp;#34;: true //可选，默认: false; 选择true将在响应中加入用户对象
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>clientToken应该是随机生成的标识符，并且对于每个请求都必须是相同的。Vanilla启动程序在第一次运行时生成一个随机的（版本4）的uuid并保存它，在随后的每个请求中都重复使用它。如果它被省略，服务器将基于Java的UUID.toString()生成一个随机令牌，然后由客户端存储。但是，这也会使该用户以前获得的所有客户端访问令牌失效。&lt;/p>
+&lt;h4 id="响应">响应
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;accessToken&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;随机访问令牌（access token）&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制或&lt;/span>&lt;span class="n">JSON&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Web&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Token&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="err">未确认&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="err">正常的&lt;/span>&lt;span class="n">accessToken能够在payload&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">JWT中找到&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">第二个由&lt;/span> &lt;span class="s1">&amp;#39;.&amp;#39;&lt;/span>&lt;span class="err">分割的&lt;/span>&lt;span class="n">Base64编码的&lt;/span> &lt;span class="n">JSON&lt;/span> &lt;span class="n">object&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="err">在关键词&lt;/span> &lt;span class="s2">&amp;#34;yggt&amp;#34;&lt;/span>&lt;span class="err">中&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;clientToken&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;客户端标识符(client identifier)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">与接收到的相同&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;availableProfiles&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有在收到&lt;/span>&lt;span class="n">agent字段时才出现&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;agent&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;minecraft&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">大概和以前相同的值&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;配置文件标识符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;玩家名&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;userId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;十六进制字符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;createdAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="err">数值&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">（账户创建时间）自&lt;/span>&lt;span class="mi">1970&lt;/span>&lt;span class="err">年&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="err">月&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="err">日起毫秒&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">即使失败也存在&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">很可能是否&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;paid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">很可能是是&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">即使是迁移账号也是否&lt;/span>&lt;span class="o">...&lt;/span>&lt;span class="err">?&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">bugs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">mojang&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">browse&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">WEB&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1461&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">（作者不确定）&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacy&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="bp">false&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有当为是时才会出现在应中。默认为&lt;/span>&lt;span class="bp">false&lt;/span>&lt;span class="err">。对新的&lt;/span>&lt;span class="n">legacyProfile而言是多余的&lt;/span>&lt;span class="err">。。。&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;selectedProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有在收到&lt;/span>&lt;span class="n">agent字段时才出现&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;无短线的uuid&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;游戏名&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;userId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;十六进制字符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;createdAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1325376000000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;paid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacy&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;user&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">仅当请求负载中的&lt;/span>&lt;span class="n">requestUser为true时才存在&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user identifier&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;email&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user@email.example&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">为迁移账户的&lt;/span> &lt;span class="n">Hashed&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">（作者不确定）&lt;/span> &lt;span class="err">值&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;username&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user@email.example&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">未迁移帐户的常规名称，迁移帐户的电子邮件&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;registerIp&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;198.51.100.*&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">最后一次登录的&lt;/span>&lt;span class="n">IP地址&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migratedFrom&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;minecraft.net&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migratedAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1420070400000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;registeredAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1325376000000&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">或许比配置文件创造的时间稍早一些&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;passwordChangedAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1569888000000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;dateOfBirth&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">2208988800000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;blocked&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;secured&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">甚至在&lt;/span>&lt;span class="n">migratedAt和migratedFrom存在时似乎也是否&lt;/span>&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;emailVerified&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyUser&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;verifiedByParent&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;properties&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;preferredLanguage&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">或许不是所有账户都存在此项&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;en&amp;#34;&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="n">locale&lt;/span> &lt;span class="err">格式&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">docs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">oracle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">javase&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">8&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">api&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">java&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">util&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Locale&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="c1">##toString--)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;twitch_access_token&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有连接了&lt;/span>&lt;span class="n">twitch账户时才存在&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">see&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">account&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">mojang&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">me&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">settings&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;twitch oauth token&amp;#34;&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="n">OAuth&lt;/span> &lt;span class="mf">2.0&lt;/span> &lt;span class="n">Token&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">alphanumerical&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">g&lt;/span>&lt;span class="o">.&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">twitch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tv&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">kraken&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="n">oauth_token&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">...&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Twitch&lt;/span> &lt;span class="n">API的文档&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">github&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">justintv&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Twitch&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">API&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>未完待续
+Note: 如果用户希望保持登录状态，强烈建议您保存accesToken而不是密码本身。&lt;/p>
+&lt;p>目前每个账户仅有一个配置文件，但是未来可能会有多个配置文件。如果用户试图登录到没有随附Minecraft许可证的有效Mojang帐户，则身份验证将成功，但响应将不包含selectedProfile字段，并且availableProfiles数组将为空。&lt;/p>
+&lt;p>Some instances in the wild have been observed of Mojang returning a flat null for failed refresh attempts against legacy accounts. It&amp;rsquo;s not clear what the actual error tied to the null response is and it is extremely rare, but implementations should be wary of null output from the response.&lt;/p>
+&lt;p>This endpoint is severely rate-limited: multiple /authenticate requests for the same account in a short amount of time (think 3 requests in a few seconds), even with the correct password, will eventually lead to an Invalid credentials. response. This error clears up a few seconds later.
+Refresh&lt;/p>
+&lt;p>Refreshes a valid accessToken. It can be used to keep a user logged in between gaming sessions and is preferred over storing the user&amp;rsquo;s password in a file (see lastlogin).
+Endpoint&lt;/p>
+&lt;p>/refresh&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo;, // This needs to be identical to the one used
+// to obtain the accessToken in the first place
+&amp;ldquo;selectedProfile&amp;rdquo;: { // optional; sending it will result in an error
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;profile identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;player name&amp;rdquo;
+},
+&amp;ldquo;requestUser&amp;rdquo;: true // optional; default: false; true adds the user object to the response
+}&lt;/p>
+&lt;p>Note: The provided accessToken gets invalidated.
+Response&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;random access token&amp;rdquo;, // hexadecimal
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo;, // identical to the one received
+&amp;ldquo;selectedProfile&amp;rdquo;: {
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;profile identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;player name&amp;rdquo;
+},
+&amp;ldquo;user&amp;rdquo;: { // only present if requestUser was true in the request payload
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;user identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;properties&amp;rdquo;: [
+{
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;preferredLanguage&amp;rdquo;, // might not be present for all accounts
+&amp;ldquo;value&amp;rdquo;: &amp;ldquo;en&amp;rdquo; // Java locale format (https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html##toString&amp;ndash;)
+},
+{
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;twitch_access_token&amp;rdquo;, // only present if a twitch account is associated (see https://account.mojang.com/me/settings)
+&amp;ldquo;value&amp;rdquo;: &amp;ldquo;twitch oauth token&amp;rdquo; // OAuth 2.0 Token; alphanumerical; e.g. https://api.twitch.tv/kraken?oauth_token=[&amp;hellip;]
+// the Twitch API is documented here: https://github.com/justintv/Twitch-API
+}
+]
+}
+}&lt;/p>
+&lt;p>Validate&lt;/p>
+&lt;p>Checks if an accessToken is usable for authentication with a Minecraft server. The Minecraft Launcher (as of version 1.6.13) calls this endpoint on startup to verify that its saved token is still usable, and calls /refresh if this returns an error.&lt;/p>
+&lt;p>Note that an accessToken may be unusable for authentication with a Minecraft server, but still be good enough for /refresh. This mainly happens when one has used another client (e.g. played Minecraft on another PC with the same account). It seems only the most recently obtained accessToken for a given account can reliably be used for authentication (the next-to-last token also seems to remain valid, but don&amp;rsquo;t rely on it).&lt;/p>
+&lt;p>/validate may be called with or without a clientToken. If a clientToken is provided, it should match the one used to obtain the accessToken. The Minecraft Launcher does send a clientToken to /validate.
+Endpoint&lt;/p>
+&lt;p>/validate&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;associated clientToken&amp;rdquo; // optional, see above
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload (204 No Content) if successful, an error JSON with status 403 Forbidden otherwise.
+Signout&lt;/p>
+&lt;p>Invalidates accessTokens using an account&amp;rsquo;s username and password.
+Endpoint&lt;/p>
+&lt;p>/signout&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;username&amp;rdquo;: &amp;ldquo;mojang account name&amp;rdquo;,
+&amp;ldquo;password&amp;rdquo;: &amp;ldquo;mojang account password&amp;rdquo;
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload if successful.
+Invalidate&lt;/p>
+&lt;p>Invalidates accessTokens using a client/access token pair.
+Endpoint&lt;/p>
+&lt;p>/invalidate&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo; // This needs to be identical to the one used
+// to obtain the accessToken in the first place
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload if successful.
+Joining a Server&lt;/p>
+&lt;p>See Protocol Encryption##Authentication&lt;/p></description></item></channel></rss>

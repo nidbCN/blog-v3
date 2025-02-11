@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DIY on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/diy/</link><description>Recent content in DIY on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 16 Jul 2019 08:22:58 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/diy/index.xml" rel="self" type="application/rss+xml"/><item><title>用废显示器自制充电柔和吸顶灯</title><link>https://blog.gaein.cn/passages/how-to-diy-lamp/</link><pubDate>Tue, 16 Jul 2019 08:22:58 +0800</pubDate><guid>https://blog.gaein.cn/passages/how-to-diy-lamp/</guid><description>&lt;p>年前呢，在 b 站上看见有牛人拆了坏电视来做一盏效果超强、超棒的吸顶灯，而且成本也很低。看着就手痒痒。加上学长刚好有一个坏的屏幕，宿舍晚上断电需要照明，所以就干脆弄一个试试。&lt;/p>
+&lt;blockquote>
+&lt;p>制作灵感来自视频：&lt;a class="link" href="https://www.bilibili.com/video/BV1xp4y1s7WY" target="_blank" rel="noopener"
+>哔哩哔哩:DIY-Perks——把坏掉的电视改造成日光灯，效果秒杀吸顶灯！&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>参照这个视频来进行制作&lt;/p>&lt;/blockquote>
+&lt;h2 id="材料">材料
+&lt;/h2>&lt;ol>
+&lt;li>坏的显示器面板，不显示、碎屏、花屏都可以用，而且有面板就行。可以考虑到本地垃圾场去捡一个，单买的话有点 &lt;del>败家&lt;/del>。
+&lt;blockquote>
+&lt;p>注意：必须是 LCD 屏！&lt;br>
+注意：请使用其它视频源和连接线确保显示器是坏的，至少我不会希望把好的显示器拆开。
+&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RARLZ.jpg"
+loading="lazy"
+alt="确实坏了"
+>&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;li>LED 灯带/灯条
+&lt;blockquote>
+&lt;p>注意：不是最小裁剪 1m 那种，而是裸板的 LED 灯带。这种：
+&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD95Q9R2T.jpg"
+loading="lazy"
+alt="LED"
+>&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;li>12v 电源适配器，用于给 LED 灯带供电&lt;/li>
+&lt;li>DC 母座，方便插电用&lt;/li>
+&lt;li>18650 电池、电池盒 x3，用于停电时给灯供电&lt;/li>
+&lt;li>12v 供电切换模块，停电时切换供电&lt;/li>
+&lt;/ol>
+&lt;p>基本上的清单就是这样：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD53DHR2E.png"
+loading="lazy"
+alt="物品"
+>&lt;/p>
+&lt;p>当然还有一个显示屏&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33Q9R2T.jpg"
+loading="lazy"
+alt="屏幕"
+>&lt;/p>
+&lt;h2 id="制作">制作
+&lt;/h2>&lt;h4 id="拆屏">拆屏
+&lt;/h4>&lt;p>需要的是显示屏内的背光部分，具体来说就是扩散层和一些膜（其实把显示器值钱的部分全扔了）&lt;/p>
+&lt;h6 id="拆解外壳">拆解外壳
+&lt;/h6>&lt;p>把显示器的外壳拆下来，一般来说背面有螺丝，侧面是卡扣的。但是因为没有找到窍门，我就暴力了一下。&lt;/p>
+&lt;p>我用显卡翘的，结果都弯了&amp;hellip;&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RBNW5.jpg"
+loading="lazy"
+alt="显卡"
+>&lt;/p>
+&lt;p>最后暴力钻孔打穿了卡扣才卸下来。&lt;/p>
+&lt;h6 id="拆解面板">拆解面板
+&lt;/h6>&lt;p>将后壳拿下来后里面大致是这样的&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RCVCZ.jpg"
+loading="lazy"
+alt="内部"
+>&lt;/p>
+&lt;p>将上面的胶带撕开，断开连接控制按钮的电线。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RC82Q.jpg"
+loading="lazy"
+alt="电线"
+>&lt;/p>
+&lt;p>将鼓起来那块放 PCB 的拆下，并断开电线&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RD375.jpg"
+loading="lazy"
+alt="PCB"
+>&lt;/p>
+&lt;p>这根电线粘在上面，要撕下来，这是给背光模组供电的。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RERGM.jpg"
+loading="lazy"
+alt="电线"
+>&lt;/p>
+&lt;p>拆完后就剩下一个面板&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RE3WP.jpg"
+loading="lazy"
+alt="面板"
+>&lt;/p>
+&lt;h6 id="拆解背光">拆解背光
+&lt;/h6>&lt;p>面板的四周是完全用卡扣固定的，轻轻的撬开就能将它打开。由于下面还有胶带粘住，只能先掀起来。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RFF05.jpg"
+loading="lazy"
+alt="撬"
+>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RFR2T.jpg"
+loading="lazy"
+alt="LCD"
+>&lt;/p>
+&lt;p>黑色的是屏幕，去掉胶带后把黑色的屏幕拿下去，剩下的就是背光层。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RGF5A.jpg"
+loading="lazy"
+alt="背光层"
+>&lt;/p>
+&lt;p>一层一层的把薄膜拿下来，最后一层是散光层&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/blog/posts/How-to-DIY-lamp/BD33RGZHG.jpg"
+loading="lazy"
+alt="散光层"
+>&lt;/p>
+&lt;p>侧面有一条LED灯带，作为光源。但是我这里不采用这个灯带，因为它的电压很高（我这个屏幕光源电压已经高于100V了），不是很安全。而且还要对供电进行魔改。所以我买了LED灯带。&lt;/p>
+&lt;h4 id="电路">电路
+&lt;/h4>&lt;p>为了实现断电时仍然能供电，我买了一些模块，用于供电。
+大致就是，12v适配器用于平时供电与电池充电。断电时自动切换到电池进行供电。为了电压合适使用了3节18650电池串联。&lt;/p>
+&lt;blockquote>
+&lt;p>等待物资到货中。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>咕咕咕&lt;/p>&lt;/blockquote></description></item><item><title>自制可充电式MP3</title><link>https://blog.gaein.cn/passages/how-to-diy-mp3/</link><pubDate>Tue, 16 Jul 2019 08:22:58 +0800</pubDate><guid>https://blog.gaein.cn/passages/how-to-diy-mp3/</guid><description>&lt;p>最近闲来无事，做个mp3听歌用，准备加上锂电池充电使用，比较方便&lt;/p>
+&lt;blockquote>
+&lt;p>以前倒是做过一个，也是网上买的mp3解码板，但是供电用的是3节电池，实在是有点浪费，而且也没有喇叭。这次加入了一个3W 4Ω的扬声器，供电使用2000mah（典型值）的锂聚合物电池。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>焊接电池真的很累人，反正我是焊不好，图省心可以购买18650电池+电池盒&lt;/p>&lt;/blockquote>
+&lt;h2 id="一准备工作">[一]准备工作
+&lt;/h2>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/01.webp"
+loading="lazy"
+alt="商品截图"
+>&lt;/p>
+&lt;p>首先想好需要买的东西：包括但不限于&lt;/p>
+&lt;ul>
+&lt;li>mp3解码板&lt;/li>
+&lt;li>开关（因为我家里有，就没有购买新的）&lt;/li>
+&lt;li>锂电池（2000mah用不太完，不用购买带保护的，因为充电模组就带保护）&lt;/li>
+&lt;li>锂电池充电板&lt;/li>
+&lt;li>电压表（用来显示剩余电量，注意购买合适电压的（锂电池3.7v-4.2v，USB5v））&lt;/li>
+&lt;li>扬声器（根据板载功放的功率而定，推荐3W 4Ω）&lt;/li>
+&lt;li>导线、热缩管若干（导线我用的电压表上面的剪的&amp;hellip;）&lt;/li>
+&lt;li>电烙铁/焊台、焊锡等&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>
+&lt;p>拿到东西后拆开包装，检查是否齐全
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/02.webp"
+loading="lazy"
+alt="合影"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>画个简易的电路图，规划好怎么焊接
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/03.webp"
+loading="lazy"
+alt="电路图"
+>&lt;/p>
+&lt;p>我的思路很简单：MP3分为3层，第一层是MP3解码器和电压表；第二层是锂电池；第三层是扬声器和充电模块。电路方面如图，先把MP3和充电模块并联起来&lt;/p>
+&lt;p>充电模块有4个焊点，两个接电池正负极，另外两个接负载（MP3和电压表）正负极&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>制作第一二层夹板
+推荐使用快递盒子制作，或者其它质量更好的硬纸板。因为我手头没有，只能裁剪荷兰白卡，然后一张张粘了&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/04.webp"
+loading="lazy"
+alt="抹胶"
+>&lt;/p>
+&lt;p>纸与纸之间用胶棒粘贴&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/05.webp"
+loading="lazy"
+alt="开孔"
+>&lt;/p>
+&lt;p>粘贴完成后形成一个厚纸板，由于MP3解码板下面焊点突起较大，在焊点处开孔&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/06.webp"
+loading="lazy"
+alt="开孔完成"
+>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/07.webp"
+loading="lazy"
+alt="MP3解码板与纸板"
+>&lt;/p>
+&lt;p>夹板制作完成！&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>标出电池正负极
+为了方便制作，首先用记号笔在电池上面标出正负极
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/08.webp"
+loading="lazy"
+alt="标正负极"
+>&lt;/p>
+&lt;p>可以用万能表调到直流20V挡位测量，当然，也可以用买的电压表测量（注意是防反接的那种，反接不亮，正确接入后有读数）&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/09.webp"
+loading="lazy"
+alt="电压表"
+>&lt;/p>
+&lt;p>我惊喜的发现尽管我买错了表，仍然可以读数。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="二焊接">[二]焊接
+&lt;/h2>&lt;p>这是最主要的步骤了，如果不会焊接的画建议先找找东西练练手，能凑合了再焊（比如我这就是纯属凑合事(lll￢ω￢) ）&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>焊接MP3与充电模块
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/10.webp"
+loading="lazy"
+alt="MP3与充电模块"
+>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/11.webp"
+loading="lazy"
+alt="MP3与充电模块"
+>&lt;/p>
+&lt;p>MP3要焊接在充电模块 &lt;code>OUT+&lt;/code> &lt;code>OUT-&lt;/code> 两个焊点上，注意正负极对应。充电模块在不接电池的情况下即使供电也不会给MP3供电的，上电没反应的不要慌。&lt;/p>
+&lt;p>这块焊接不算困难，电路板很好焊。注意剥导线的时候尽量少弄断里面的丝，别像我一样就剩几根&amp;hellip;&lt;/p>
+&lt;p>把焊锡化到烙铁上面，然后把导线插进电路板的孔里面，把烙铁上的焊锡沾到电路板上面的焊点，等到焊锡覆盖满焊点且渗到导线里面，拿开烙铁，用最吹冷却即可。推荐背面的焊点也这样弄，焊的比较牢固即可。&lt;/p>
+&lt;p>焊完后可以拿万用表调到欧姆档测量电阻，如果接通电阻不会超过0.1Ω&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>焊接电池与开关
+我真的焊不好，这块费心费时最多，主要是电池极板面积太大，不好加热，不沾锡。电池这种东西又不能长时间受热。如果想了解怎么焊电池可以上网百度。反正我是不会&amp;hellip;&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/12.webp"
+loading="lazy"
+alt="电池与开关"
+>&lt;/p>
+&lt;p>另外开关也怕受热&amp;hellip;如果想焊好点的话推荐使用导线连接，因为开关的引脚也很大&amp;hellip;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>焊接电池与充电模块
+根据电路图，电池的负极（还没焊开关那个）需要和充电模块的&lt;code>B-&lt;/code> 焊点焊接。只能用导线相连。正极（有开关那个）在开关的另外一个引脚上面去连接充电模块的 &lt;code>B+&lt;/code> 焊点
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/13.webp"
+loading="lazy"
+alt="电池开关与充电模块"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>焊接电压表，连接扬声器
+没图&amp;hellip;&lt;/p>
+&lt;p>电压表并联即可。也就是电压表正极连接充电模块的 &lt;code>B+&lt;/code> 焊点，负极连接 &lt;code>B-&lt;/code> 焊点。缺点是没法看充电进度&amp;hellip;可以将导线焊接在充电模块背面，注意固定好以前焊接的MP3解码板和充电模块处，以防受热后弹出&lt;/p>
+&lt;p>焊接导线与扬声器，导线另外一头可以直接用螺丝接到MP3解码板上面&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/14.webp"
+loading="lazy"
+alt="电压表与MP3"
+>&lt;/p>
+&lt;p>其实还是有图的，只不过surface pro3的相机&amp;hellip;不敢恭维:D&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="三组装">[三]组装
+&lt;/h2>&lt;p>其实也没啥可组装的&amp;hellip;按照之前说过的，三层&lt;/p>
+&lt;p>扬声器和电压表不好固定，无奈只能使用胶带&amp;hellip; _(: 」∠)_&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/15.webp"
+loading="lazy"
+alt="完成P1"
+>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/How-to-DIY-mp3/16.webp"
+loading="lazy"
+alt="完成P2"
+>&lt;/p>
+&lt;p>P1怎么看着有点像相机？？？&lt;/p>
+&lt;blockquote>
+&lt;p>注意事项：&lt;/p>&lt;/blockquote>
+&lt;ol>
+&lt;li>不要和我一样在切割垫上焊接东西，千万不要！&lt;/li>
+&lt;li>注意焊接电池时的时间不要太长，电池不耐高温&lt;/li>
+&lt;li>注意正负极&lt;/li>
+&lt;li>上电之前检查电路，以防发生危险&lt;/li>
+&lt;li>注意电池不要长时间满电保存&lt;/li>
+&lt;li>每焊接完一个模块，冷却后就要检查是否虚焊，如果没虚焊再进行下一步。&lt;/li>
+&lt;li>好像没了诶&amp;hellip;&lt;/li>
+&lt;/ol></description></item></channel></rss>

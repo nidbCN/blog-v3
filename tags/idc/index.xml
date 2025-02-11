@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>IDC on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/idc/</link><description>Recent content in IDC on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 27 Apr 2019 23:40:49 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/idc/index.xml" rel="self" type="application/rss+xml"/><item><title>网站转战阿里云服务器</title><link>https://blog.gaein.cn/passages/change-idc-to-alicloud/</link><pubDate>Sat, 27 Apr 2019 23:40:49 +0800</pubDate><guid>https://blog.gaein.cn/passages/change-idc-to-alicloud/</guid><description>&lt;p>网站有一段时间不能访问，原因是转备案到阿里云了。&lt;/p>
+&lt;h2 id="原因">原因
+&lt;/h2>&lt;p>最近网站没法访问了，原因很简单，不是服务器日常爆炸，而是拿去转备案了。
+因为备案比较费事，不说材料准备，审核也要挺长时间（这次大概是15天）所以我不会轻易的转备案的。
+不过最近仍然抛弃了陪伴我2年的主机屋，入了阿里云，原因很简单：&lt;/p>
+&lt;ol>
+&lt;li>阿里云确实在性能上比主机屋强&lt;/li>
+&lt;li>阿里云的学生云服务器（24岁以下）才114/年，相比较90/月的老服务器来说太值了！&lt;/li>
+&lt;li>服务稳定，工作效率高&lt;/li>
+&lt;li>备案服务免费&lt;/li>
+&lt;li>功能齐全，其他各项服务也很优秀&lt;/li>
+&lt;/ol>
+&lt;p>当然，主机屋也有一定的优点，比如很少需要手机验证码（因为上学的原因，没办法接收短信，以至于在阿里云重启服务器都成了难题）&lt;/p>
+&lt;h2 id="购买前">购买前
+&lt;/h2>&lt;p>实在是无法相信自己的眼睛，114/年，确认再三后终于入手。因为是放假前三天看见的，就提前在闲鱼买了阿里云的幕布（他自己印的，20块钱，这样比较方便）&lt;/p>
+&lt;p>放假当天，先买了服务器，不过需要审核（因为限制24岁）&lt;/p>
+&lt;p>流程：购买&amp;gt;审核&amp;gt;发放提货券&amp;gt;绑定账号&amp;gt;提取阿里云服务器。&lt;/p>
+&lt;p>提货券有效期一个月，记得及时用啊！一开始我还以为商品有问题，那个有效期是服务器，还专门打了电话问一下。&lt;/p>
+&lt;h2 id="备案">备案
+&lt;/h2>&lt;p>到手后申请备案，然后打印核验单，把幕布粘墙上，架起三脚架和相机，拍照。家里有个相机是真的舒服。&lt;/p>
+&lt;p>阿里云上传资料是不限制大小的，不过尽量不要上传太大的文件，容易由于网络原因出错，当然，也要保证清晰。&lt;/p>
+&lt;p>第二天阿里云审核就给我来电话了，先后来了两次（清明节都不放假的？）&lt;/p>
+&lt;blockquote>
+&lt;p>第一次比较戏剧，客服跟我说我还没到年龄。我就很迷茫了，我初三就备案成功了，高二反而没到年龄？客服于是和我解释说阿里云这边要求16周岁（按照身份证上面的生日算），您还有两个个月才够岁数。蒙了一秒钟，我默默回复了一句，今年是2019年&amp;hellip;客服沉默了一下，才发现日期算错了&amp;hellip;&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>第二次来电是提醒我域名快要到期，并且提醒我说如果中间到期备案是不会成功的，可见服务之细致。我还真忘了这码子事，赶紧续费一波。&lt;/p>&lt;/blockquote>
+&lt;p>一番折腾，上传图片，终于进入到了管局审核阶段。&lt;/p>
+&lt;h2 id="部署">部署
+&lt;/h2>&lt;p>一狠心上了大佬们说很“优雅”的CentOS，以前都是用的Ubuntu（2021补：屑CentOS的时代过去了，Ubuntu好时代，来力！）&lt;/p>
+&lt;p>一点点部署nginx，nodejs，hexo&amp;hellip;&amp;hellip;&lt;/p>
+&lt;p>到现在主页也没有完成，虽然没感觉CentOS怎么好用（因为Ubuntu习惯了吧）不过确实学到了很多东西。具体部署可能会以后再发。&lt;/p></description></item></channel></rss>

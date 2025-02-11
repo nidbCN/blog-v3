@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>使用技巧 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/categories/%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/</link><description>Recent content in 使用技巧 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 09 Nov 2022 10:26:22 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/categories/%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/index.xml" rel="self" type="application/rss+xml"/><item><title>在 Windows 下舒适的使用命令行</title><link>https://blog.gaein.cn/passages/use-cli-in-windows/</link><pubDate>Wed, 09 Nov 2022 10:26:22 +0800</pubDate><guid>https://blog.gaein.cn/passages/use-cli-in-windows/</guid><description>&lt;h2 id="前言">前言
+&lt;/h2>&lt;p>自从大一坐到 &lt;a class="link" href="https://aimerneige.com/" target="_blank" rel="noopener"
+>AimerNeige&lt;/a> 身边以来，就见到他的双系统 Linux。后来自己也装了一个 ubuntu server + i3wm 日常用（虽然后来因为臭打游戏的原因回 windows 了），不得不说 Linux 的命令行以及各种命令行工具用起来非常的爽啊，相比较而言，用 windows 几乎很少用到命令行，cmd 和 powershell 都很丑，而且默认字体对眼睛很不友好 :D。以及各种工具并不多导致我不怎么用。&lt;/p>
+&lt;h2 id="美化">美化
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/Windows-Terminal-Usage/" target="_blank" rel="noopener"
+>个性化你的Windows Terminal终端与PowerShell&lt;/a> 其实以前写过一篇文章来记录如何安装配置 Windows Terminal 和 Powershell 7（后改名 Powershell Core，现名 Powershell）（谢谢微软改名部）&lt;/p>
+&lt;p>至于字体方面选择了 Cascadia Code。&lt;/p>
+&lt;blockquote>
+&lt;p>注意，oh-my-posh 需要使用 &lt;a class="link" href="https://www.nerdfonts.com/" target="_blank" rel="noopener"
+>Nerd Font&lt;/a> 字体，否则不能正常显示各种图标。&lt;/p>&lt;/blockquote>
+&lt;h2 id="包管理">包管理
+&lt;/h2>&lt;p>Linux 各种发行版通常有着一个包管理，pacman 也好、apt 也好、傻逼 snap 也好，总之有一个。Windows 这边没有一个中心化的包管理器，不管是微软的 win-get 还是第三方的 choco 和 scoop，都是直接从软件发行商那边进行下载的。不过我比较喜欢 scoop 的 portable 的思想，所以使用了 scoop 作为我的包管理器，配置各种环境非常舒适。&lt;/p>
+&lt;p>至于 scoop 的安装，参考其&lt;a class="link" href="https://scoop.sh/" target="_blank" rel="noopener"
+>官网&lt;/a>即可。顺带一提，scoop 的“软件源”在 Github 上，你可能需要某些技术来解决连接性问题。&lt;/p>
+&lt;p>当然，对于某些 scoop 内没有的软件包，可以使用 win-get 来安装。&lt;/p>
+&lt;h3 id="scoop-常用指令">scoop 常用指令
+&lt;/h3>&lt;p>&lt;code>scoop help&lt;/code> 查看帮助
+&lt;code>scoop update&lt;/code> 更新软件源
+&lt;code>scoop update *&lt;/code> 安装所有包的更新
+&lt;code>scoop search &amp;lt;keyword&amp;gt;&lt;/code> 搜索包
+&lt;code>scoop info &amp;lt;package name&amp;gt;&lt;/code> 查看包的详细信息
+&lt;code>scoop cleanup *&lt;/code> 清理软件包&lt;/p>
+&lt;p>更多命令：自己看吧。&lt;/p>
+&lt;h3 id="使用-scoop-配置环境">使用 scoop 配置环境
+&lt;/h3>&lt;p>平时会用到各种语言的环境（虽然我是远程编译人但是本地还是有环境罢）&lt;/p>
+&lt;p>哦其实好像根本不用怎么配，你只需要：&lt;/p>
+&lt;p>&lt;code>scoop install gcc&lt;/code>
+&lt;code>scoop install nodejs&lt;/code>
+&lt;code>scoop install python&lt;/code>&lt;/p>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;p>之类的。&lt;/p>
+&lt;p>怎么样，是不是非常爽？终于不用找到官网然后点 download 然后疯狂 next 了。&lt;/p>
+&lt;h2 id="cli-工具">CLI 工具
+&lt;/h2>&lt;h3 id="命令行美化">命令行美化
+&lt;/h3>&lt;p>&lt;code>oh-my-posh&lt;/code> —— prompt 美化
+&lt;code>lsd&lt;/code> —— 列出文件&lt;/p>
+&lt;h3 id="网络工具">网络工具
+&lt;/h3>&lt;p>&lt;code>nmap&lt;/code> —— 扫描
+&lt;code>tcping&lt;/code> —— 测试端口连接性
+&lt;code>clash&lt;/code> —— 代理分流
+&lt;code>wireshark&lt;/code> —— 抓包
+&lt;code>nexttrace&lt;/code> —— 路由追踪&lt;/p>
+&lt;h3 id="系统管理">系统管理
+&lt;/h3>&lt;p>&lt;code>btop&lt;/code> —— 资源任务管理
+&lt;code>neofetch&lt;/code> —— 让我看看（系统信息）&lt;/p>
+&lt;p>当然，还有很多例如 &lt;code>ffmpeg&lt;/code> 这种多媒体处理、&lt;code>7z&lt;/code>、 &lt;code>tar&lt;/code> 这种压缩解压以及各种其它工具。&lt;/p>
+&lt;h2 id="自定义脚本">自定义脚本
+&lt;/h2>&lt;p>bash 使用 &lt;code>.bashrc&lt;/code> 作为用户启动 shell 时执行的脚本，而 powershell 则会执行一个 &lt;code>.ps1&lt;/code> 脚本，这个脚本的位置可以保存在 Powershell 中名为 &lt;code>$PROFILE&lt;/code> 的变量。&lt;/p>
+&lt;p>可以使用 &lt;code>Write-Host $PROFILE&lt;/code> 来查看路径。&lt;/p>
+&lt;p>这个脚本在我那篇 Window Terminal 也提过。不过在那个玩意的基础上，我最近又添加了一些自己用的实用函数：&lt;/p>
+&lt;p>比如先对于“在 Windows Terminal 中打开” 的 “在文件资源管理器中打开”：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-pwsh" data-lang="pwsh">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Get-Exploere&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">param&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">string&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="nv">$Path&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nv">$PWD&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">explorer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="nv">$Path&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-Alias&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="n">open&lt;/span> &lt;span class="n">-Value&lt;/span> &lt;span class="nb">Get-Exploere&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>用于测试命令是否存在：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-pwsh" data-lang="pwsh">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Test-Command&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">param&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">string&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="nv">$CommandName&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="vm">$null&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Get-Command&lt;/span> &lt;span class="nv">$CommandName&lt;/span> &lt;span class="n">-ErrorAction&lt;/span> &lt;span class="n">SilentlyContinue&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>当然还有很多别名，比如将 &lt;code>ls&lt;/code> 改为使用 &lt;code>lsd&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-pwsh" data-lang="pwsh">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Get-Item-Line&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lsd&lt;/span> &lt;span class="n">-lh&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Test-Command&lt;/span> &lt;span class="n">lsd&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">Set-Alias&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="nb">ls &lt;/span>&lt;span class="n">-Value&lt;/span> &lt;span class="n">lsd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">Set-Alias&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="n">ll&lt;/span> &lt;span class="n">-Value&lt;/span> &lt;span class="nb">Get-Item&lt;/span>&lt;span class="n">-Line&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>除此之外，为 ffmpeg 的常见操作也写了一些函数：&lt;/p>
+&lt;p>比如如下代码可以将图片转为 &lt;code>webp&lt;/code> 格式并且调整大小。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-pwsh" data-lang="pwsh">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Get-Webp&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">param&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">string&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="nv">$FileName&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">int&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="nv">$Width&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="mf">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">int&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="nv">$Height&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="mf">-1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$file&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nb">Get-Item&lt;/span> &lt;span class="nv">$FileName&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="nv">$Width&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="mf">-1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-and&lt;/span> &lt;span class="p">(&lt;/span> &lt;span class="nv">$Height&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="mf">-1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ffmpeg&lt;/span> &lt;span class="n">-i&lt;/span> &lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">FullName&lt;/span> &lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Extension&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;.webp&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ffmpeg&lt;/span> &lt;span class="n">-i&lt;/span> &lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">FullName&lt;/span> &lt;span class="n">-vf&lt;/span> &lt;span class="n">scale&lt;/span>&lt;span class="p">=${&lt;/span>&lt;span class="n">Width&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">${&lt;/span>&lt;span class="n">Height&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Extension&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;.webp&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>另外，powershell 中 &lt;code>mv&lt;/code>、&lt;code>ls&lt;/code> 等命令的用法和 Linux 下的 shell 极为相似，上手也很快。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Minecraft on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/minecraft/</link><description>Recent content in Minecraft on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 08 Feb 2019 21:04:35 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/minecraft/index.xml" rel="self" type="application/rss+xml"/><item><title>Minecraft启动器正版登录原理</title><link>https://blog.gaein.cn/passages/minecraft-login/</link><pubDate>Fri, 08 Feb 2019 21:04:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/minecraft-login/</guid><description>&lt;p>前阵子为了给服务器做个启动器，需要正版登录，于是研究了一下这方面的内容&amp;hellip;结果百度上是千篇一律的：
+&amp;ldquo;向MOJANG服务器POST账号密码&amp;rdquo;
+那么我们的当前的问题是：
+1、接收账号密码的服务器地址/IP是什么
+2、POST的格式
+至于如何POST数据，百度一搜一把
+于是我研究了一下HeyoX的代码，结果&amp;hellip;没看懂
+又是一番艰苦卓绝的百度，终于发现了一些有用的东西
+&lt;a class="link" href="https://blessing.studio/minecraft-yggdrasil-api-third-party-implementation" target="_blank" rel="noopener"
+>https://blessing.studio/minecraft-yggdrasil-api-third-party-implementation&lt;/a>
+原来MOJANG验证系统叫Yggdrasil啊&amp;hellip;或许搜这个能有所帮助
+于是，发现了神级WIKI，正式我需要的！
+&lt;a class="link" href="https://wiki.vg/Authentication" target="_blank" rel="noopener"
+>https://wiki.vg/Authentication&lt;/a>
+这里面详细的写了包括登录、刷新、登出等
+以下是翻译内容(&amp;quot;(?)是当前无法确定的翻译&amp;quot;)：
+从 Minecraft 1.6 起引入了一个名为yggdrasil的新认证方案，它完全取代了以前的认证系统。Mojang的另一个游戏——Scrolls，也使用这种身份验证方法。Mojang表示，每个人都应该使用这个认证系统进行自定义登录，但是不应该从用户那里收集凭证。&lt;/p>
+&lt;h2 id="目录">目录：
+&lt;/h2>&lt;ul>
+&lt;li>1.认证格式&lt;/li>
+&lt;li>2.错误&lt;/li>
+&lt;li>3.登录&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>4.刷新&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>5.生效(?Validate)&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>6.登出&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>7.失效&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>8.加入服务器&lt;/li>
+&lt;/ul>
+&lt;h2 id="请求格式">请求格式
+&lt;/h2>&lt;p>所有发送到ygdrasil的请求都发送到以下服务器：
+&lt;a class="link" href="https://authserver.mojang.com" target="_blank" rel="noopener"
+>https://authserver.mojang.com&lt;/a>
+此外，它们还应遵守以下规则：&lt;/p>
+&lt;ul>
+&lt;li>是POST请求吗？&lt;/li>
+&lt;li>将content-type头设置为&amp;quot;application/json&amp;quot;&lt;/li>
+&lt;li>包含一个JSON编码的字典作为有效负载(?Payload)
+如果请求成功，服务器将响应：&lt;/li>
+&lt;li>HTTP状态码200&lt;/li>
+&lt;li>在下面有一个符合规范的JSON编码字典
+但是，如果请求失败，服务器将响应：&lt;/li>
+&lt;li>适当的非200 HTTP状态代码&lt;/li>
+&lt;li>遵循此格式（见下）的JSON编码字典：
+{
+&amp;ldquo;error&amp;rdquo;:&amp;ldquo;错误的简短描述&amp;rdquo;,
+&amp;ldquo;errormessage&amp;rdquo;:&amp;ldquo;可以向用户显示的较长描述&amp;rdquo;,
+&amp;ldquo;cause&amp;rdquo;:&amp;ldquo;错误原因&amp;rdquo; //可选
+}&lt;/li>
+&lt;/ul>
+&lt;h2 id="错误">错误
+&lt;/h2>&lt;p>以下是可能遇到的一些错误&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>错误&lt;/th>
+&lt;th>原因&lt;/th>
+&lt;th>错误信息&lt;/th>
+&lt;th>笔记&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Method Not Allowed&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>请求中的方法不允许用于请求URL的资源(?)&lt;/td>
+&lt;td>发送了除POST以外方法的请求&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Not Found&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>服务器上未找到任何与URL相匹配的内容&lt;/td>
+&lt;td>发送到了不存在的端点&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>用户迁移异常&lt;/td>
+&lt;td>无效的凭证。用户已迁移，请使用电子邮件作为用户名&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的凭证。用户名或密码错误&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的凭证&lt;/td>
+&lt;td>最近使用此用户名进行的登录尝试太多（详见/authenticate）。请注意，用户名和密码可能仍然有效！&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的令牌&lt;/td>
+&lt;td>accessToken失效&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>访问令牌已经分配了一个配置文件&lt;/td>
+&lt;td>选择配置文件尚未生效&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>凭证空&lt;/td>
+&lt;td>用户名/密码未提交&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的salt版本&lt;/td>
+&lt;td>？？？&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Unsupported Media Type&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>服务器拒绝回复请求，因为请求的格式不受请求方法的支持&lt;/td>
+&lt;td>数据未作为&amp;quot;application/json&amp;quot;提交&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="登录">登录
+&lt;/h2>&lt;p>使用用户的密码进行登录&lt;/p>
+&lt;h4 id="端点">端点
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">/authenticate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="有效负载">有效负载
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;agent&amp;#34;: { //默认是Minecraft
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;name&amp;#34;: &amp;#34;Minecraft&amp;#34;, //为了登录MOJANG的另外一款游戏Scrolls，应该使用&amp;#34;Scrolls&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;version&amp;#34;: 1 //数字可能会增长
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> //未来的普通客户端(?by the vanilla client in the future)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;username&amp;#34;: &amp;#34;MOJANG账户名&amp;#34;, //可以是电子邮件或者玩家名
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> //未迁移的账户（使用玩家名）
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;password&amp;#34;: &amp;#34;MOJANG账户的密码&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;clientToken&amp;#34;: &amp;#34;客户端标识符(client identifier)&amp;#34;,//可选
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;requestUser&amp;#34;: true //可选，默认: false; 选择true将在响应中加入用户对象
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>clientToken应该是随机生成的标识符，并且对于每个请求都必须是相同的。Vanilla启动程序在第一次运行时生成一个随机的（版本4）的uuid并保存它，在随后的每个请求中都重复使用它。如果它被省略，服务器将基于Java的UUID.toString()生成一个随机令牌，然后由客户端存储。但是，这也会使该用户以前获得的所有客户端访问令牌失效。&lt;/p>
+&lt;h4 id="响应">响应
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;accessToken&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;随机访问令牌（access token）&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制或&lt;/span>&lt;span class="n">JSON&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Web&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Token&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="err">未确认&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="err">正常的&lt;/span>&lt;span class="n">accessToken能够在payload&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">JWT中找到&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">第二个由&lt;/span> &lt;span class="s1">&amp;#39;.&amp;#39;&lt;/span>&lt;span class="err">分割的&lt;/span>&lt;span class="n">Base64编码的&lt;/span> &lt;span class="n">JSON&lt;/span> &lt;span class="n">object&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="err">在关键词&lt;/span> &lt;span class="s2">&amp;#34;yggt&amp;#34;&lt;/span>&lt;span class="err">中&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;clientToken&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;客户端标识符(client identifier)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">与接收到的相同&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;availableProfiles&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有在收到&lt;/span>&lt;span class="n">agent字段时才出现&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;agent&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;minecraft&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">大概和以前相同的值&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;配置文件标识符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;玩家名&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;userId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;十六进制字符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;createdAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="err">数值&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">（账户创建时间）自&lt;/span>&lt;span class="mi">1970&lt;/span>&lt;span class="err">年&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="err">月&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="err">日起毫秒&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">即使失败也存在&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">很可能是否&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;paid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">很可能是是&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">即使是迁移账号也是否&lt;/span>&lt;span class="o">...&lt;/span>&lt;span class="err">?&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">bugs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">mojang&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">browse&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">WEB&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1461&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">（作者不确定）&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacy&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="bp">false&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有当为是时才会出现在应中。默认为&lt;/span>&lt;span class="bp">false&lt;/span>&lt;span class="err">。对新的&lt;/span>&lt;span class="n">legacyProfile而言是多余的&lt;/span>&lt;span class="err">。。。&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;selectedProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有在收到&lt;/span>&lt;span class="n">agent字段时才出现&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;无短线的uuid&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;游戏名&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;userId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;十六进制字符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;createdAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1325376000000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;paid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacy&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;user&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">仅当请求负载中的&lt;/span>&lt;span class="n">requestUser为true时才存在&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user identifier&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;email&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user@email.example&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">为迁移账户的&lt;/span> &lt;span class="n">Hashed&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">（作者不确定）&lt;/span> &lt;span class="err">值&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;username&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user@email.example&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">未迁移帐户的常规名称，迁移帐户的电子邮件&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;registerIp&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;198.51.100.*&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">最后一次登录的&lt;/span>&lt;span class="n">IP地址&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migratedFrom&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;minecraft.net&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migratedAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1420070400000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;registeredAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1325376000000&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">或许比配置文件创造的时间稍早一些&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;passwordChangedAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1569888000000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;dateOfBirth&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">2208988800000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;blocked&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;secured&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">甚至在&lt;/span>&lt;span class="n">migratedAt和migratedFrom存在时似乎也是否&lt;/span>&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;emailVerified&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyUser&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;verifiedByParent&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;properties&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;preferredLanguage&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">或许不是所有账户都存在此项&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;en&amp;#34;&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="n">locale&lt;/span> &lt;span class="err">格式&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">docs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">oracle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">javase&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">8&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">api&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">java&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">util&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Locale&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="c1">##toString--)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;twitch_access_token&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有连接了&lt;/span>&lt;span class="n">twitch账户时才存在&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">see&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">account&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">mojang&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">me&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">settings&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;twitch oauth token&amp;#34;&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="n">OAuth&lt;/span> &lt;span class="mf">2.0&lt;/span> &lt;span class="n">Token&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">alphanumerical&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">g&lt;/span>&lt;span class="o">.&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">twitch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tv&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">kraken&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="n">oauth_token&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">...&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Twitch&lt;/span> &lt;span class="n">API的文档&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">github&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">justintv&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Twitch&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">API&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>未完待续
+Note: 如果用户希望保持登录状态，强烈建议您保存accesToken而不是密码本身。&lt;/p>
+&lt;p>目前每个账户仅有一个配置文件，但是未来可能会有多个配置文件。如果用户试图登录到没有随附Minecraft许可证的有效Mojang帐户，则身份验证将成功，但响应将不包含selectedProfile字段，并且availableProfiles数组将为空。&lt;/p>
+&lt;p>Some instances in the wild have been observed of Mojang returning a flat null for failed refresh attempts against legacy accounts. It&amp;rsquo;s not clear what the actual error tied to the null response is and it is extremely rare, but implementations should be wary of null output from the response.&lt;/p>
+&lt;p>This endpoint is severely rate-limited: multiple /authenticate requests for the same account in a short amount of time (think 3 requests in a few seconds), even with the correct password, will eventually lead to an Invalid credentials. response. This error clears up a few seconds later.
+Refresh&lt;/p>
+&lt;p>Refreshes a valid accessToken. It can be used to keep a user logged in between gaming sessions and is preferred over storing the user&amp;rsquo;s password in a file (see lastlogin).
+Endpoint&lt;/p>
+&lt;p>/refresh&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo;, // This needs to be identical to the one used
+// to obtain the accessToken in the first place
+&amp;ldquo;selectedProfile&amp;rdquo;: { // optional; sending it will result in an error
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;profile identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;player name&amp;rdquo;
+},
+&amp;ldquo;requestUser&amp;rdquo;: true // optional; default: false; true adds the user object to the response
+}&lt;/p>
+&lt;p>Note: The provided accessToken gets invalidated.
+Response&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;random access token&amp;rdquo;, // hexadecimal
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo;, // identical to the one received
+&amp;ldquo;selectedProfile&amp;rdquo;: {
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;profile identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;player name&amp;rdquo;
+},
+&amp;ldquo;user&amp;rdquo;: { // only present if requestUser was true in the request payload
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;user identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;properties&amp;rdquo;: [
+{
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;preferredLanguage&amp;rdquo;, // might not be present for all accounts
+&amp;ldquo;value&amp;rdquo;: &amp;ldquo;en&amp;rdquo; // Java locale format (https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html##toString&amp;ndash;)
+},
+{
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;twitch_access_token&amp;rdquo;, // only present if a twitch account is associated (see https://account.mojang.com/me/settings)
+&amp;ldquo;value&amp;rdquo;: &amp;ldquo;twitch oauth token&amp;rdquo; // OAuth 2.0 Token; alphanumerical; e.g. https://api.twitch.tv/kraken?oauth_token=[&amp;hellip;]
+// the Twitch API is documented here: https://github.com/justintv/Twitch-API
+}
+]
+}
+}&lt;/p>
+&lt;p>Validate&lt;/p>
+&lt;p>Checks if an accessToken is usable for authentication with a Minecraft server. The Minecraft Launcher (as of version 1.6.13) calls this endpoint on startup to verify that its saved token is still usable, and calls /refresh if this returns an error.&lt;/p>
+&lt;p>Note that an accessToken may be unusable for authentication with a Minecraft server, but still be good enough for /refresh. This mainly happens when one has used another client (e.g. played Minecraft on another PC with the same account). It seems only the most recently obtained accessToken for a given account can reliably be used for authentication (the next-to-last token also seems to remain valid, but don&amp;rsquo;t rely on it).&lt;/p>
+&lt;p>/validate may be called with or without a clientToken. If a clientToken is provided, it should match the one used to obtain the accessToken. The Minecraft Launcher does send a clientToken to /validate.
+Endpoint&lt;/p>
+&lt;p>/validate&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;associated clientToken&amp;rdquo; // optional, see above
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload (204 No Content) if successful, an error JSON with status 403 Forbidden otherwise.
+Signout&lt;/p>
+&lt;p>Invalidates accessTokens using an account&amp;rsquo;s username and password.
+Endpoint&lt;/p>
+&lt;p>/signout&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;username&amp;rdquo;: &amp;ldquo;mojang account name&amp;rdquo;,
+&amp;ldquo;password&amp;rdquo;: &amp;ldquo;mojang account password&amp;rdquo;
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload if successful.
+Invalidate&lt;/p>
+&lt;p>Invalidates accessTokens using a client/access token pair.
+Endpoint&lt;/p>
+&lt;p>/invalidate&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo; // This needs to be identical to the one used
+// to obtain the accessToken in the first place
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload if successful.
+Joining a Server&lt;/p>
+&lt;p>See Protocol Encryption##Authentication&lt;/p></description></item></channel></rss>
