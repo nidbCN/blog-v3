@@ -1,0 +1,1188 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>运维 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E8%BF%90%E7%BB%B4/</link><description>Recent content in 运维 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 11 Jul 2023 19:05:15 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml"/><item><title>直播推流常见协议及网页端实现 RTMP/STR/FLV/HLS/WebRTC</title><link>https://blog.gaein.cn/passages/live-streaming-protocols/</link><pubDate>Tue, 11 Jul 2023 19:05:15 +0800</pubDate><guid>https://blog.gaein.cn/passages/live-streaming-protocols/</guid><description>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Live-streaming-protocols/cover.webp" alt="Featured image of post 直播推流常见协议及网页端实现 RTMP/STR/FLV/HLS/WebRTC" />&lt;h2 id="前言">前言
+&lt;/h2>&lt;p>最近一个月在叔叔那直播动画，但是被封了。寻思自己随便找个服务器播着玩，搭了个开源的又对延迟什么的不满意，于是走上了折腾这一车直播协议的&lt;del>不归路。&lt;/del>&lt;/p>
+&lt;h2 id="前置编码编码器格式与容器">前置：编码、编码器、格式与容器？
+&lt;/h2>&lt;blockquote>
+&lt;p>心里不是特别有底，可能有部分地方有疏漏或错误之处，还请谅解。&lt;/p>&lt;/blockquote>
+&lt;h3 id="编码encode解码decode">编码(encode)/解码(decode)
+&lt;/h3>&lt;p>我们说到多媒体时候，经常说什么 &lt;code>mp4&lt;/code> 辣，&lt;code>avi&lt;/code> 辣，同时又经常听到什么 &lt;code>H.265&lt;/code>、&lt;code>H.264&lt;/code> 这种“奇怪”的词。&lt;/p>
+&lt;p>编码代表了如何去将视频变成二进制，解码代表了将编码出来的二进制在变成视频。&lt;/p>
+&lt;p>为什么要编码呢？以一个 YUV 4:2:2 像素格式的 1080p 60FPS 视频为例，每秒的大小为 &lt;code>1920*1080*2*60=237Mb&lt;/code> ，一个俩小时的电影就是小俩TB&amp;hellip; 这显然是不可接受的。编码在方便视频存储的同时根据相邻的帧相似的地方等进行压缩。&lt;/p>
+&lt;p>&lt;del>什么？你说怎么实现？他很厉害，他不是一个有形的。所以你读《心经》，《心经》里面讲什么&amp;hellip;&lt;/del>&lt;/p>
+&lt;h3 id="编encoder解decoder码器codec">编(encoder)解(decoder)码器(codec)
+&lt;/h3>&lt;p>此前说的编码是一种规范或者说算法，比如说 &lt;code>H.264&lt;/code> 编码，要先这样再那样再那样，诶就好了。&lt;/p>
+&lt;p>编解码器(codec)就是具体干这个的。&lt;/p>
+&lt;p>比如 &lt;code>H.264&lt;/code> 编码常见的编解码器有 &lt;code>libx264&lt;/code>、&lt;code>nvenc&lt;/code> 等等。&lt;/p>
+&lt;p>如果你使用 &lt;code>ffmpeg&lt;/code> 的话，不妨输入 &lt;code>ffmpeg -codecs&lt;/code> 来看看 &lt;code>ffmpeg&lt;/code> 支持的那些编解码和器。&lt;/p>
+&lt;h3 id="格式format">格式(format)
+&lt;/h3>&lt;p>现在编码器已经可以根据编码把视频变成一大堆二进制了，如何存储他们？&lt;/p>
+&lt;p>显然，直接将这一坨二进制写入磁盘不太合理，这样的话谁知道他用的什么编码，该如何解码？另外一个多媒体文件还可能会有音频，怎么区分开这一坨二进制里面的视频和音频？字幕怎么办？分章节的怎么办？&lt;/p>
+&lt;p>显然，问题太多了，所以才有了格式，以比较简单的 avi 为例：&lt;/p>
+&lt;p>avi 嘛，全称是音频视频交错格式，这玩意就是一截音频，一截视频，一截音频，一截视频&amp;hellip;&lt;/p>
+&lt;p>而 flv 是一个 header（标识有下面的内容有多少个字节之类），然后是一个tag，一个二进制，一个tag，一个二进制&amp;hellip;这种能够读一点、放一点的格式就很利好直播（毕竟有些格式二进制堆在一起，你放个电影得全下完才能播）&lt;/p>
+&lt;blockquote>
+&lt;p>注意，以上举例经过简化，实际格式比起文章内缩写复杂。这样写方便大家理解，如果需要了解这些格式的细节请自行查阅资料。&lt;/p>&lt;/blockquote>
+&lt;h3 id="容器container">容器(container)
+&lt;/h3>&lt;p>很多时候“容器”与“格式”用的一个名字，比如 &lt;code>flv&lt;/code>、&lt;code>mp4&lt;/code> 等，容器便是你能看到的文件。容器可能会支持多种格式，比如著名的 &lt;code>Matroska&lt;/code> ，支持几乎所有常见的格式。容器内除了多媒体内容外，还有一些 metadata（章节信息、标题等）。&lt;/p>
+&lt;h2 id="都有那些直播用协议">都有那些直播用协议？
+&lt;/h2>&lt;h3 id="经典推拉流协议rtmprtsp">经典推拉流协议：RTMP/RTSP
+&lt;/h3>&lt;p>对于如何做直播流这件事，最简单也是最好办的方法就是——&lt;/p>
+&lt;h4 id="rtmp">RTMP
+&lt;/h4>&lt;p>RTMP 全名为 &lt;code>Real Time Messaging Protocol&lt;/code>，开发后被 Adobe 收购。&lt;/p>
+&lt;p>目前在各种领域应用广泛，几乎所有的直播平台都支持 RTMP 协议推流。&lt;/p>
+&lt;p>RTMP 采用 TCP 连接，优点是稳定、延迟低。&lt;/p>
+&lt;p>RTMP 采用经典广泛的 H.264 和 AAC，格式为 flv。&lt;/p>
+&lt;p>缺点也很简单：现代浏览器不能使用 RTMP 拉流。也就是说浏览器不能直接播放 RTMP 直播流。&lt;/p>
+&lt;p>目前通常只使用 RTMP 推流，各种直播客户端&amp;amp;APP可以使用 RTMP 拉流播放。&lt;/p>
+&lt;h4 id="rtsp">RTSP
+&lt;/h4>&lt;p>RTSP 虽然名字和 RTMP 很像，但并不是一家的。RTSP 的特点是：使用 TCP 发送控制请求、使用 UDP 传输媒体数据。其使用 RTP 协议分视频块传输。&lt;/p>
+&lt;p>有点是嘎嘎低延迟，但是在 Android 和 iOS 上似乎没有开箱即用的库。&lt;/p>
+&lt;p>广泛应用于监控领域。&lt;/p>
+&lt;h3 id="基于http的拉流协议http-flvhlsmpeg-dash">基于HTTP的拉流协议：HTTP-Flv/HLS/MPEG-DASH
+&lt;/h3>&lt;p>由于现代浏览器并没有直接办法发起 TCP 请求等（以前 RTMP 使用类似于 Java 浏览器插件等方式工作，但是由于安全原因现代浏览器并不支持这么干），所以需要将 RTMP 直播流进行简单的处理，将其变成浏览器能拿到的。&lt;/p>
+&lt;h4 id="http-flv">HTTP-Flv
+&lt;/h4>&lt;p>前文介绍过 Flv，它文件体内除了头，存储媒体信息的是一小段、一小段的，也就是说你不需要下载整个文件，就可以解码出其中的、你已经获取到的音视频。这种特性使得 flv 非常适合做直播。&lt;/p>
+&lt;p>并且，由于以前 flash 插件的高流行度，使得使用 HTTP 获取 flv 文件边获取边播放的方式更加流行了。&lt;/p>
+&lt;p>HTTP-Flv 相比较与其它方法来说延迟不高，但是缺点是——&lt;strong>现代浏览器不支持 flash player 辣！&lt;/strong>&lt;/p>
+&lt;p>噔噔咚，然后你就不能放 &lt;code>flv&lt;/code> 了。HTML5 原生支持的只有 &lt;code>webm&lt;/code> 和 &lt;code>mp4&lt;/code> 等。&lt;/p>
+&lt;p>解决办法总是有的嘛，还记得在 flash player 停止支持前 bilibili 的 &lt;code>HTML5 播放器&lt;/code> 吗？没错，叔叔给他开源出来了，而且协议是 Apache-2.0。&lt;/p>
+&lt;h5 id="叔叔怎么解-flv-的">叔叔怎么解 flv 的？
+&lt;/h5>&lt;p>既然浏览器不支持 flv，那么叔叔怎么做的 &lt;code>flv.js&lt;/code> 呢？难道是摁写 &lt;code>js&lt;/code> 或者用 &lt;code>wasm&lt;/code> 解析 flv 然后解码然后在浏览器上画？&lt;/p>
+&lt;p>当然不是。有一个神奇的东西叫做 &lt;code>MSE&lt;/code> ，&lt;code>video&lt;/code> 标签不是只支持 &lt;code>mp4&lt;/code> 吗？那我把 &lt;code>flv&lt;/code> 变成小 &lt;code>mp4&lt;/code> 总行了吧！Media Source Extension 支持在代码中构建 &lt;code>MediaSource&lt;/code> 对象并将其作为 &lt;code>src&lt;/code> 传递给 &lt;code>video&lt;/code> 标签。&lt;/p>
+&lt;p>简而言之，你只需要把东西变成 &lt;code>mp4&lt;/code> 格式，不需要自己解码，然后交给浏览器就好了！&lt;/p>
+&lt;p>当然，对于 &lt;code>h.265/HEVC&lt;/code> 这种浏览器不支持的，叔叔那真就拿 &lt;code>wasm&lt;/code> 开了一堆线程搁用户浏览器上软解，前阵子骂的沸沸扬扬的。&lt;/p>
+&lt;p>flv.js 项目对于该实现的原文：&lt;/p>
+&lt;blockquote>
+&lt;p>flv.js works by transmuxing FLV file stream into ISO BMFF (Fragmented MP4) segments, followed by feeding mp4 segments into an HTML5 &lt;video> element through Media Source Extensions API.&lt;/p>&lt;/blockquote>
+&lt;p>于是，有了叔叔的帮助，我们就可以在浏览器播放 flv 了，当然也可以看直播了。&lt;/p>
+&lt;p>另外，注意 flv.js 项目首页上写道的：&lt;/p>
+&lt;blockquote>
+&lt;p>For FLV live stream playback, please consider mpegts.js which is under active development.&lt;/p>
+&lt;p>This project will become rarely maintained.&lt;/p>&lt;/blockquote>
+&lt;p>推荐我们使用 &lt;code>mpegts.js&lt;/code> 来播放直播流，该项目开发者也是 &lt;code>flv.js&lt;/code> 开发者之一，其对直播进行了优化。&lt;/p>
+&lt;h4 id="hls">HLS
+&lt;/h4>&lt;p>HLS 全程是 &lt;code>HTTP Live Stream&lt;/code> ，是水果公司整的。&lt;/p>
+&lt;p>其具体工作原理是先获取一个列表文件，然后挨个请求里面的 &lt;code>ts&lt;/code> 文件挨个播放。&lt;/p>
+&lt;p>目前来说 HLS 支持在 IOS、Safari 及安卓上最新版本的浏览器/Chrome 浏览器。通过 js 也可以在其它现代浏览器上播放。&lt;/p>
+&lt;p>目前可以播放 HLS 的 JS 播放器有：&lt;/p>
+&lt;ol>
+&lt;li>&lt;a class="link" href="https://github.com/video-dev/hls.js" target="_blank" rel="noopener"
+>hls.js&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h4 id="mpeg-dash">MPEG-DASH
+&lt;/h4>&lt;p>DASH 的意思是 “基于 HTTP 的动态自适应流”，DASH 技术很新，设计的很棒，其原理也是 XHR 请求视频数据块，再添加入 &lt;code>video&lt;/code> 标签。&lt;/p>
+&lt;p>不过据 SRS Github issue 说，DASH 的设计很棒有点“想得很美”的意思，似乎协议写的不是特别清除，实现的有些迷糊。&lt;/p>
+&lt;p>目前可以播放 MPEG-DASH 的播放器有：&lt;/p>
+&lt;ol>
+&lt;li>&lt;a class="link" href="https://github.com/Dash-Industry-Forum/dash.js" target="_blank" rel="noopener"
+>dash.js&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/shaka-project/shaka-player" target="_blank" rel="noopener"
+>shaka-player&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h3 id="新技术webrtc与srt">新技术：WebRTC与SRT
+&lt;/h3>&lt;p>除了以上几种经典方案外，近年来出现了 WebRTC 和 SRT 协议。&lt;/p>
+&lt;h4 id="webrtc">WebRTC
+&lt;/h4>&lt;p>WebRTC 是一项实时通讯技术，建立点对点连接并实现任意数据传输。适用于浏览器的摄像头直播会议等场景。&lt;/p>
+&lt;p>WebRTC 算是一种较新的技术。目前看来其前景广阔。但是经过测试不知道是 SRS 问题抑或是 WebRTC 问题，推流直播效果不够好。&lt;/p>
+&lt;h4 id="srt">SRT
+&lt;/h4>&lt;p>SRT 为了解决 RTMP 的问题（旧、延迟高等），开发出了基于UDT（UDP的传输协议）的新协议。&lt;/p>
+&lt;p>特点是快速连接以及按照时间发送音视频数据等。&lt;/p>
+&lt;p>小缺点是 URL 不太容易看懂，另外就是其拥塞控制有些简单。&lt;/p>
+&lt;h2 id="使用-srs-接收-rtmpsrt-推流">使用 SRS 接收 RTMP/SRT 推流
+&lt;/h2>&lt;h3 id="推流工具">推流工具
+&lt;/h3>&lt;p>在b站直播，我们可以使用b站直播只因等工具。当然，大家也注意到了，有很多up主或者其它平台在使用 OBS Studio 这款软件。&lt;/p>
+&lt;h4 id="obs-studio">OBS Studio
+&lt;/h4>&lt;p>&lt;a class="link" href="https://obsproject.com/" target="_blank" rel="noopener"
+>Open Broadcaster Software | OBS&lt;/a>&lt;/p>
+&lt;p>OBS Studio 更合适一般在电脑上的直播（比如各种游戏直播），可以实时看到反馈，使用方便。&lt;/p>
+&lt;h4 id="ffmpeg">ffmpeg
+&lt;/h4>&lt;p>在无GUI环境下，更适合用 ffmpeg 进行推流。&lt;/p>
+&lt;p>ffmpeg 适合无人值守直播（比如7x24的动画片之类），易于编程和调用，性能要求低。&lt;/p>
+&lt;h2 id="浏览器端实现拉流播放-http-flvhlsdash">浏览器端实现拉流播放 HTTP-FLV/HLS/DASH
+&lt;/h2>&lt;h3 id="dplayer">DPlayer
+&lt;/h3>&lt;p>Dplayer 是 DIYGOD 开发的播放器。支持多种媒体，且可以通过自定义 type 来支持其它 MSE 播放器来实现各种协议的视频播放。为了风格统一，使用了该播放器来做直播播放。&lt;/p>
+&lt;h3 id="编码实现">编码实现
+&lt;/h3>&lt;p>首先先在 vue 上初始化 Dplayer 播放器：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-vue" data-lang="vue">&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">div&lt;/span> &lt;span class="na">ref&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;playerContainer&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="nt">div&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">template&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span> &lt;span class="na">setup&lt;/span> &lt;span class="na">lang&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;ts&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nx">computed&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">onMounted&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">onUpdated&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">ref&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="nx">from&lt;/span> &lt;span class="s2">&amp;#34;vue&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="nx">createVideo&lt;/span> &lt;span class="nx">from&lt;/span> &lt;span class="s2">&amp;#34;@/utils/videoEngine&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="nx">DPlayer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nx">DPlayerDanmaku&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="nx">from&lt;/span> &lt;span class="s2">&amp;#34;dplayer&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nx">options&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="nx">from&lt;/span> &lt;span class="s2">&amp;#34;@/utils/request&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">const&lt;/span> &lt;span class="nx">props&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">defineProps&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">streamName&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">const&lt;/span> &lt;span class="nx">player&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">ref&lt;/span>&lt;span class="p">({}&lt;/span> &lt;span class="nx">as&lt;/span> &lt;span class="nx">DPlayer&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">const&lt;/span> &lt;span class="nx">srsAddress&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">ref&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">options&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">serverAddress&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">const&lt;/span> &lt;span class="nx">playerContainer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">ref&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">const&lt;/span> &lt;span class="nx">videoItem&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">computed&lt;/span>&lt;span class="p">(()&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">createVideo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">liveType&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="nx">liveType&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">flvJs&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">srsAddress&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">props&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">streamName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">onMounted&lt;/span>&lt;span class="p">(()&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">DPlayer&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">container&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">playerContainer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span> &lt;span class="nx">as&lt;/span> &lt;span class="nx">HTMLElement&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">live&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">autoplay&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">theme&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;#F19EC2&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">video&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">videoItem&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span>&lt;span class="o">?&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">play&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 当源地址值更新时，切换视频。
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">onUpdated&lt;/span>&lt;span class="p">(()&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span>&lt;span class="o">?&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">pause&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span>&lt;span class="o">?&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">switchVideo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">videoItem&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{}&lt;/span> &lt;span class="nx">as&lt;/span> &lt;span class="nx">DPlayerDanmaku&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">value&lt;/span>&lt;span class="o">?&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">play&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>其中，&lt;code>createVideo&lt;/code> 方法是自己编写的工具方法，用于生成含有对应 &lt;code>customType&lt;/code> 的 &lt;code>video&lt;/code> 对象。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;span class="lnt">106
+&lt;/span>&lt;span class="lnt">107
+&lt;/span>&lt;span class="lnt">108
+&lt;/span>&lt;span class="lnt">109
+&lt;/span>&lt;span class="lnt">110
+&lt;/span>&lt;span class="lnt">111
+&lt;/span>&lt;span class="lnt">112
+&lt;/span>&lt;span class="lnt">113
+&lt;/span>&lt;span class="lnt">114
+&lt;/span>&lt;span class="lnt">115
+&lt;/span>&lt;span class="lnt">116
+&lt;/span>&lt;span class="lnt">117
+&lt;/span>&lt;span class="lnt">118
+&lt;/span>&lt;span class="lnt">119
+&lt;/span>&lt;span class="lnt">120
+&lt;/span>&lt;span class="lnt">121
+&lt;/span>&lt;span class="lnt">122
+&lt;/span>&lt;span class="lnt">123
+&lt;/span>&lt;span class="lnt">124
+&lt;/span>&lt;span class="lnt">125
+&lt;/span>&lt;span class="lnt">126
+&lt;/span>&lt;span class="lnt">127
+&lt;/span>&lt;span class="lnt">128
+&lt;/span>&lt;span class="lnt">129
+&lt;/span>&lt;span class="lnt">130
+&lt;/span>&lt;span class="lnt">131
+&lt;/span>&lt;span class="lnt">132
+&lt;/span>&lt;span class="lnt">133
+&lt;/span>&lt;span class="lnt">134
+&lt;/span>&lt;span class="lnt">135
+&lt;/span>&lt;span class="lnt">136
+&lt;/span>&lt;span class="lnt">137
+&lt;/span>&lt;span class="lnt">138
+&lt;/span>&lt;span class="lnt">139
+&lt;/span>&lt;span class="lnt">140
+&lt;/span>&lt;span class="lnt">141
+&lt;/span>&lt;span class="lnt">142
+&lt;/span>&lt;span class="lnt">143
+&lt;/span>&lt;span class="lnt">144
+&lt;/span>&lt;span class="lnt">145
+&lt;/span>&lt;span class="lnt">146
+&lt;/span>&lt;span class="lnt">147
+&lt;/span>&lt;span class="lnt">148
+&lt;/span>&lt;span class="lnt">149
+&lt;/span>&lt;span class="lnt">150
+&lt;/span>&lt;span class="lnt">151
+&lt;/span>&lt;span class="lnt">152
+&lt;/span>&lt;span class="lnt">153
+&lt;/span>&lt;span class="lnt">154
+&lt;/span>&lt;span class="lnt">155
+&lt;/span>&lt;span class="lnt">156
+&lt;/span>&lt;span class="lnt">157
+&lt;/span>&lt;span class="lnt">158
+&lt;/span>&lt;span class="lnt">159
+&lt;/span>&lt;span class="lnt">160
+&lt;/span>&lt;span class="lnt">161
+&lt;/span>&lt;span class="lnt">162
+&lt;/span>&lt;span class="lnt">163
+&lt;/span>&lt;span class="lnt">164
+&lt;/span>&lt;span class="lnt">165
+&lt;/span>&lt;span class="lnt">166
+&lt;/span>&lt;span class="lnt">167
+&lt;/span>&lt;span class="lnt">168
+&lt;/span>&lt;span class="lnt">169
+&lt;/span>&lt;span class="lnt">170
+&lt;/span>&lt;span class="lnt">171
+&lt;/span>&lt;span class="lnt">172
+&lt;/span>&lt;span class="lnt">173
+&lt;/span>&lt;span class="lnt">174
+&lt;/span>&lt;span class="lnt">175
+&lt;/span>&lt;span class="lnt">176
+&lt;/span>&lt;span class="lnt">177
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ts" data-lang="ts">&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="nx">mpegts&lt;/span> &lt;span class="kr">from&lt;/span> &lt;span class="s2">&amp;#34;mpegts.js&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="nx">Mpegts&lt;/span> &lt;span class="kr">from&lt;/span> &lt;span class="s2">&amp;#34;mpegts.js&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="nx">FlvJs&lt;/span> &lt;span class="kr">from&lt;/span> &lt;span class="s2">&amp;#34;flv.js&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="nx">flvjs&lt;/span> &lt;span class="kr">from&lt;/span> &lt;span class="s2">&amp;#34;flv.js&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="nx">Hls&lt;/span> &lt;span class="kr">from&lt;/span> &lt;span class="s2">&amp;#34;hls.js&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">import&lt;/span> &lt;span class="nx">dashjs&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nx">MediaPlayerClass&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="kr">from&lt;/span> &lt;span class="s2">&amp;#34;dashjs&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">enum&lt;/span> &lt;span class="nx">MesPlayerName&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">HttpFlvByMpegTsJs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;mpegTsJs&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">HttpFlvByFlvJs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;flvJs&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">HLSByHlsJs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;hlsJs&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">DASHByDashJs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;dashJs&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">DASHByShaka&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;dashShaka&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">interface&lt;/span> &lt;span class="nx">IMsePlayerInfo&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">name&lt;/span>: &lt;span class="kt">MesPlayerName&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>: &lt;span class="kt">any&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">extension&lt;/span>: &lt;span class="kt">string&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">title&lt;/span>: &lt;span class="kt">string&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 创建播放器
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">createPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="k">void&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 加载直播流
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">loadPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="k">void&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">hasStream&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kr">boolean&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 卸载直播流
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">unloadPlayer&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="k">void&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">const&lt;/span> &lt;span class="nx">_mesPlayerList&lt;/span>: &lt;span class="kt">Array&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">IMsePlayerInfo&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">name&lt;/span>: &lt;span class="kt">MesPlayerName.HttpFlvByMpegTsJs&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>: &lt;span class="kt">null&lt;/span> &lt;span class="kr">as&lt;/span> &lt;span class="nx">Mpegts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Player&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">extension&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;flv&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">title&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;HTTP-FLV(mpegts.js)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">createPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">streamUrl&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">video&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">src&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">mpegts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">createPlayer&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">type&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;flv&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">isLive&lt;/span>: &lt;span class="kt">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">url&lt;/span>: &lt;span class="kt">streamUrl&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">loadPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sb">`[videoEngine,flvJs,unloadPlayer]detach and unload mpegts.js player.`&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">attachMediaElement&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">load&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">on&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">mpegts&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Events&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">LOADING_COMPLETE&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">()&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">play&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">unloadPlayer() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sb">`[videoEngine,flvJs,unloadPlayer]detach and unload mpegts.js player.`&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">detachMediaElement&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">unload&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span> &lt;span class="nx">hasStream() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">isPlaying&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">name&lt;/span>: &lt;span class="kt">MesPlayerName.HttpFlvByFlvJs&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>: &lt;span class="kt">null&lt;/span> &lt;span class="kr">as&lt;/span> &lt;span class="nx">FlvJs&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Player&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">extension&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;flv&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">title&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;HTTP-FLV(flv.js)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">createPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">streamUrl&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">video&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">src&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">flvjs&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">createPlayer&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">type&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;flv&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">isLive&lt;/span>: &lt;span class="kt">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">url&lt;/span>: &lt;span class="kt">streamUrl&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">loadPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sb">`[videoEngine,flvJs,unloadPlayer]detach and unload flv.js player.`&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">attachMediaElement&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">load&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">unloadPlayer() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sb">`[videoEngine,flvJs,unloadPlayer]detach and unload flv.js player.`&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">detachMediaElement&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">unload&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span> &lt;span class="nx">hasStream() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">isPlaying&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">name&lt;/span>: &lt;span class="kt">MesPlayerName.HLSByHlsJs&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>: &lt;span class="kt">null&lt;/span> &lt;span class="kr">as&lt;/span> &lt;span class="nx">Hls&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">extension&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;m3u8&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">title&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;HLS(hls.js)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">createPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kt">any&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">Hls&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">loadPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">streamLink&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">video&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">src&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">loadSource&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">streamLink&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">attachMedia&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">unloadPlayer() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sb">`[videoEngine,hlsJs,unloadPlayer]nothing todo with hls.js player.`&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">hasStream() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">isLevelLoaded&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">name&lt;/span>: &lt;span class="kt">MesPlayerName.DASHByDashJs&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">player&lt;/span>: &lt;span class="kt">null&lt;/span> &lt;span class="kr">as&lt;/span> &lt;span class="nx">MediaPlayerClass&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">extension&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;mpd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">title&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;MPEG DASH(dash.js)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">createPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kt">any&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">dashjs&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">MediaPlayer&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="nx">create&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">loadPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">streamLink&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">video&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">src&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">streamLink&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">updateSettings&lt;/span>&lt;span class="p">({&lt;/span>&lt;span class="nx">streaming&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nx">delay&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nx">liveDelay&lt;/span>: &lt;span class="kt">10&lt;/span>&lt;span class="p">}}});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">unloadPlayer() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">this&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">reset&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sb">`[videoEngine,hlsJs,unloadPlayer]nothing todo with hls.js player.`&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">hasStream() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">export&lt;/span> &lt;span class="kd">function&lt;/span> &lt;span class="nx">getPlayerInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">playerName&lt;/span>: &lt;span class="kt">MesPlayerName&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">IMsePlayerInfo&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="kc">undefined&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">playerInfo&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">_mesPlayerList&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">player&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">name&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nx">playerName&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sb">`[videoEngine,getPlayerInfo]can not find player named &lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">playerName&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">.`&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">export&lt;/span> &lt;span class="k">default&lt;/span> &lt;span class="kd">function&lt;/span> &lt;span class="nx">createVideo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">playerName&lt;/span>: &lt;span class="kt">MesPlayerName&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">srsAddress&lt;/span>: &lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">streamName&lt;/span>: &lt;span class="kt">string&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">playerInfo&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">_mesPlayerList&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">find&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nx">player&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">name&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nx">playerName&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sb">`[videoEngine,createVideo]can not find player&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">playerName&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">.`&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">streamUrl&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sb">`//&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">srsAddress&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">:8080/live/&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">streamName&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">.&lt;/span>&lt;span class="si">${&lt;/span>&lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">extension&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="sb">`&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">url&lt;/span>: &lt;span class="kt">streamUrl&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">type&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;streamPlayer&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">pic&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s2">&amp;#34;./PM5644.webp&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">customType&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">streamPlayer&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>: &lt;span class="kt">HTMLVideoElement&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">player&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">createPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">hasStream&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">unloadPlayer&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">playerInfo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">loadPlayer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">video&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>完整实现见：&lt;a class="link" href="https://github.com/nidbCN/live_room" target="_blank" rel="noopener"
+>live_room&lt;/a>&lt;/p>
+&lt;h2 id="参考">参考
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://dplayer.diygod.dev/zh/guide.html#mse-%E6%94%AF%E6%8C%81" target="_blank" rel="noopener"
+>指南 | DPlayer&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/Audio_and_video_delivery/Live_streaming_web_audio_and_video" target="_blank" rel="noopener"
+>实时传输 Web 音频与视频 - Web 开发者指南 | MDN&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/video-dev/hls.js" target="_blank" rel="noopener"
+>video-dev/hls.js: HLS.js is a JavaScript library that plays HLS in browsers with support for MSE.&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/Dash-Industry-Forum/dash.js" target="_blank" rel="noopener"
+>Dash-Industry-Forum/dash.js: A reference client implementation for the playback of MPEG DASH via Javascript and compliant browsers.&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/shaka-project/shaka-player" target="_blank" rel="noopener"
+>shaka-project/shaka-player: JavaScript player library / DASH &amp;amp; HLS client / MSE-EME player&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/xqq/mpegts.js" target="_blank" rel="noopener"
+>xqq/mpegts.js: HTML5 MPEG2-TS / FLV Stream Player&lt;/a>&lt;/li>
+&lt;/ol></description></item><item><title>使用 Grafana 监控你的 PromoxVE 集群</title><link>https://blog.gaein.cn/passages/pve-with-grafana/</link><pubDate>Mon, 03 Oct 2022 19:11:23 +0800</pubDate><guid>https://blog.gaein.cn/passages/pve-with-grafana/</guid><description>&lt;p>原来的虚拟机是一台实验用的设备，因为过度耦合，所以准备迁移到一台新开的专门提供服务的虚拟机，系统为 &lt;code>Ubuntu server 22.04 LTS&lt;/code>。&lt;/p>
+&lt;p>本博客实际上是由旧的服务器向新的服务器迁移并且重新部署的过程中写的，因此 InfluxDB 没有使用最新的 &lt;code>2.4&lt;/code> 版本而是使用了 &lt;code>1.8.10&lt;/code>。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/PVE-with-grafana/01.webp"
+loading="lazy"
+alt="概览"
+>&lt;/p>
+&lt;p>非常的帅气&lt;/p>
+&lt;h2 id="influxdb">InfluxDB
+&lt;/h2>&lt;h3 id="安装-influxdb">安装 InfluxDB
+&lt;/h3>&lt;p>参考 &lt;a class="link" href="https://mirrors.tuna.tsinghua.edu.cn/help/influxdata/" target="_blank" rel="noopener"
+>influxdata | 清华大学开源软件镜像站&lt;/a>&lt;/p>
+&lt;p>TUNA 这里并没有适用于 Ubuntu 22.04 LTS 的选项，不过问题不大。&lt;/p>
+&lt;p>向 &lt;code>/etc/apt/sources.list.d/influxdb.list&lt;/code> 写入：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">deb https://mirrors.tuna.tsinghua.edu.cn/influxdata/ubuntu/ jammy stable
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>添加公钥：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">wget -qO https://repos.influxdata.com/influxdb.key &lt;span class="p">|&lt;/span> sudo tee /etc/apt/trusted.gpg.d/influxdb.asc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>为什么不用 &lt;code>apt-key&lt;/code> ？因为已经废弃辣，详见 &lt;code>man apt-key&lt;/code>&lt;/p>&lt;/blockquote>
+&lt;p>之后使用 &lt;code>apt install influxdb&lt;/code> 安装即可。&lt;/p>
+&lt;h3 id="配置-influxdb">配置 InfluxDB
+&lt;/h3>&lt;p>主要目的就是两个：开放 &lt;code>udp&lt;/code> 和 &lt;code>http&lt;/code> 连接。&lt;/p>
+&lt;p>Promox VE 使用 udp 连接，Grafana 使用 http。&lt;/p>
+&lt;p>修改 &lt;code>/etc/influxdb/influxdb.conf&lt;/code>&lt;/p>
+&lt;p>&lt;code>[http]&lt;/code> 部分修改如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[http]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # Determines whether HTTP endpoint is enabled.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> enabled = true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # Determines whether the Flux query endpoint is enabled.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # flux-enabled = false
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # Determines whether the Flux query logging is enabled.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # flux-log-enabled = false
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # The bind address used by the HTTP service.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> bind-address = &amp;#34;:8086&amp;#34;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>取消 &lt;code>enabled&lt;/code> 和 &lt;code>bind-address&lt;/code> 的注释即可。&lt;/p>
+&lt;p>&lt;code>udp&lt;/code> 部分修改如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[[udp]]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> enabled = true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> bind-address = &amp;#34;:8089&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> database = &amp;#34;proxmox&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> # retention-policy = &amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>也是取消两个注释，然后将 &lt;code>database&lt;/code> 节点设置为 &lt;code>proxmox&lt;/code> 。&lt;/p>
+&lt;p>还需要创建用户，因为我是从以前的迁移过来的，所以不需要再创建。&lt;/p>
+&lt;h3 id="启用-influxdb">启用 InfluxDB
+&lt;/h3>&lt;p>使用命令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">systemctl start influxdb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>即可。&lt;/p>
+&lt;p>如果报错类似于以下的&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-zed" data-lang="zed">&lt;span class="line">&lt;span class="cl">&lt;span class="n">run&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">open&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">server&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">open&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">tsdb&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">store&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">mkdir&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nn">var/lib/influxdb/data/_internal/&lt;/span>&lt;span class="n">_series&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">permission&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">denied&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可能是因为使用过 &lt;code>root&lt;/code> 用户运行 &lt;code>influxd&lt;/code>。&lt;/p>
+&lt;p>执行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo chmod -R influxdb:influxdb /var/lib/influxdb/*
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>即可。&lt;/p>
+&lt;h2 id="proxmox-ve">Proxmox VE
+&lt;/h2>&lt;p>点击 &lt;code>DataCenter&lt;/code>，再点击 &lt;code>Metric Server&lt;/code>。&lt;/p>
+&lt;p>依次点击 &lt;code>Add&lt;/code>，&lt;code>InfluxDB&lt;/code>，在 &lt;code>server&lt;/code> 处指定提供 InfluxDB 的虚拟机的 IP。&lt;/p>
+&lt;h2 id="grafana">Grafana
+&lt;/h2>&lt;h3 id="安装-grafana">安装 Grafana
+&lt;/h3>&lt;p>依旧是参考 &lt;a class="link" href="https://mirrors.tuna.tsinghua.edu.cn/help/grafana/" target="_blank" rel="noopener"
+>grafana | 清华大学开源软件镜像站&lt;/a> 。&lt;/p>
+&lt;p>首先使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">wget -qO- https://packages.grafana.com/gpg.key &lt;span class="p">|&lt;/span> sudo tee /etc/apt/trusted.gpg.d/grafana.asc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>将&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">deb https://mirrors.tuna.tsinghua.edu.cn/grafana/apt/ stable main
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>写入 &lt;code>/etc/apt/sources.list.d/grafana.list&lt;/code>。&lt;/p>
+&lt;p>然后执行：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo apt update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt install grafana
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="配置-grafana">配置 Grafana
+&lt;/h3>&lt;p>大部分配置都是从原服务器上恢复（因为实在不想重新设置面板了）&lt;/p>
+&lt;ul>
+&lt;li>/var/lib/grafana/grafana.db # 数据库文件&lt;/li>
+&lt;li>/etc/grafana/grafana.ini # grafana配置文件&lt;/li>
+&lt;li>/var/lib/grafana/plugins # 插件目录&lt;/li>
+&lt;/ul>
+&lt;h4 id="设置匿名访问">设置匿名访问
+&lt;/h4>&lt;p>编辑配置文件，找到&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ini" data-lang="ini">&lt;span class="line">&lt;span class="cl">&lt;span class="k">[auth.anonymous]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># enable anonymous access&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">enabled&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">true&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>取消注释并改为 &lt;code>true&lt;/code>。&lt;/p>
+&lt;h2 id="nginx">Nginx
+&lt;/h2>&lt;p>grafana 默认监听在 3000 端口，这样用起来非常的 low，这里使用 nginx 把 &lt;code>localhost:3000&lt;/code> 反向代理到 &lt;code>http://grafana-server/monitor/&lt;/code> 。&lt;/p>
+&lt;p>修改配置文件 &lt;code>/etc/nginx/sites-enabled/default&lt;/code> ，在 &lt;code>server&lt;/code> 块内添加：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># Grafana
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">location /monitor/ {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_set_header Host $host;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_set_header X-Real-IP $remote_addr;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> proxy_pass http://localhost:3000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Linux挂载新硬盘</title><link>https://blog.gaein.cn/passages/linux-add-newdisk/</link><pubDate>Sat, 20 Oct 2018 12:07:15 +0800</pubDate><guid>https://blog.gaein.cn/passages/linux-add-newdisk/</guid><description>&lt;p>最近给Ubuntu添加了一块硬盘，下面是具体的步骤&lt;/p>
+&lt;!-- more -->
+&lt;p>
+买的云服务器IDC给了一块10GB的数据盘，因为系统盘不大，就要把数据盘用上了
+&lt;/p>
+&lt;p>
+但是Linux下数据盘并没有挂载，Linux的磁盘系统也不同于windows，需要挂载使用
+&lt;/p>
+&lt;h1 label="标题居左" style="font-size: 32px; font-weight: bold; border-bottom: 2px solid rgb(204, 204, 204); padding: 0px 4px 0px 0px; text-align: left; margin: 0px 0px 10px;">
+1、新建分区并格式化&lt;br/>
+&lt;/h1>
+&lt;p>
+使用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">fdisk -l&lt;/pre>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/10/20/i04JfK.png" alt="" width="516" height="328"/>
+&lt;/p>
+&lt;p>
+查看当前的硬盘，可以看到有sda、sdb两块盘，第一块作为系统盘已经分区，sdb就是我们要挂载的数据盘
+&lt;/p>
+&lt;p>
+首先进行分区
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">fdisk /dev/sdb&lt;/pre>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/10/20/i048Fx.png" alt="" width="491" height="162"/>
+&lt;/p>
+&lt;p>
+进入磁盘sdb（如果你是磁盘sdc就相应的替换为sdc）相当于选中这个硬盘的意思
+&lt;/p>
+&lt;p>
+首先输入m看一下帮助
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/10/20/i041T1.png" alt="" width="567" height="571"/>
+&lt;/p>
+&lt;p>
+比较简单，应该很容易看懂，暂时把几个常用的写上了意思
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">Command (m for help): p ##显示磁盘信息
+Disk /dev/sdb: 10 GiB, 10737418240 bytes, 20971520 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: dos
+Disk identifier: 0xb5106536
+&lt;p>Command (m for help): n ##新建分区
+Partition type
+p primary (0 primary, 0 extended, 4 free)
+e extended (container for logical partitions)
+Select (default p): p ##新建逻辑分区
+Partition number (1-4, default 1):
+First sector (2048-20971519, default 2048):
+Last sector, +sectors or +size{K,M,G,T,P} (2048-20971519, default 20971519):
+##直接留空，我只想把所有的空间分一个分区
+Created a new partition 1 of type &amp;amp;##39;Linux&amp;amp;##39; and of size 10 GiB.&lt;/p>
+&lt;p>Command (m for help): w ##保存退出
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.&lt;/pre>&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/10/20/i04lwR.png" alt="" width="560" height="382"/>
+&lt;/p>
+&lt;p>
+再次使用fdisk -l已经可以看到sdb有一个分区sdb1了
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/10/20/i04tSO.png" alt="" width="511" height="397"/>
+&lt;/p>
+&lt;p>
+同Windows一样，磁盘需要格式化后才能使用
+&lt;/p>
+&lt;p>
+用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">mkntfs /dev/sdb1&lt;/pre>
+&lt;p>
+来格式化为NTFS格式，其他格式可以自行百度
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/10/20/i04GY6.png" alt="" width="391" height="57"/>
+&lt;/p>
+&lt;p>
+出现
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">Cluster size has been automatically set to 4096 bytes.
+Initializing device with zeroes: 100% - Done.
+Creating NTFS volume structures.
+mkntfs completed successfully. Have a nice day.&lt;/pre>
+&lt;p>
+即为格式化完成
+&lt;/p>
+&lt;h1 label="标题居中" style="font-size: 32px; font-weight: bold; border-bottom: 2px solid rgb(204, 204, 204); padding: 0px 4px 0px 0px; text-align: center; margin: 0px 0px 20px;">
+2、挂载磁盘
+&lt;/h1>
+&lt;div>
+&lt;p>
+&lt;br/>
+&lt;/p>
+&lt;p>
+临时挂载可以使用mount命令，但是重启后需要重新挂载
+&lt;/p>
+&lt;p>
+用法为
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">mount 分区 目录&lt;/pre>
+&lt;p>
+比如我需要使用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">mount /dev/sdb1 /data&lt;/pre>
+&lt;p>
+挂载
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/10/20/i0IkGV.png" alt="" width="542" height="83"/>
+&lt;/p>
+&lt;p>
+（当然前提是存在目录/data）
+&lt;/p>
+&lt;p>
+编辑
+&lt;/p>
+&lt;pre class="prettyprint" name="code">/etc/fstab&lt;/pre>
+&lt;p>
+来永久挂载磁盘
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">## /etc/fstab: static file system information.
+##
+## Use &amp;##39;blkid&amp;##39; to print the universally unique identifier for a
+## device; this may be used with UUID= as a more robust way to name devices
+## that works even if disks are added and removed. See fstab(5).
+##
+## &amp;lt;file system&amp;gt; &amp;lt;mount point&amp;gt; &amp;lt;type&amp;gt; &amp;lt;options&amp;gt; &amp;lt;dump&amp;gt; &amp;lt;pass&amp;gt;
+## / was on /dev/sda1 during installation
+UUID=22e202f3-ae04-4995-b214-de7f192f33c4 / ext4 errors=remount-ro 0 1
+## swap was on /dev/sda5 during installation
+UUID=472580b3-a87b-4fe2-8bda-59b59d087ec6 none swap sw 0 0
+/dev/fd0 /media/floppy0 auto rw,user,noauto,exec,utf8 0 0
+/dev/sdb1 /data ntfs defaults 0 0
+磁盘 挂载目录 磁盘格式&lt;/pre>
+&lt;/div>
+&lt;p>
+需要注意的是，中间的空不需要打空格，用TAB制表符更方便&lt;br/>
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">root@rootadmin:/data## mkdir blog
+root@rootadmin:/data## dir
+blog
+root@rootadmin:/data## reboot
+Connection closing...Socket close.
+&lt;p>Connection closed by foreign host.&lt;/p>
+&lt;p>Disconnected from remote host(GAEIN.CN) at 12:21:20.&lt;/p>
+&lt;p>Type `help&amp;amp;##39; to learn how to use Xshell prompt.
+[C:~]$&lt;/p>
+&lt;p>Connecting to &lt;em>.&lt;/em>.&lt;em>.&lt;/em>:22&amp;hellip;&lt;/p>
+&lt;p>Connection established.
+To escape to local shell, press &amp;amp;##39;Ctrl+Alt+]&amp;amp;##39;.&lt;/p>
+&lt;p>Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-38-generic x86_64)&lt;/p>
+&lt;ul>
+&lt;li>Documentation: &lt;a class="link" href="https://help.ubuntu.com" target="_blank" rel="noopener"
+>https://help.ubuntu.com&lt;/a>&lt;/li>
+&lt;li>Management: &lt;a class="link" href="https://landscape.canonical.com" target="_blank" rel="noopener"
+>https://landscape.canonical.com&lt;/a>&lt;/li>
+&lt;li>Support: &lt;a class="link" href="https://ubuntu.com/advantage" target="_blank" rel="noopener"
+>https://ubuntu.com/advantage&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>System information as of Sat Oct 20 12:21:29 CST 2018&lt;/p>
+&lt;p>System load: 0.49 Processes: 89
+Usage of /: 24.9% of 12.67GB Users logged in: 0
+Memory usage: 7% IP address for eth0: &lt;em>.&lt;/em>.&lt;em>.&lt;/em>
+Swap usage: 0%&lt;/p>
+&lt;ul>
+&lt;li>Canonical Livepatch is available for installation.
+&lt;ul>
+&lt;li>Reduce system reboots and improve kernel security. Activate at:
+&lt;a class="link" href="https://ubuntu.com/livepatch" target="_blank" rel="noopener"
+>https://ubuntu.com/livepatch&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>0 个可升级软件包。
+0 个安全更新。&lt;/p>
+&lt;p>Failed to connect to &lt;a class="link" href="https://changelogs.ubuntu.com/meta-release-lts" target="_blank" rel="noopener"
+>https://changelogs.ubuntu.com/meta-release-lts&lt;/a>. Check your Internet connection or proxy settings&lt;/p>
+&lt;p>Last login: Sat Oct 20 11:26:33 2018 from &lt;em>.&lt;/em>.&lt;em>.&lt;/em>
+rootadmin@rootadmin:~$ cd /data
+rootadmin@rootadmin:/data$ dir
+blog
+rootadmin@rootadmin:/data$&lt;/pre>&lt;/p>
+&lt;p>
+重启了一下，挂载确实成功了&lt;br/>
+&lt;/p></description></item><item><title>Ubuntu下apt“无法解析域名”解决方案</title><link>https://blog.gaein.cn/passages/fix-ubuntu-dns-error/</link><pubDate>Sat, 20 Oct 2018 11:42:39 +0800</pubDate><guid>https://blog.gaein.cn/passages/fix-ubuntu-dns-error/</guid><description>&lt;blockquote>
+&lt;p>注意：本博客过于久远，内容可能已经不适用&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>注意：正确的更改DNS的方法见博客：&lt;a class="link" href="https://blog.gaein.cn/passages/Public-DNS-and-configure-DNS" target="_blank" rel="noopener"
+>常见公共DNS服务&amp;amp;Linux和Windows下修改DNS的方法&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;p>DNS莫名其妙出错，啥也干不了&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Fix-Ubuntu-DNS-Error/01.webp"
+loading="lazy"
+alt="错误"
+>&lt;/p>
+&lt;p>百度了一波，发现解决方案很简单，就是手动加入DNS&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo vim /etc/resolv.conf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>加入DNS&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">nameserver 119.29.29.29
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>当然可以自己去百度其他家的DNS，我这是DNS PUBLIC+的地址&lt;/p>&lt;/blockquote>
+&lt;p>按照百度说的我保存重启&lt;/p>
+&lt;p>结果发现并没有什么卵用&amp;hellip;&lt;/p>
+&lt;p>仔细观摩一下文件&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 127.0.0.53 is the systemd-resolved stub resolver.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># run &amp;#34;systemd-resolve --status&amp;#34; to see details about the actual nameservers.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nameserver 127.0.0.53&amp;lt;/pre&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>被覆盖了&lt;/p>
+&lt;p>而且说明也写着“DO NOT EDIT THIS FILE BY HAND”&lt;/p>
+&lt;p>我按照其他的方法修改了一下编辑resolv.conf.d目录下的base文件&lt;/p>
+&lt;p>不过也没有效果&lt;/p>
+&lt;p>但是按照第二篇看的文章找到了问题所在：&lt;/p>
+&lt;p>重启系统后DNS设置不但不会被应用还会被覆盖，应该重启网卡来解决&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo /etc/init.d/networking restart&amp;lt;/pre&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>完美解决&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Fix-Ubuntu-DNS-Error/02.webp"
+loading="lazy"
+alt="修复"
+>&lt;/p>
+&lt;p>参考：&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="http://www.myexceptions.net/ai/1477082.html" target="_blank" rel="noopener"
+>ubuntu apt-get 异常 Temporary failure resolving &amp;lsquo;us.archive.ubuntu.com&amp;rsquo; 解决 - 人工智能&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.csdn.net/tsq292978891/article/details/75039926" target="_blank" rel="noopener"
+>ubuntu16.04 出现域名解析暂时失败 解决方法_tsq292978891的博客-CSDN博客_域名解析暂时失败&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.csdn.net/u012207345/article/details/78339218" target="_blank" rel="noopener"
+>ubuntu域名解析失败解决方案_廿四桥明月夜的博客-CSDN博客_ubuntu域名解析失败&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>不过刚刚重启了好像又被覆盖了，很是绝望&lt;/p>
+&lt;p>干脆写了个脚本，然后开机自动运行脚本得了&amp;hellip;&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">### BEGIN INIT INFO&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Provides: run.sh &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Required-start: $local_fs $remote_fs $network $syslog &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Required-Stop: $local_fs $remote_fs $network $syslog &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Default-Start: 2 3 4 5 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Default-Stop: 0 1 6 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Short-Description: starts the run.shh daemon &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Description: starts run.sh using start-stop-daemon &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">### END INIT INFO&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;nameserver 119.29.29.29&amp;#34;&lt;/span> &amp;gt;&amp;gt; /etc/resolv.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo /etc/init.d/networking restart
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后复制到init.d中，再&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">update-rc.d run.sh defaults 99
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Ubuntu终端更改为中文</title><link>https://blog.gaein.cn/passages/change-ubuntu-to-chinese/</link><pubDate>Fri, 17 Aug 2018 09:36:49 +0800</pubDate><guid>https://blog.gaein.cn/passages/change-ubuntu-to-chinese/</guid><description>&lt;p>由于本人英文渣，加之一个服务器终端是中文一个服务器终端是英文（当然两个服务器都穷的续不起了）&lt;/p>
+&lt;p>所以今天更改Ubuntu的语言为中文&lt;/p>
+&lt;p>因为是服务器所以只能通过终端更改&lt;/p>
+&lt;p>首先安装下语言包&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo apt search language-pack-zh-hans
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>我先使用apt搜索了一下语言包&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Change-Ubuntu-To-Chinese/01.webp"
+loading="lazy"
+alt="搜索结果"
+>&lt;/p>
+&lt;p>使用命令安装他们&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo apt install language-pack-zh-hans
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt install language-pack-zh-hans-base
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装下对于程序的语言支持&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo apt install &lt;span class="sb">`&lt;/span>check-language-support -l zh&lt;span class="sb">`&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>将语言设置为中文&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo localectl set-locale.UTF-8
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>重启系统&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo reboot
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>随便输入个什么命令，比如 &lt;code>date&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Change-Ubuntu-To-Chinese/02.webp"
+loading="lazy"
+alt="显示"
+>&lt;/p>
+&lt;p>显示为中文，修改成功&lt;/p>
+&lt;p>如果没有修改成功的话，使用文本编辑器编辑文件&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">sudo vim /etc/default/locale
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Change-Ubuntu-To-Chinese/03.webp"
+loading="lazy"
+alt="编辑文件"
+>&lt;/p>
+&lt;p>将 &lt;code>LANG LANGUAGE等&lt;/code> 后面换成&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zh_CN.UTF-8
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Change-Ubuntu-To-Chinese/04.webp"
+loading="lazy"
+alt="编辑文件内容"
+>&lt;/p>
+&lt;p>重启系统后就是中文了&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Change-Ubuntu-To-Chinese/05.webp"
+loading="lazy"
+alt="中文显示"
+>&lt;/p>
+&lt;p>参考：&lt;/p>
+&lt;ol>
+&lt;li>&lt;a class="link" href="https://www.linuxdashen.com/ubuntu%e5%a6%82%e4%bd%95%e5%9c%a8%e7%bb%88%e7%ab%af%e4%b8%8b%e6%9b%b4%e6%94%b9%e7%b3%bb%e7%bb%9f%e8%af%ad%e8%a8%80" target="_blank" rel="noopener"
+>ubuntu如何在终端下更改系统语言 - Linux大神博客&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.csdn.net/cnylsy/article/details/52474433" target="_blank" rel="noopener"
+>Ubuntu 14.04 英文SSH终端更改为中文显示_雅礼·实验-CSDN博客&lt;/a>&lt;/li>
+&lt;/ol></description></item></channel></rss>

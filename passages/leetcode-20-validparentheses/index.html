@@ -1,0 +1,493 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="中北大学 AI+移动互联创新实验室 C语言培训作业，力扣第20题有效的括号 题解\n这道题感觉很简单，但是吧，做起来还真不简单。对于人类来说理解判断似乎不难，但是对于计算机来说可能就比较麻烦了。起初我写了很多判断，但是依旧无法实现。经过党明学姐的启发，我觉得使用栈，官方题解上使用的是数组，其实数组就可以做一个简单的栈。不过数组很可能造成内存的浪费，经过李涛的启(qī)发(piàn)自己搓了一个链式栈。\n"><title>有效的括号-力扣20 栈</title>
+<link rel=canonical href=https://blog.gaein.cn/passages/leetcode-20-validparentheses/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="有效的括号-力扣20 栈"><meta property='og:description' content="中北大学 AI+移动互联创新实验室 C语言培训作业，力扣第20题有效的括号 题解\n这道题感觉很简单，但是吧，做起来还真不简单。对于人类来说理解判断似乎不难，但是对于计算机来说可能就比较麻烦了。起初我写了很多判断，但是依旧无法实现。经过党明学姐的启发，我觉得使用栈，官方题解上使用的是数组，其实数组就可以做一个简单的栈。不过数组很可能造成内存的浪费，经过李涛的启(qī)发(piàn)自己搓了一个链式栈。\n"><meta property='og:url' content='https://blog.gaein.cn/passages/leetcode-20-validparentheses/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='算法'><meta property='article:tag' content='笔记'><meta property='article:tag' content='C语言'><meta property='article:published_time' content='2020-11-13T11:25:24+08:00'><meta property='article:modified_time' content='2020-11-13T11:25:24+08:00'><meta name=twitter:title content="有效的括号-力扣20 栈"><meta name=twitter:description content="中北大学 AI+移动互联创新实验室 C语言培训作业，力扣第20题有效的括号 题解\n这道题感觉很简单，但是吧，做起来还真不简单。对于人类来说理解判断似乎不难，但是对于计算机来说可能就比较麻烦了。起初我写了很多判断，但是依旧无法实现。经过党明学姐的启发，我觉得使用栈，官方题解上使用的是数组，其实数组就可以做一个简单的栈。不过数组很可能造成内存的浪费，经过李涛的启(qī)发(piàn)自己搓了一个链式栈。\n"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico><head><meta itemprop=name content="有效的括号-力扣20 栈"><meta itemprop=image content="http://img.cdn.gaein.cn/website_used/avatars/avatar-256x.webp"><meta itemprop=description content="中北大学 AI+移动互联创新实验室 C语言培训作业，力扣第20题有效的括号 题解
+
+
+这道题感觉很简单，但是吧，做起来还真不简单。对于人类来说理解判断似乎不难，但是对于计算机来说可能就比较麻烦了。起初我写了很多判断，但是依旧无法实现。经过党明学姐的启发，我觉得使用栈，官方题解上使用的是数组，其实数组就可以做一个简单的栈。不过数组很可能造成内存的浪费，经过李涛的启(qī)发(piàn)自己搓了一个链式栈。"></head></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu_d97b16840c038ea4.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#题干>题干</a></li><li><a href=#栈>栈</a><ol><li><ol><li><a href=#思路>思路</a></li><li><a href=#代码>代码</a></li><li><a href=#结果>结果</a></li></ol></li></ol></li><li><a href=#最后>最后</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/leetcode-20-validparentheses/>有效的括号-力扣20 栈</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2020 Nov 13</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 4 分钟</time></div></footer></div></header><section class=article-content><p>中北大学 AI+移动互联创新实验室 C语言培训作业，力扣第20题有效的括号 题解</p><blockquote><p>这道题感觉很简单，但是吧，做起来还真不简单。对于人类来说理解判断似乎不难，但是对于计算机来说可能就比较麻烦了。起初我写了很多判断，但是依旧无法实现。经过党明<strong>学姐</strong>的启发，我觉得使用栈，官方题解上使用的是数组，其实数组就可以做一个简单的栈。不过数组很可能造成内存的浪费，经过李涛的启(qī)发(piàn)自己搓了一个链式栈。</p></blockquote><h2 id=题干>题干</h2><p>[<a class=link href=https://leetcode-cn.com/problems/valid-parentheses/ target=_blank rel=noopener>力扣-有效的括号</a>]</p><blockquote><p>给定一个只包括 &lsquo;(&rsquo;，&rsquo;)&rsquo;，&rsquo;{&rsquo;，&rsquo;}&rsquo;，&rsquo;[&rsquo;，&rsquo;]&rsquo; 的字符串，判断字符串是否有效。
+有效字符串需满足：</p><ol><li>左括号必须用相同类型的右括号闭合。</li><li>左括号必须以正确的顺序闭合。</li><li><strong>注意空字符串可被认为是有效字符串。</strong></li></ol></blockquote><blockquote><p>示例 1:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;()&#34;
+</span></span><span class=line><span class=cl>输出: true
+</span></span></code></pre></td></tr></table></div></div></blockquote><blockquote><p>示例 2:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;()[]{}&#34;
+</span></span><span class=line><span class=cl>输出: true
+</span></span></code></pre></td></tr></table></div></div></blockquote><blockquote><p>示例 3:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;(]&#34;
+</span></span><span class=line><span class=cl>输出: false
+</span></span></code></pre></td></tr></table></div></div></blockquote><blockquote><p>示例 4:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;([)]&#34;
+</span></span><span class=line><span class=cl>输出: false
+</span></span></code></pre></td></tr></table></div></div></blockquote><blockquote><p>示例 5:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入: &#34;{[]}&#34;
+</span></span><span class=line><span class=cl>输出: true
+</span></span></code></pre></td></tr></table></div></div></blockquote><h2 id=栈>栈</h2><h4 id=思路>思路</h4><p>起初我写了很多判断，但是依旧无法实现。经过党明<strong>学姐</strong>的启发，我觉得使用栈，官方题解上使用的是数组，其实数组就可以做一个简单的栈。不过数组很可能造成内存的浪费，经过李涛的启(qī)发(piàn)自己搓了一个链式栈。<br>做法是首先判断是否为空字符串，为空则返回<code>true</code>，不为空则遍历字符数组，当匹配到左括号<code>{</code>、<code>[</code>、<code>(</code>时候，将左括号入栈。<br>继续遍历，发现右括号后将其和栈顶的左括号匹配，匹配成功则将其出栈，继续进行循环，直到读取到<code>'\0'</code>为止。<br>如果</p><ol><li>没有任何括号入栈</li><li>遍历结束后栈不为空
+则返回<code>false</code></li></ol><h4 id=代码>代码</h4><h6 id=官方题解>官方题解</h6><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>char</span> <span class=nf>pairs</span><span class=p>(</span><span class=kt>char</span> <span class=n>a</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>a</span> <span class=o>==</span> <span class=sc>&#39;}&#39;</span><span class=p>)</span> <span class=k>return</span> <span class=sc>&#39;{&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>a</span> <span class=o>==</span> <span class=sc>&#39;]&#39;</span><span class=p>)</span> <span class=k>return</span> <span class=sc>&#39;[&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>a</span> <span class=o>==</span> <span class=sc>&#39;)&#39;</span><span class=p>)</span> <span class=k>return</span> <span class=sc>&#39;(&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=nf>isValid</span><span class=p>(</span><span class=kt>char</span><span class=o>*</span> <span class=n>s</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>n</span> <span class=o>=</span> <span class=nf>strlen</span><span class=p>(</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>n</span> <span class=o>%</span> <span class=mi>2</span> <span class=o>==</span> <span class=mi>1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>stk</span><span class=p>[</span><span class=n>n</span> <span class=o>+</span> <span class=mi>1</span><span class=p>],</span> <span class=n>top</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>n</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kt>char</span> <span class=n>ch</span> <span class=o>=</span> <span class=nf>pairs</span><span class=p>(</span><span class=n>s</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>ch</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>top</span> <span class=o>==</span> <span class=mi>0</span> <span class=o>||</span> <span class=n>stk</span><span class=p>[</span><span class=n>top</span> <span class=o>-</span> <span class=mi>1</span><span class=p>]</span> <span class=o>!=</span> <span class=n>ch</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=n>top</span><span class=o>--</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>stk</span><span class=p>[</span><span class=n>top</span><span class=o>++</span><span class=p>]</span> <span class=o>=</span> <span class=n>s</span><span class=p>[</span><span class=n>i</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>top</span> <span class=o>==</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=我的题解>我的题解</h6><blockquote><p>由于手搓了一个链式栈，所以代码很长</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span><span class=lnt>171
+</span><span class=lnt>172
+</span><span class=lnt>173
+</span><span class=lnt>174
+</span><span class=lnt>175
+</span><span class=lnt>176
+</span><span class=lnt>177
+</span><span class=lnt>178
+</span><span class=lnt>179
+</span><span class=lnt>180
+</span><span class=lnt>181
+</span><span class=lnt>182
+</span><span class=lnt>183
+</span><span class=lnt>184
+</span><span class=lnt>185
+</span><span class=lnt>186
+</span><span class=lnt>187
+</span><span class=lnt>188
+</span><span class=lnt>189
+</span><span class=lnt>190
+</span><span class=lnt>191
+</span><span class=lnt>192
+</span><span class=lnt>193
+</span><span class=lnt>194
+</span><span class=lnt>195
+</span><span class=lnt>196
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/*AI+移动互联创新实验室 C语言培训练习题 有效的括号 | 力扣-20*/</span>
+</span></span><span class=line><span class=cl><span class=cp>##include &lt;stdio.h&gt;
+</span></span></span><span class=line><span class=cl><span class=cp>##include &lt;stdbool.h&gt;
+</span></span></span><span class=line><span class=cl><span class=cp>##include &lt;string.h&gt;
+</span></span></span><span class=line><span class=cl><span class=cp>##include &lt;malloc.h&gt;
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=c1>// 结构体栈
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>typedef</span> <span class=k>struct</span> <span class=n>_Node</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>char</span> <span class=n>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>struct</span> <span class=n>_Node</span> <span class=o>*</span><span class=n>next</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>struct</span> <span class=n>_Node</span> <span class=o>*</span><span class=n>last</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=n>Node</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 结构体栈
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>typedef</span> <span class=k>struct</span> <span class=n>_Stack</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Node</span> <span class=o>*</span><span class=n>top</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=n>Stack</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 函数声明
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>stackPush</span><span class=p>(</span><span class=n>Stack</span> <span class=o>*</span><span class=n>st</span><span class=p>,</span> <span class=kt>char</span> <span class=n>val</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>char</span> <span class=nf>stackPop</span><span class=p>(</span><span class=n>Stack</span> <span class=o>*</span><span class=n>st</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=nf>isOdd</span><span class=p>(</span><span class=kt>int</span> <span class=n>num</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>Stack</span> <span class=o>*</span><span class=nf>stackInit</span><span class=p>(</span><span class=kt>char</span> <span class=n>in</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>bracketsTableInit</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=kt>char</span> <span class=nf>bracketsTable</span><span class=p>(</span><span class=kt>char</span> <span class=n>ch</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 定义对应表
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>char</span> <span class=n>table</span><span class=p>[</span><span class=mi>126</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// bool isValid(char *s);
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=c1>// int main(int argc, char const *argv[])
+</span></span></span><span class=line><span class=cl><span class=c1>// {
+</span></span></span><span class=line><span class=cl><span class=c1>//     char ch[] = &#34;()[]{}&#34;;
+</span></span></span><span class=line><span class=cl><span class=c1>//     if (isValid(ch))
+</span></span></span><span class=line><span class=cl><span class=c1>//     {
+</span></span></span><span class=line><span class=cl><span class=c1>//         printf(&#34;%s \n&#34;, &#34;有效&#34;);
+</span></span></span><span class=line><span class=cl><span class=c1>//     }
+</span></span></span><span class=line><span class=cl><span class=c1>//     else
+</span></span></span><span class=line><span class=cl><span class=c1>//     {
+</span></span></span><span class=line><span class=cl><span class=c1>//         printf(&#34;%s \n&#34;, &#34;无效&#34;);
+</span></span></span><span class=line><span class=cl><span class=c1>//     }
+</span></span></span><span class=line><span class=cl><span class=c1>//     return 0;
+</span></span></span><span class=line><span class=cl><span class=c1>// }
+</span></span></span><span class=line><span class=cl><span class=c1>// 测试用代码
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=nf>isValid</span><span class=p>(</span><span class=kt>char</span> <span class=o>*</span><span class=n>s</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>LENGTH</span> <span class=o>=</span> <span class=nf>strlen</span><span class=p>(</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=n>ret</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nf>isOdd</span><span class=p>(</span><span class=n>LENGTH</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nf>bracketsTableInit</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=nf>bracketsTable</span><span class=p>(</span><span class=o>*</span><span class=n>s</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// 匹配到左括号
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>Stack</span> <span class=o>*</span><span class=n>st</span> <span class=o>=</span> <span class=nf>stackInit</span><span class=p>(</span><span class=o>*</span><span class=n>s</span><span class=p>);</span> <span class=c1>// 入栈
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>s</span><span class=o>++</span><span class=p>;</span>                       <span class=c1>// 移到下一个字符
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=kt>bool</span> <span class=n>hasR</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>         <span class=c1>// 默认有对应的右边为false
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>LENGTH</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>,</span> <span class=n>s</span><span class=o>++</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=c1>// 循环遍历字符数组
+</span></span></span><span class=line><span class=cl><span class=c1></span>                <span class=k>if</span> <span class=p>(</span><span class=nf>bracketsTable</span><span class=p>(</span><span class=o>*</span><span class=n>s</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=c1>// 左括号入栈
+</span></span></span><span class=line><span class=cl><span class=c1></span>                    <span class=nf>stackPush</span><span class=p>(</span><span class=n>st</span><span class=p>,</span> <span class=o>*</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=c1>//右括号，设置hasR为true并且出栈
+</span></span></span><span class=line><span class=cl><span class=c1></span>                    <span class=n>hasR</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=kt>char</span> <span class=n>inSt</span> <span class=o>=</span> <span class=nf>bracketsTable</span><span class=p>(</span><span class=nf>stackPop</span><span class=p>(</span><span class=n>st</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>                    <span class=c1>// printf(&#34;%c %c\n&#34;,inSt,*s );
+</span></span></span><span class=line><span class=cl><span class=c1></span>                    <span class=k>if</span> <span class=p>(</span><span class=n>inSt</span> <span class=o>!=</span> <span class=o>*</span><span class=n>s</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=c1>// 无法匹配
+</span></span></span><span class=line><span class=cl><span class=c1></span>                        <span class=n>ret</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=k>else</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=c1>// 匹配并跳到下一循环
+</span></span></span><span class=line><span class=cl><span class=c1></span>                        <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>hasR</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=c1>// 未找到右括号
+</span></span></span><span class=line><span class=cl><span class=c1></span>                <span class=n>ret</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span> <span class=o>!=</span> <span class=nb>NULL</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=c1>// 栈未出空
+</span></span></span><span class=line><span class=cl><span class=c1></span>                <span class=n>ret</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>ret</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>ret</span> <span class=o>=</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>ret</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Stack</span> <span class=o>*</span><span class=nf>stackInit</span><span class=p>(</span><span class=kt>char</span> <span class=n>in</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Node</span> <span class=o>*</span><span class=n>newNode</span> <span class=o>=</span> <span class=p>(</span><span class=n>Node</span> <span class=o>*</span><span class=p>)</span><span class=nf>malloc</span><span class=p>(</span><span class=k>sizeof</span><span class=p>(</span><span class=n>Node</span><span class=p>));</span>  <span class=c1>// 新建栈节点
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>Stack</span> <span class=o>*</span><span class=n>newSt</span> <span class=o>=</span> <span class=p>(</span><span class=n>Stack</span> <span class=o>*</span><span class=p>)</span><span class=nf>malloc</span><span class=p>(</span><span class=k>sizeof</span><span class=p>(</span><span class=n>Stack</span><span class=p>));</span> <span class=c1>// 新建栈
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>newNode</span><span class=o>-&gt;</span><span class=n>value</span> <span class=o>=</span> <span class=n>in</span><span class=p>;</span>                           <span class=c1>// 节点值
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>newNode</span><span class=o>-&gt;</span><span class=n>next</span> <span class=o>=</span> <span class=nb>NULL</span><span class=p>;</span>                          <span class=c1>// 置空节点next
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>newNode</span><span class=o>-&gt;</span><span class=n>last</span> <span class=o>=</span> <span class=nb>NULL</span><span class=p>;</span>                          <span class=c1>// 置空节点last
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>newSt</span><span class=o>-&gt;</span><span class=n>top</span> <span class=o>=</span> <span class=n>newNode</span><span class=p>;</span>                          <span class=c1>// 栈顶指向节点
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=n>newSt</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 入栈
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>stackPush</span><span class=p>(</span><span class=n>Stack</span> <span class=o>*</span><span class=n>st</span><span class=p>,</span> <span class=kt>char</span> <span class=n>val</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Node</span> <span class=o>*</span><span class=n>newNode</span> <span class=o>=</span> <span class=p>(</span><span class=n>Node</span> <span class=o>*</span><span class=p>)</span><span class=nf>malloc</span><span class=p>(</span><span class=k>sizeof</span><span class=p>(</span><span class=n>Node</span><span class=p>));</span> <span class=c1>// 新建栈节点
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>newNode</span><span class=o>-&gt;</span><span class=n>value</span> <span class=o>=</span> <span class=n>val</span><span class=p>;</span>                         <span class=c1>// 设置栈节点的值
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>newNode</span><span class=o>-&gt;</span><span class=n>next</span> <span class=o>=</span> <span class=nb>NULL</span><span class=p>;</span>                         <span class=c1>// 置空节点next
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>newNode</span><span class=o>-&gt;</span><span class=n>last</span> <span class=o>=</span> <span class=nb>NULL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span> <span class=o>!=</span> <span class=nb>NULL</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 判空
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span><span class=o>-&gt;</span><span class=n>next</span> <span class=o>=</span> <span class=n>newNode</span><span class=p>;</span> <span class=c1>// 将节点加入栈
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=n>newNode</span><span class=o>-&gt;</span><span class=n>last</span> <span class=o>=</span> <span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span><span class=p>;</span> <span class=c1>// 设置节点的last
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span> <span class=o>=</span> <span class=n>newNode</span><span class=p>;</span> <span class=c1>// 指向新节点
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 出栈
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>char</span> <span class=nf>stackPop</span><span class=p>(</span><span class=n>Stack</span> <span class=o>*</span><span class=n>st</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>char</span> <span class=n>ret</span> <span class=o>=</span> <span class=sc>&#39;\0&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span> <span class=o>!=</span> <span class=nb>NULL</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span><span class=o>-&gt;</span><span class=n>last</span> <span class=o>==</span> <span class=nb>NULL</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// 仅有一个栈
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>ret</span> <span class=o>=</span> <span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span><span class=o>-&gt;</span><span class=n>value</span><span class=p>;</span> <span class=c1>// 取值
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span> <span class=o>=</span> <span class=nb>NULL</span><span class=p>;</span>       <span class=c1>// 置空
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=c1>// free(st-&gt;top);
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>Node</span> <span class=o>*</span><span class=n>del</span> <span class=o>=</span> <span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span><span class=p>;</span>  <span class=c1>// 临时节点
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span> <span class=o>=</span> <span class=n>del</span><span class=o>-&gt;</span><span class=n>last</span><span class=p>;</span>  <span class=c1>// 修改栈顶
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span><span class=o>-&gt;</span><span class=n>next</span> <span class=o>=</span> <span class=nb>NULL</span><span class=p>;</span> <span class=c1>// 取消栈与del节点的链接
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>del</span><span class=o>-&gt;</span><span class=n>last</span> <span class=o>=</span> <span class=nb>NULL</span><span class=p>;</span>     <span class=c1>// 取消del节点与栈的链接
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>ret</span> <span class=o>=</span> <span class=n>del</span><span class=o>-&gt;</span><span class=n>value</span><span class=p>;</span>     <span class=c1>// 取ret值
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=nf>free</span><span class=p>(</span><span class=n>del</span><span class=p>);</span>            <span class=c1>// 释放内存
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>del</span> <span class=o>=</span> <span class=nb>NULL</span><span class=p>;</span>           <span class=c1>// 设置NULL
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>ret</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 判断是否能出栈
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>bool</span> <span class=nf>stackCanPop</span><span class=p>(</span><span class=n>Stack</span> <span class=o>*</span><span class=n>st</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span><span class=n>st</span><span class=o>-&gt;</span><span class=n>top</span> <span class=o>!=</span> <span class=nb>NULL</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 判断是否为奇数
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>bool</span> <span class=nf>isOdd</span><span class=p>(</span><span class=kt>int</span> <span class=n>num</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>num</span> <span class=o>&amp;</span> <span class=mi>1</span> <span class=o>?</span> <span class=nb>true</span> <span class=o>:</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 初始化对应表
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>bracketsTableInit</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>table</span><span class=p>[</span><span class=sc>&#39;(&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=sc>&#39;)&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>table</span><span class=p>[</span><span class=sc>&#39;[&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=sc>&#39;]&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>table</span><span class=p>[</span><span class=sc>&#39;{&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=sc>&#39;}&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 查询对应空格
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>char</span> <span class=nf>bracketsTable</span><span class=p>(</span><span class=kt>char</span> <span class=n>ch</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>table</span><span class=p>[</span><span class=n>ch</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这次只使用了C语言，因为CSharp反转链表应该不难，<code>list.Reverse();</code>（逃）</p><h4 id=结果>结果</h4><p>仅有一次循环，使用迭代的方法还是蛮快的，完成了力扣的任务。但是递归我实在不会，甚至不能很好的区分它们。所以暂时就没有写递归方法。
+<img src=https://s3.ax1x.com/2020/11/12/DSKJ74.md.jpg loading=lazy alt=力扣></p><h2 id=最后>最后</h2><p>这道题的话还是比较简单的，毕竟画起图来感觉不难，但是实际写起来还是有一定挑战性的。通过这道题顺手复习了忘干净的链表，也是非常好的。链表的题先画图理解一下有很大帮助，尤其是自己用笔手动遍历一下，利于理解过程。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/%E7%AE%97%E6%B3%95/>算法</a>
+<a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a>
+<a href=/tags/c%E8%AF%AD%E8%A8%80/>C语言</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/leetcode-206-reverselinkedlist/><div class=article-details><h2 class=article-title>反转链表-力扣206 迭代</h2></div></a></article><article><a href=/passages/leetcode-1-twosum/><div class=article-details><h2 class=article-title>两数之和-力扣1 暴力算法/哈希表</h2></div></a></article><article><a href=/passages/leetcode-417-pacificatlanticwaterflow/><div class=article-details><h2 class=article-title>太平洋大西洋水流问题-力扣417 深都优先搜索</h2></div></a></article><article><a href=/passages/leetcode-221-maximalsquare/><div class=article-details><h2 class=article-title>二叉树的中序遍历-力扣94 中序遍历</h2></div></a></article><article><a href=/passages/leetcode-13-romantointeger/><div class=article-details><h2 class=article-title>罗马数字转整数-力扣13 遍历吧</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2025 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

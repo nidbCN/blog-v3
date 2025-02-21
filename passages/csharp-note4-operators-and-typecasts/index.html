@@ -1,0 +1,322 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 运算符和类型强制转换 6 - 运算符和类型强制转换 6.1 - 运算符和类型转换 6.2 - 运算符 CSharp的运算符类似于C++和Java的运算符，但有一些区别。\n"><title>C#的运算符和类型强制转换 - C#笔记</title>
+<link rel=canonical href=https://blog.gaein.cn/passages/csharp-note4-operators-and-typecasts/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="C#的运算符和类型强制转换 - C#笔记"><meta property='og:description' content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 运算符和类型强制转换 6 - 运算符和类型强制转换 6.1 - 运算符和类型转换 6.2 - 运算符 CSharp的运算符类似于C++和Java的运算符，但有一些区别。\n"><meta property='og:url' content='https://blog.gaein.cn/passages/csharp-note4-operators-and-typecasts/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='笔记'><meta property='article:tag' content='编程'><meta property='article:tag' content='CSharp'><meta property='article:tag' content='dotNET'><meta property='article:published_time' content='2021-05-01T20:42:20+08:00'><meta property='article:modified_time' content='2021-05-01T20:42:20+08:00'><meta name=twitter:title content="C#的运算符和类型强制转换 - C#笔记"><meta name=twitter:description content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 运算符和类型强制转换 6 - 运算符和类型强制转换 6.1 - 运算符和类型转换 6.2 - 运算符 CSharp的运算符类似于C++和Java的运算符，但有一些区别。\n"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico><head><meta itemprop=name content="C#的运算符和类型强制转换 - C#笔记"><meta itemprop=image content="http://img.cdn.gaein.cn/website_used/avatars/avatar-256x.webp"><meta itemprop=description content="目录
+
+C#基础
+C#面向对象
+C#泛型
+C#运算符和强制类型转换
+C#中数组的使用
+C#的委托、lambda 表达式和事件
+C#字符串和正则表达式
+
+运算符和类型强制转换
+6 - 运算符和类型强制转换
+6.1 - 运算符和类型转换
+6.2 - 运算符
+CSharp的运算符类似于C++和Java的运算符，但有一些区别。"></head></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu_d97b16840c038ea4.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#目录>目录</a></li><li><a href=#运算符和类型强制转换>运算符和类型强制转换</a><ol><li><a href=#6---运算符和类型强制转换>6 - 运算符和类型强制转换</a><ol><li><a href=#61---运算符和类型转换>6.1 - 运算符和类型转换</a></li><li><a href=#62---运算符>6.2 - 运算符</a></li><li><a href=#63---使用二进制运算符>6.3 - 使用二进制运算符</a></li><li><a href=#64---类型的安全性>6.4 - 类型的安全性</a></li><li><a href=#65---比较对象的相等性>6.5 - 比较对象的相等性</a></li><li><a href=#66---运算符重载>6.6 - 运算符重载</a></li><li><a href=#67---实现自定义的索引运算符>6.7 - 实现自定义的索引运算符</a></li><li><a href=#68-用户定义的类型强制转换>6.8 用户定义的类型强制转换</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99/>学习资料</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/csharp-note4-operators-and-typecasts/>C#的运算符和类型强制转换 - C#笔记</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2021 May 01</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 13 分钟</time></div></footer></div></header><section class=article-content><h2 id=目录>目录</h2><ul><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note1-Basic/ target=_blank rel=noopener>C#基础</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note2-OOP/ target=_blank rel=noopener>C#面向对象</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note3-Generics-Type/ target=_blank rel=noopener>C#泛型</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note4-Operators-and-TypeCasts/ target=_blank rel=noopener>C#运算符和强制类型转换</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note5-Array/ target=_blank rel=noopener>C#中数组的使用</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note6-Delegates-lambda-Expressions-and-Events/ target=_blank rel=noopener>C#的委托、lambda 表达式和事件</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note7-String-and-Regular/ target=_blank rel=noopener>C#字符串和正则表达式</a></li></ul><h2 id=运算符和类型强制转换>运算符和类型强制转换</h2><h3 id=6---运算符和类型强制转换>6 - 运算符和类型强制转换</h3><h4 id=61---运算符和类型转换>6.1 - 运算符和类型转换</h4><h4 id=62---运算符>6.2 - 运算符</h4><p>CSharp的运算符类似于C++和Java的运算符，但有一些区别。</p><p>除了常见的算数运算符、逻辑运算符、比较运算符和赋值运算符等，CSharp还有</p><ul><li>类型信息运算符 <code>sizeof</code> 、 <code>is</code> 、 <code>typeof</code> 、 <code>as</code></li><li>溢出异常控制运算符 <code>checked</code> 、 <code>unchecked</code></li><li>标识符的名称运算符 <code>nameof()</code></li><li>空合并运算符 <code>??</code></li><li>空值条件运算符 <code>?.</code> 、 <code>?[]</code></li></ul><h5 id=621---运算符的简化操作>6.2.1 - 运算符的简化操作</h5><p>自增(<code>++</code>)、自减(<code>--</code>)以及一些合并赋值(+=)运算符。</p><p>当自增/自减运算符用于较长的表达式内部时，把运算符放在前面(<code>++x</code>)会在计算表达式之前递增 <code>x</code> 。换而言之，在增加了 <code>x</code> 的值后再带入表达式计算。而把运算符放在后面(<code>x++</code>)则反之。</p><p>看个例子就行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>x</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(++</span><span class=n>x</span><span class=p>);</span>     <span class=c1>// The output is &#34;1&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>x</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>x</span><span class=p>++);</span>     <span class=c1>// The output is &#34;0&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>x</span><span class=p>);</span>       <span class=c1>// The output is &#34;1&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>看这三行输出。第一行是先把 <code>x</code> 进行了自增，在 <code>x</code> 传入 <code>WriteLine</code> 方法前就是 <code>1</code> 了。第二行代码是先将 <code>x</code> 的值 <code>0</code> 传给 <code>WriteLine</code> 方法，再将 <code>x</code> 的值自增为 <code>1</code> 。因此第三行代码输出为 <code>1</code>。</p><h6 id=条件运算符>条件运算符</h6><p><strong>适当</strong>的使用条件运算符可以使程序更简洁，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cs>/// &lt;summary&gt;</span>
+</span></span><span class=line><span class=cl><span class=cs>/// 获取数字为奇数或偶数</span>
+</span></span><span class=line><span class=cl><span class=cs>/// &lt;/summary&gt;</span>
+</span></span><span class=line><span class=cl><span class=cs>/// &lt;param name=&#34;input&#34;&gt;数字&lt;/param&gt;</span>
+</span></span><span class=line><span class=cl><span class=cs>/// &lt;returns&gt;字符串奇数或偶数&lt;/returns&gt;</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>string</span> <span class=n>NumType</span><span class=p>(</span><span class=kt>int</span> <span class=n>input</span><span class=p>)</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=n>input</span> <span class=p>%</span> <span class=m>2</span> <span class=p>==</span> <span class=m>0</span> <span class=p>?</span> <span class=s>&#34;偶数&#34;</span> <span class=p>:</span> <span class=s>&#34;奇数&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 不使用条件运算符的版本</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>string</span> <span class=n>NumType</span><span class=p>(</span><span class=kt>int</span> <span class=n>input</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>input</span> <span class=p>%</span> <span class=m>2</span> <span class=p>==</span> <span class=m>0</span><span class=p>)</span> <span class=k>return</span> <span class=s>&#34;偶数&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=s>&#34;奇数&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用条件运算符明显短了很多。</p><h6 id=checked-和-unchecked-运算符><code>checked</code> 和 <code>unchecked</code> 运算符</h6><p>如果把一个代码块标记为 <code>checked</code> ，CLR就会执行溢出检查，如果发生了溢出就抛出 <code>OverflowException</code> 异常。</p><blockquote><p>注意：unchecked 是默认行为。只有在 checked 标记的代码块里把几行不去检查的代码进行标记才使用。</p></blockquote><blockquote><p>checked 有性能损耗</p></blockquote><h6 id=is-运算符><code>is</code> 运算符</h6><p><code>is</code> 运算符可以检查对象是否与特定的类型兼容。短语“兼容”表示对象或者是该类型或者是派生自该类型，总之，可以安全的正常转换为该类型。</p><p>CSharp7 扩展了具有类型匹配的 <code>is</code> 运算符，可以在类型的右边声明变量。如果 <code>is</code> 运算符返回 <code>true</code> ，则该变量被赋值为转换后的引用。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>void</span> <span class=n>PeopleReg</span><span class=p>(</span><span class=kt>object</span> <span class=n>o</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>o</span> <span class=k>is</span> <span class=n>Person</span> <span class=n>p</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// convert success</span>
+</span></span><span class=line><span class=cl>        <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>$&#34;Welcome {p.Name}&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>&#34;You are not a human!&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=as-运算符><code>as</code> 运算符</h6><p><code>as</code> 运算符用于执行引用类型的强制转换。如果要转换的类型与指定的类型兼容，转换就会成功，否则赋值为 <code>null</code> 。</p><p><code>as</code> 运算符允许在一步中进行安全的类型转换，不需要先使用 <code>is</code> 运算符测试类型，再执行转换。</p><h6 id=sizeof-运算符><code>sizeof</code> 运算符</h6><p>使用 <code>sizeof</code> 运算符可以确定栈中值类型需要的长度（字节）。如果结构体只包含值类型，也可以使用 <code>sizeof</code> 运算符和结构。</p><p>如果对复杂类型（而非基本类型）使用 <code>sizeof</code> 运算符，就要把代码放在 <code>unsafe</code> 块中。</p><h6 id=typeof-运算符><code>typeof</code> 运算符</h6><p><code>typeof</code> 运算符返回一个表示特定类型的 <code>System.Type</code> 对象。例如 <code>typeof(string)</code> 返回表示 <code>System.String</code> 类的对象。</p><blockquote><p>Tip：在使用反射技术动态的查找对象的相关信息时，这个运算符很有用。</p></blockquote><h6 id=nameof-运算符><code>nameof</code> 运算符</h6><p>接受一个符号、属性或方法，并返回其名称。比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>void</span> <span class=n>LikeArticle</span><span class=p>(</span><span class=n>Guid</span> <span class=n>aid</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>aid</span> <span class=p>==</span> <span class=kc>null</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>aid</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>还可以使用这个运算符得到属性的名称，也可以得到方法的名称。</p><h6 id=索引运算符>索引运算符</h6><p>类似于访问数组元素，索引运算符可以是任何类型（比如字典中使用的索引运算符）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>title</span> <span class=p>=</span> <span class=n>dict</span><span class=p>[</span><span class=s>&#34;title&#34;</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=可空类型和运算符>可空类型和运算符</h6><p>引用类型可以为空，每次都用 <code>if</code> 来判断空太麻烦了，所以有了可空类型和运算符。</p><p>可空的值类型使用 <code>?</code> 来定义，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int?</span> <span class=n>num</span> <span class=p>=</span> <span class=m>6</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>num</span> <span class=p>=</span> <span class=kc>null</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>或者</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=cs>/// &lt;summary&gt;</span>
+</span></span><span class=line><span class=cl><span class=cs>/// 获取文章列表</span>
+</span></span><span class=line><span class=cl><span class=cs>/// &lt;/summary&gt;</span>
+</span></span><span class=line><span class=cl><span class=cs>/// &lt;param name=&#34;limit&#34;&gt;限制数&lt;/param&gt;</span>
+</span></span><span class=line><span class=cl><span class=cs>/// &lt;returns&gt;HTTP 200&lt;/returns&gt;</span>
+</span></span><span class=line><span class=cl><span class=na>[HttpGet]</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>ActionResult</span><span class=p>&lt;</span><span class=n>ICollection</span><span class=p>&lt;</span><span class=n>ArticleListDto</span><span class=p>&gt;&gt;&gt;</span> <span class=n>GetArticleList</span><span class=p>([</span><span class=n>FromQuery</span><span class=p>]</span> <span class=kt>int?</span> <span class=n>limit</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>注意：通常可空类型与一元或二元运算符一起使用时，如果其中一个操作数或两个操作数都是 <code>null</code> 则结果也为 <code>null</code> 。</p></blockquote><blockquote><p>在比较可空类型时，有一个为 <code>null</code> 则结果就是 <code>false</code> 。</p></blockquote><h6 id=空合并运算符>空合并运算符</h6><p>空合并运算符(<code>??</code>)提供了一种快捷的方式：如果运算符前的表达式不为 <code>null</code> 则返回前面的表达式，否则返回后面的：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>void</span> <span class=n>Test</span><span class=p>(</span><span class=kt>int?</span> <span class=n>num</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>numInt</span> <span class=p>=</span> <span class=n>num</span> <span class=p>??</span> <span class=p>-</span><span class=m>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>input</span> <span class=p>=</span> <span class=n>Console</span><span class=p>.</span><span class=n>ReadLine</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>path</span> <span class=p>=</span> <span class=n>input</span> <span class=p>??</span> <span class=s>&#34;C:/&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=空值条件运算符>空值条件运算符</h6><p>下面这段代码验证传递的参数 <code>p</code> 是否非空。如果它为空，方法就只是返回，而不会继续执行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>void</span> <span class=n>ShowPerson</span><span class=p>(</span><span class=n>Person</span> <span class=n>p</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>p</span><span class=p>==</span><span class=kc>null</span><span class=p>)</span> <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>firstName</span> <span class=p>=</span> <span class=n>p</span><span class=p>.</span><span class=n>FirstName</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// ...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>（你看它多麻烦）</p><p>使用空值条件运算符 <code>?.</code> 访问 <code>FirstName</code> ，当 <code>p</code> 为空的时候就只返回 <code>null</code> ，而不继续执行表达式。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>void</span> <span class=n>ShowPerson</span><span class=p>(</span><span class=n>Person</span> <span class=n>p</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>firstName</span> <span class=p>=</span> <span class=n>p</span><span class=p>?.</span><span class=n>FirstName</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>还可以把空值运算符用于数组：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span><span class=p>[]</span> <span class=n>arr</span> <span class=p>=</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>val</span> <span class=p>=</span> <span class=n>arr</span><span class=p>?[</span><span class=m>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 结合 ?? 运算符给它一个默认值：</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>valWithDefault</span> <span class=p>=</span> <span class=n>arr</span><span class=p>?[</span><span class=m>0</span><span class=p>]</span> <span class=p>??</span> <span class=p>-</span><span class=m>1</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=522---运算符的优先级和关联性>5.2.2 - 运算符的优先级和关联性</h5><p>基本运算符 > 一元运算符 > 乘除 > 加减 > 移位运算 > 关系运算 > 比较运算 > AND > XOR > OR > 逻辑与 > 逻辑或 > 空合并 > 三元条件运算符 > 赋值与lambda</p><p>关联性的例外是赋值运算符，它们是右关联。</p><p>一个重要的、可能误导右关联是三元条件运算符：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>a</span> <span class=p>?</span> <span class=n>b</span> <span class=p>:</span> <span class=n>c</span> <span class=p>?</span> <span class=n>d</span> <span class=p>:</span> <span class=n>e</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=c1>// 等价</span>
+</span></span><span class=line><span class=cl><span class=n>a</span> <span class=p>?</span> <span class=n>b</span> <span class=p>:</span> <span class=p>(</span><span class=n>c</span> <span class=p>?</span> <span class=n>d</span> <span class=p>:</span> <span class=n>e</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>注意：在复杂的表达式中应避免运算符优先级来生成正确的结果。优先级一般符合正常的认知，当不利于人类理解时应该使用括号指定优先级。避免潜在的问题。</p></blockquote><h4 id=63---使用二进制运算符>6.3 - 使用二进制运算符</h4><p><code>Convert.ToString</code> 提供的一个重载带有两个 <code>int</code> 参数，其中第二个 <code>int</code> 值是 <code>toBase</code> 参数。使用这个方法可以传递值：</p><ul><li>2 - 二进制</li><li>8 - 八进制</li><li>10 - 十进制</li><li>16 - 十六进制</li></ul><p>来格式化字符串。</p><p>默认情况下，如果二进制以 <code>0</code> 开头，则这些 <code>0</code> 将会被忽略，而不会被打印出来。使用 <code>PadLeft</code> 方法来填充字符串中的这些 <code>0</code> 值。</p><ol><li><p>位与 AND：该位全是1的时候结果为1，否则为0，比如：</p><p>A: 1001_0011_1001_1111<br>B: 1100_0101_0011_1011<br>R: 1000_0001_0001_1011</p></li><li><p>位或 OR : 该位上任意操作数为1的时候结果为1，比如：</p><p>A: 1001_0011_1001_1111<br>B: 1100_0101_0011_1011<br>R: 1101_0111_1011_1111</p></li><li><p>位异或XOR: 该位上只有一操作数位1的时候结果为1，比如：</p><p>A: 1001_0011_1001_1111<br>B: 1100_0101_0011_1011<br>R: 0101_0110_1010_0100</p></li><li><p>位取反NOT:按位取反，比如：</p><p>A: 1001_0011_1001_1111<br>R: 0110_1100_0110_0000</p></li></ol><h5 id=631---位的移动>6.3.1 - 位的移动</h5><p>向左移动 n 位等同于原来的数字乘以 2^n ，这比乘法运算符要快得多哦。</p><h5 id=632---有符号数和无符号数>6.3.2 - 有符号数和无符号数</h5><p>使用二进制时要记住的意见重要的事情是，有符号类型的数字最左边一位表示符号。</p><h4 id=64---类型的安全性>6.4 - 类型的安全性</h4><h5 id=641---类型转换>6.4.1 - 类型转换</h5><h6 id=隐式转换>隐式转换</h6><p>只要保证值不会发生任何变化，类型转换就可以自动进行。即：可以从“小范围”转到“大范围”的意思。</p><blockquote><p>Tips：<code>BigInteger</code> 是包含任意大小的数字的结构体。可以从较小的类型中初始化它，传递一个大数字或者解析字符串。</p></blockquote><blockquote><p>注意：</p><ol><li>只能从较小的整数类型隐式的转换为较大的整数类型，反过来不行。</li><li>可以将整数隐式的转换为浮点数，尽管可能会丢失精度。</li><li>可空类型不能隐式的转换为不可空类型。</li></ol></blockquote><h6 id=显示转换>显示转换</h6><p>强制类型转换，使用 <code>(type)identifer</code> 的语法来转换。强制类型转换可能是不安全的，可能会引发溢出或者异常。</p><p>CSharp提供了 <code>checked</code> 运算符，可以检查是否有算术溢出。当然它也检查了是否安全，如果不安全则会强制抛出一个异常。</p><blockquote><p>Tips：谨慎的使用显示的类型强制转换，就可以把简单值类型的任何实例转换为几乎任何其它类型。</p></blockquote><p>如果需要在数字和字符串之间转换可以使用 <code>.NET</code> 类库提供的一些方法。</p><p>数字 -> 字符串：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>num</span> <span class=p>=</span> <span class=m>8</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>str</span> <span class=p>=</span> <span class=n>num</span><span class=p>.</span><span class=n>ToString</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><p>字符串 -> 数字：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>str</span> <span class=p>=</span> <span class=s>&#34;8&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>num</span> <span class=p>=</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=kt>int</span><span class=p>.</span><span class=n>TryParse</span><span class=p>(</span><span class=n>str</span><span class=p>,</span> <span class=k>out</span> <span class=n>num</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// Successfully convert string to int.</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>num</span><span class=p>);</span>     <span class=c1>// 8</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果使用了 <code>Parse</code> 方法，将会返回转换后的值，但是如果不能转换该方法就会抛出一个异常。</p><h5 id=642---装箱和拆箱>6.4.2 - 装箱和拆箱</h5><p>前面说过了：</p><ul><li>装箱：值类型 -> 引用类型，栈 -> 堆</li><li>拆箱：引用类型 -> 值类型，堆 -> 栈</li></ul><p>装箱可以隐式的进行。</p><blockquote><p>Tips: 拆箱时必须非常小心，确保能拆&mldr;否则可能会引发一个异常</p></blockquote><h4 id=65---比较对象的相等性>6.5 - 比较对象的相等性</h4><h5 id=1-referenceequals-方法>1. <code>ReferenceEquals</code> 方法</h5><p><code>ReferenceEquals</code> 是一个静态方法，其测试两个引用是否指向类的同一个实例，特别是两个引用是否包括内存中相同的地址。不能重写。</p><p>但是，它认为 <code>null</code> 等于 <code>null</code>。</p><blockquote><p>Tips：这个方法如果用于比较值类型则总返回 <code>false</code> 。</p></blockquote><h5 id=2-equals-虚方法>2. <code>Equals</code> 虚方法</h5><p><code>Equals</code> 虚版本的也可以实现比较， <code>System.Object</code> 中实现的版本是比较引用。因为这是虚方法所以可以在自己的类中重写它，使用适合自己类的方法进行比较，比如值比较。</p><blockquote><p>如果希望类的实例用作字典的键，就需要重写这个方法。</p></blockquote><h5 id=3-equals-静态方法>3. <code>Equals</code> 静态方法</h5><p>作用相同，不同的是静态方法有两个参数，它的作用是比较这两个参数（引用）的相等性。如果有一个参数为 <code>null</code> 则返回 <code>false</code> 。</p><h5 id=4--比较运算符>4. <code>==</code> 比较运算符</h5><p>最好将它看作严格的值比较和严格的引用比较中间的玩意，大多数情况下，如果两边是引用类型的话是引用比较。</p><blockquote><p>不过字符串类型通过运算符重载实现了通过比较运算符进行值比较，更符合人的直觉。</p></blockquote><p>在使用上述几种方法的时候，通常来说使用 <code>==</code>，需要比较引用的时候使用 <code>ReferenceEquals</code> 方法。需要复杂类型的自定义比较时，重写 <code>Equals</code> 方法，并且，建议使用这个方法重载运算符 <code>==</code>，以便于更方便的比较。</p><h5 id=652---比较值类型的相等性>6.5.2 - 比较值类型的相等性</h5><p>在比较值类型的相等性时，采用与引用类型相同的规则：<code>ReferenceEquals</code> 用于比较引用，<code>Equals</code> 用于比较值，比较运算符可以看作一个中间项。</p><p>如果调用 <code>sA.Equals(sB)</code> ，其中 <code>sA</code> 和 <code>sB</code> 是某个结构的实例，则根据它俩是否存在所有的字段并且包含相同的值返回 <code>true</code> 或者 <code>false</code>。</p><p>另一方面，在默认情况下，使用 <code>==</code> 比较结构会无法编译，除非自己重载了比较运算符。</p><p>尽管 <code>System.ValueType</code> 提供的 <code>Equals</code> 默认重写版本肯定足以应付大部分自定义的结构，但是仍然可以重写方法以适用于自己的结构、提高性能。另外，如果值类型包含作为字段的引用类型，就需要重写 <code>Equals</code> 方法，默认的版本仅比较它们的地址。</p><h4 id=66---运算符重载>6.6 - 运算符重载</h4><p>假如有个 <code>Matrix</code> 类，实现了矩阵相加、相乘的一些方法。但是直接调用看着太不舒服了，使用更利于理解的运算符才是该干的。</p><p>通过运算符重载可以告诉编译器，<code>+</code> 和 <code>*</code> 分别对 <code>Matrix</code> 对象执行什么操作，以便编写类似于上面的代码。</p><p>事实证明，在许多情况下，重载运算符利于生成可读性更高、更直观的代码。</p><h5 id=661---运算符的工作方式>6.6.1 - 运算符的工作方式</h5><ul><li>编译器会看前后的操作数的类型，如果是相同的基础类型，则按照规定的操作进行。</li><li>如果是不同的，则看是否能够隐式转换并选择合适的路径进行转换。</li><li>如果是用户自定义的类型，则去查找重载，找到就走重载，找不到就报错。</li></ul><h5 id=662---运算符重载的示例vector-结构>6.6.2 - 运算符重载的示例：Vector 结构</h5><p><code>Vector</code> 结构表示一个三维的数学矢量。为了简单，就算它是三个 <code>double</code> 类型数字的集合。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>struct</span> <span class=nc>Vector</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>Vector</span><span class=p>(</span><span class=kt>double</span> <span class=n>x</span><span class=p>,</span> <span class=kt>double</span> <span class=n>y</span><span class=p>,</span> <span class=kt>double</span> <span class=n>z</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>X</span> <span class=p>=</span> <span class=n>x</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>Y</span> <span class=p>=</span> <span class=n>y</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>Z</span> <span class=p>=</span> <span class=n>z</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>Vector</span><span class=p>(</span><span class=n>Vector</span> <span class=n>v</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>X</span> <span class=p>=</span> <span class=n>v</span><span class=p>.</span><span class=n>X</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>Y</span> <span class=p>=</span> <span class=n>v</span><span class=p>.</span><span class=n>Y</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>Z</span> <span class=p>=</span> <span class=n>v</span><span class=p>.</span><span class=n>Z</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kt>double</span> <span class=n>X</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kt>double</span> <span class=n>Y</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kt>double</span> <span class=n>Z</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kd>override</span> <span class=kt>string</span> <span class=n>ToString</span><span class=p>()</span> <span class=p>=&gt;</span> <span class=s>$&#34;( {X}, {Y}, {Z} )&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>运算符重载的声明方式与静态方法基本相同，但 <code>operator</code> 关键字告诉编译器这是运算符重载，它后面紧跟一个运算符，比如 <code>+</code> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=n>Vector</span> <span class=kd>operator</span> <span class=p>+(</span><span class=n>Vector</span> <span class=n>left</span><span class=p>,</span> <span class=n>Vector</span> <span class=n>right</span><span class=p>)</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=k>new</span> <span class=n>Vector</span><span class=p>(</span><span class=n>left</span><span class=p>.</span><span class=n>X</span> <span class=p>+</span> <span class=n>right</span><span class=p>.</span><span class=n>X</span><span class=p>,</span> <span class=n>left</span><span class=p>.</span><span class=n>Y</span> <span class=p>+</span> <span class=n>right</span><span class=p>.</span><span class=n>Y</span><span class=p>,</span> <span class=n>left</span><span class=p>.</span><span class=n>Z</span> <span class=p>+</span> <span class=n>right</span><span class=p>.</span><span class=n>Z</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>注意：CSharp要求所有的运算符重载都声明为 <code>public</code> 和 <code>static</code> ，这表示它们与类或结构相关联而不是某个特定的实例。所以运算符重载的代码体不能访问非静态类成员，也不能访问 <code>this</code> 标识符。</p></blockquote><p>有一个运算符重载，其参数依次是一个 <code>double</code> 和一个 <code>Vector</code> ，但是编译器不能交换参数的顺序，所以对于这种交换顺序不影响的运算，需要写两个重载。</p><p>虽然 <code>+=</code> 一般算作一个运算符，但实际上它对应的操作分为两步：相加和赋值。但是CSharp是不允许重载 <code>=</code> 运算符的，不过如果重载了 <code>+</code> 运算符，编译器会自动重载 <code>+=</code> 运算符。</p><h5 id=663---比较运算符的重载>6.6.3 - 比较运算符的重载</h5><p>6个比较运算符分为三对：</p><ol><li><code>==</code> 和 <code>!=</code></li><li><code>></code> 和 <code>&lt;</code></li><li><code>>=</code> 和 <code>&lt;=</code></li></ol><p>CSharp语言要求成对重载比较运算符，也就是你重载了 <code>>=</code> 也必须重载 <code>&lt;=</code> ，否则就会产生编译器错误。</p><blockquote><p>Tips：当比较时，需要考虑：如果有嵌入的类，是比较嵌入的类的引用（浅度比较）还是应该比较对象的值是否相等（深度比较）？</p></blockquote><blockquote><p>注意：不要通过调用从 <code>System.Object</code> 中继承的 <code>Equals</code> 方法的实例版本来重载比较运算符，如果这么做在双等号左值为 <code>null</code> 时（例如 <code>objA == objB</code>）系统会去调用 <code>null.Equals(objB)</code> ，这样会引发一个异常。采用其他方法（重写 <code>Equals</code> 方法以比较）比较安全。</p></blockquote><p>还需要重写 <code>Equals</code> 方法和 <code>GetHashCode</code> 方法。这些方法总是应该在重载 <code>==</code> 进行重写，否则编译器会报错：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>override</span> <span class=kt>bool</span> <span class=n>Equals</span><span class=p>(</span><span class=kt>object</span> <span class=n>obj</span><span class=p>)</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=n>obj</span> <span class=k>is</span> <span class=n>Vector</span> <span class=n>v</span> <span class=p>?</span> <span class=k>this</span> <span class=p>==</span> <span class=n>v</span> <span class=p>:</span> <span class=kc>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>override</span> <span class=kt>int</span> <span class=n>GetHashCode</span><span class=p>()</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=n>X</span><span class=p>.</span><span class=n>GetHashCode</span><span class=p>()</span> <span class=p>^</span> <span class=p>(</span><span class=n>Y</span><span class=p>.</span><span class=n>GetHashCode</span><span class=p>()</span> <span class=p>^</span> <span class=n>Z</span><span class=p>.</span><span class=n>GetHashCode</span><span class=p>());</span>
+</span></span></code></pre></td></tr></table></div></div><p>散列代码的实现应比较快速，且总对相同的对象返回相同的值，因此对几个属性算散列是比较的河里的。</p><h5 id=664---可以重载的运算符>6.6.4 - 可以重载的运算符</h5><p>不同于C++，并不是所有的运算符可以重载。</p><p>可以重载的运算符有：</p><ul><li>算术一元、二元运算符</li><li>按位二元运算符</li><li>按位一元运算符：<code>true</code> 和 <code>false</code> 运算符必须成对重载</li><li>比较运算符：必须成对重载</li><li>赋值运算符：不能显示重载，重载单个运算符就重载了</li><li>索引运算符：不能直接重载索引运算符，索引器成员类型允许类和结构上支持</li><li>类型强制转换运算符：不能直接重载，可以用用户定义的类型强制转换</li></ul><h4 id=67---实现自定义的索引运算符>6.7 - 实现自定义的索引运算符</h4><p>自定义索引器不能使用运算符重载语法来实现，但是它们可以用与属性非常相似的语法来实现。</p><p>举个 <code>PersonCollection</code> 类的栗子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>PersonCollection</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=n>Person</span><span class=p>[]</span> <span class=n>_people</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1>// ctor</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>PersonCollection</span><span class=p>(</span><span class=k>params</span> <span class=n>Person</span><span class=p>[]</span> <span class=n>people</span><span class=p>)</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=n>_people</span> <span class=p>=</span> <span class=n>people</span><span class=p>.</span><span class=n>ToArray</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// indexer</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>Person</span> <span class=k>this</span><span class=p>[</span><span class=kt>int</span> <span class=n>index</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>get</span> <span class=p>=&gt;</span> <span class=n>_people</span><span class=p>[</span><span class=n>index</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=k>set</span> <span class=p>=&gt;</span> <span class=n>_people</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=p>=</span> <span class=k>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>为了允许索引器语法访问 <code>PersonCollection</code> 并返回 <code>Person</code> 对象，可以创建一个索引器。索引器看起来非常类似于属性。不同之处是名称，指定索引器必须要使用 <code>this</code> 关键字，中括号中是索引的类型。</p><p>对于索引器，不仅能用 <code>int</code> 类型进行索引，任何类型都是有效的。</p><h4 id=68-用户定义的类型强制转换>6.8 用户定义的类型强制转换</h4><p>CSharp允许定义用户自己的数据类型，因此，需要去支持这些类型的转换。如果知道无论在源变量中存储什么值，类型强制转换总是安全的，就可以把它定义为隐式强制转换。然而，如果某些数值可能会出错，如丢失什么数据或抛出异常，就应该把数据类型转换定义为显示强制转换。</p><ul><li>隐式转换关键字：<code>implicit</code></li><li>显示转换关键字：<code>explicit</code></li></ul><p>与其他运算符重载一样，类型强制必须同时声明为 <code>public</code> 和 <code>static</code> 。</p><h5 id=681---实现用户定义的类型强制转换>6.8.1 - 实现用户定义的类型强制转换</h5><p>定义隐式的强制类型转换使用 <code>implicit</code> 关键字，假如我们要转 <code>Currency</code> 类为 <code>float</code> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kd>implicit</span> <span class=n>operate</span> <span class=kt>float</span> <span class=p>(</span><span class=n>Currency</span> <span class=k>value</span><span class=p>)</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=k>value</span><span class=p>.</span><span class=n>Dollars</span> <span class=p>+</span> <span class=p>(</span><span class=k>value</span><span class=p>.</span><span class=n>Cents</span> <span class=p>/</span> <span class=m>100.0f</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p>把 <code>float</code> 转换成 <code>Currency</code> 不总是成功的，应该定义一个强制转换：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kd>explicit</span> <span class=n>operate</span> <span class=n>Currency</span> <span class=p>(</span><span class=kt>float</span> <span class=k>value</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>uint</span> <span class=n>dollars</span> <span class=p>=</span> <span class=p>(</span><span class=kt>uint</span><span class=p>)</span><span class=k>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>ushort</span> <span class=n>cents</span> <span class=p>=</span> <span class=p>(</span><span class=kt>ushort</span><span class=p>)((</span><span class=k>value</span> <span class=p>-</span> <span class=n>dollars</span><span class=p>)</span> <span class=p>*</span> <span class=m>100</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>new</span> <span class=n>Currency</span><span class=p>(</span><span class=n>dollars</span><span class=p>,</span> <span class=n>cents</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>Tips：如果类型强制转换用于把 <code>float</code> 值转换为 <code>int</code> ，计算机会截取多余的数字，而不是执行四舍五入。</p></blockquote><p><code>System.Convert</code> 对象包含大量的静态方法来完成各种数字转换，在使用 <code>System.Covert</code> 类的方法时会造成额外的性能损失，所以只应在需要的时候使用它们。</p><p><code>System.Convert</code> 类的方法还执行它们自己的溢出检查，因此，不需要把对它们的调用放在 <code>checked</code> 环境下面。</p><h6 id=1-类之间的类型强制转换>1. 类之间的类型强制转换</h6><blockquote><p>注意：派生类之间不能相互转换。</p></blockquote><p>CSharp要求把类型强制转换的定义放在源类或目标类的内部。</p><h6 id=2-基类和派生类之间的类型强制转换>2. 基类和派生类之间的类型强制转换</h6><p>在进行强制类型转换时，会检查被引用的对象。因为基类原则上可以引用一个派生类的实例，所以这个对象可能是要强制转换的派生类的一个实例。如果是这样，强制转换就会成功。如果被引用的实例不是派生自基类的一个实例，强制转换就会抛出异常。</p><p>编译器已经提供了对于基类和派生类之间的强制类型转换。如果要进行的转换是合法的，它们也仅仅是更改了类型，而引用没有变。这些强制类型转换与用户定义的强制类型转换不同。在上面的例子中，将 <code>float</code> 强制转换为 <code>Currency</code> 还新定义并初始化了一个实例。</p><h6 id=3-装箱和拆箱类型的强制类型转换>3. 装箱和拆箱类型的强制类型转换</h6><p>从值类型到 <code>object</code> 的强制转换总是一种隐式的强制转换，因为这种转换是从派生类到基类的的转换。</p><p>在执行上述转换（装箱）时，值类型的变量的值被复制到堆上，放在一个装箱的对象中，并且将装箱后的变量的引用设置为那个对象。</p><p>拆箱是一种显示的强制类型转换，因为如果要强制转换的对象不是正确的类型就会抛出一个异常。</p><p>在使用装箱和拆箱时，这两个过程都把数据复制到新装箱或新拆箱的休想上，理解这一点非常重要。因此，对装箱的操作不会影响源值类型变量的值。</p><h5 id=682-多重类型强制转换>6.8.2 多重类型强制转换</h5><p>如果在进行要求的数据类型转换时没有可用的直接强制类型转换方法，则编译器会自动寻找一种转换方式，将多种转换合并起来以便于进行强制类型转换。</p><blockquote><p>Tips：如果希望类利于使用，就应该确保所有的强制类型转换都按照一种互相兼容的方式进行，即这些转换直观上应得到相同的结果。</p></blockquote><p>最好设计自己的强制类型转换，让所有的转换路线都得到相同的、正确的结果，此时编译器去选择哪条路径就不重要了。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a>
+<a href=/tags/%E7%BC%96%E7%A8%8B/>编程</a>
+<a href=/tags/csharp/>CSharp</a>
+<a href=/tags/dotnet/>DotNET</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/csharp-orderby-customed-comparer/><div class=article-details><h2 class=article-title>C# 中集合和 LINQ 的排序</h2></div></a></article><article><a href=/passages/csharp-note6-delegates-lambda-expressions-and-events/><div class=article-details><h2 class=article-title>C#的委托、lambda 表达式和事件 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note5-array/><div class=article-details><h2 class=article-title>C#中数组的使用 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note7-string-and-regular/><div class=article-details><h2 class=article-title>C#字符串和正则表达式 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note3-generics-type/><div class=article-details><h2 class=article-title>C#中的泛型 - C#笔记</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2025 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

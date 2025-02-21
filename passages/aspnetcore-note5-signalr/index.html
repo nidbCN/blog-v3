@@ -1,0 +1,284 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="前言 这是学习 ASP.NET Core 的笔记，主要是根据微软 MVP 杨旭的课程来走的，当然也有自己的偏向。关于这些内容的笔记和代码以及更多的简介在Github上。\nSignalR 是.NET Core 的实现实时通讯的开源框架，抽象于长轮询、SSE 和 WS 这三种技术之上。用于实时的 web 应用。 这一篇主要是SignalR的介绍和 ASP.NET Core 项目使用SignalR等内容。\n"><title>在 ASP.NET Core 中的实时通信——SignalR 实时通信——ASP.NET Core 入门(3)</title>
+<link rel=canonical href=https://blog.gaein.cn/passages/aspnetcore-note5-signalr/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="在 ASP.NET Core 中的实时通信——SignalR 实时通信——ASP.NET Core 入门(3)"><meta property='og:description' content="前言 这是学习 ASP.NET Core 的笔记，主要是根据微软 MVP 杨旭的课程来走的，当然也有自己的偏向。关于这些内容的笔记和代码以及更多的简介在Github上。\nSignalR 是.NET Core 的实现实时通讯的开源框架，抽象于长轮询、SSE 和 WS 这三种技术之上。用于实时的 web 应用。 这一篇主要是SignalR的介绍和 ASP.NET Core 项目使用SignalR等内容。\n"><meta property='og:url' content='https://blog.gaein.cn/passages/aspnetcore-note5-signalr/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='CSharp'><meta property='article:tag' content='dotNET'><meta property='article:tag' content='AspNetCore'><meta property='article:tag' content='编程'><meta property='article:tag' content='笔记'><meta property='article:tag' content='后端'><meta property='article:published_time' content='2021-01-30T13:32:57+08:00'><meta property='article:modified_time' content='2025-01-13T22:54:00+08:00'><meta name=twitter:title content="在 ASP.NET Core 中的实时通信——SignalR 实时通信——ASP.NET Core 入门(3)"><meta name=twitter:description content="前言 这是学习 ASP.NET Core 的笔记，主要是根据微软 MVP 杨旭的课程来走的，当然也有自己的偏向。关于这些内容的笔记和代码以及更多的简介在Github上。\nSignalR 是.NET Core 的实现实时通讯的开源框架，抽象于长轮询、SSE 和 WS 这三种技术之上。用于实时的 web 应用。 这一篇主要是SignalR的介绍和 ASP.NET Core 项目使用SignalR等内容。\n"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico><head><meta itemprop=name content="在 ASP.NET Core 中的实时通信——SignalR 实时通信——ASP.NET Core 入门(3)"><meta itemprop=image content="http://img.cdn.gaein.cn/website_used/avatars/avatar-256x.webp"><meta itemprop=description content="前言
+
+这是学习 ASP.NET Core 的笔记，主要是根据微软 MVP 杨旭的课程来走的，当然也有自己的偏向。关于这些内容的笔记和代码以及更多的简介在Github上。
+
+SignalR 是.NET Core 的实现实时通讯的开源框架，抽象于长轮询、SSE 和 WS 这三种技术之上。用于实时的 web 应用。
+这一篇主要是SignalR的介绍和 ASP.NET Core 项目使用SignalR等内容。"></head></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu_d97b16840c038ea4.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#前言>前言</a></li><li><a href=#signalr>SignalR</a><ol><li><a href=#技术>技术</a><ol><li><a href=#轮询>轮询</a></li><li><a href=#server-sent-events-sse>Server Sent Events (SSE)</a></li><li><a href=#websocket>WebSocket</a></li></ol></li><li><a href=#消息类型>消息类型</a></li><li><a href=#rpc>RPC</a></li><li><a href=#hub>Hub</a></li><li><a href=#横向扩展>横向扩展</a></li><li><a href=#实践>实践</a><ol><li><a href=#配置项目>配置项目</a></li><li><a href=#客户端>客户端</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/aspnetcore-note5-signalr/>在 ASP.NET Core 中的实时通信——SignalR 实时通信——ASP.NET Core 入门(3)</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2021 Jan 30</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 5 分钟</time></div></footer></div></header><section class=article-content><h2 id=前言>前言</h2><blockquote><p>这是学习 ASP.NET Core 的笔记，主要是根据微软 MVP 杨旭的课程来走的，当然也有自己的偏向。关于这些内容的笔记和代码以及更多的简介在<a class=link href=https://github.com/nidbCN/ASP.NET-Core-Note target=_blank rel=noopener>Github</a>上。</p></blockquote><blockquote><p>SignalR 是.NET Core 的实现实时通讯的开源框架，抽象于长轮询、SSE 和 WS 这三种技术之上。用于实时的 web 应用。
+这一篇主要是SignalR的介绍和 ASP.NET Core 项目使用SignalR等内容。</p></blockquote><h2 id=signalr>SignalR</h2><p>SignalR 是.NET Core 的开源实时框架，抽象与三种技术（见下）之上。无论使用哪种技术，使用 SignalR 是没有感觉到区别的。</p><p>用于实时的 web 应用。</p><p>传统的是浏览器发送请求、服务器处理请求、返回 payload；实时的 web 应用由 web 服务器主动通知客户端数据有变化。</p><h3 id=技术>技术</h3><p>SignalR 使用了三种“底层”的技术来实现实时 Web。分别是：</p><ol><li>Long Polling: 长轮询；</li><li>Server Sent Event;</li><li>Websocket.</li></ol><p>Signal 采用了回落机制，优先使用 WS，如果浏览器不支持再降级为 SSE 和 Long Polling。</p><h4 id=轮询>轮询</h4><p>Polling 是定期向服务器发送请求，有变化则更改数据，很简单，但是浪费资源。<br>长轮询：与轮询的不同之处是如果服务器上面的数据没有更改，则保持连接（不会立即返回 <code>HTTP 204</code> 并断开），直到超时。超时后再次请求。</p><h4 id=server-sent-events-sse>Server Sent Events (SSE)</h4><p>使用 SSE，web 服务器可以在任何时间发送数据。而客户端（浏览器）会一直监听进来的信息，这个连接也会一直开放，直到服务器主动关闭。<br>浏览器会使用一个叫做 EventSource 的对象来处理传过来的信息。</p><p>优点：使用简单，HTTP 协议。
+缺点：浏览器有最大并发、只能发送文本，只能单项通讯。</p><h4 id=websocket>WebSocket</h4><p>WS 是不同于 HTTP 的另一个 TCP 协议。</p><h5 id=优点>优点</h5><ol><li>使用 WS 消息可以双向发送（全双工）；</li><li>没有 HTTP 的延迟，信息流没有完成的时候 TCP 端口始终打开；</li><li>大部分情况下（现代浏览器） SignalR 会使用 WS 协议，这也是最有效的传输方式；</li><li>WS 可以传输文本或者二进制文件；</li><li>WS 不受 SSE 连接数限制，大部分浏览器对 WS 连接支持数为 50 个。</li></ol><h5 id=生命周期>生命周期</h5><ol><li>发送一个 HTTP 请求到服务器进行握手；</li><li>通讯；</li><li>关闭（会返回关闭原因）。</li></ol><h5 id=http-握手>HTTP 握手</h5><ol><li>每一个 WS 开始的时候都是一个简单的 HTTP 连接；</li><li>客户端发送 GET 请求升级 Socket(HTTP 101)；</li><li>服务器同意的话（HTTP 101），升级为 WebSocket。</li></ol><h3 id=消息类型>消息类型</h3><p>消息类型可以是文本或二进制。<br>每个消息由一个或多个 Frame 组成。</p><h3 id=rpc>RPC</h3><p>RPC 的优点是可以像调用本地方法一样调用远程服务。
+SignalR 采用了 RPC 范式来进行通讯。服务端和客户端可以相互调用彼此的方法。SignalR 负责序列化和反序列化。</p><h3 id=hub>Hub</h3><p>Hub 是 SignalR 的一个组件，是服务端的一个类。
+在 ASP.NET Core 中自己创建的 Hub 类需要继承与基类 Hub。<br>在 Hub 类里面可以调用客户端上面的方法，客户端也可以调用 Hub 类里面的方法。<br>Hub 可以序列化和反序列化，被序列化的参数的格式叫做 Hub 协议。Hub 的默认协议是 JSON，也支持 MessagePack（二进制的，更紧凑更快速）。</p><h3 id=横向扩展>横向扩展</h3><p>负载均衡器会保证每个进来的请求按照一定的逻辑分配。但是长轮询时候请求发送到不同的服务器就很容易出问题。</p><h3 id=实践>实践</h3><h4 id=配置项目>配置项目</h4><p>在 <code>StartUp</code> 中注册服务：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>void</span> <span class=n>ConfigureServices</span><span class=p>(</span><span class=n>IServiceCollection</span> <span class=n>services</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 添加控制器</span>
+</span></span><span class=line><span class=cl>    <span class=n>services</span><span class=p>.</span><span class=n>AddControllers</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 添加SignalR</span>
+</span></span><span class=line><span class=cl>    <span class=n>services</span><span class=p>.</span><span class=n>AddSignalR</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>自定义一个测试用的类（这里写个计数调用的）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>CountService</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kt>int</span> <span class=n>Count</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// 获取计数</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kt>int</span> <span class=n>GetLatestCount</span><span class=p>()</span> <span class=p>=&gt;</span> <span class=n>Count</span><span class=p>++;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>注册服务</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>services</span><span class=p>.</span><span class=n>AddSingleton</span><span class=p>&lt;</span><span class=n>CountService</span><span class=p>&gt;();</span>
+</span></span></code></pre></td></tr></table></div></div><p>创建一个 Hub，命名为 <code>CountHub.cs</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>using</span> <span class=nn>Microsoft.AspNetCore.SignalR</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>SignalRDemo</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>CountHub</span><span class=p>(</span><span class=n>CountService</span> <span class=n>countService</span><span class=p>,</span> <span class=n>ILogger</span><span class=p>&lt;</span><span class=n>CountHub</span><span class=p>&gt;</span> <span class=n>logger</span><span class=p>):</span> <span class=n>Hub</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 获取总和</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span> <span class=n>GetLatestCount</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=kt>var</span> <span class=n>userName</span> <span class=p>=</span> <span class=n>Context</span><span class=p>.</span><span class=n>User</span><span class=p>.</span><span class=n>Identity</span><span class=p>.</span><span class=n>Name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>logger</span><span class=p>.</span><span class=n>LogDebug</span><span class=p>(</span><span class=s>&#34;user name: {name}&#34;</span><span class=p>,</span> <span class=n>userName</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=kt>int</span> <span class=n>cnt</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>do</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>cnt</span> <span class=p>=</span> <span class=n>countService</span><span class=p>.</span><span class=n>GetLatestCount</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                <span class=n>Task</span><span class=p>.</span><span class=n>Delay</span><span class=p>(</span><span class=m>100</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                <span class=c1>// 向所有客户端（正经写应该是返回给Connect的客户端？）返回新的数据</span>
+</span></span><span class=line><span class=cl>                <span class=k>await</span> <span class=n>Clients</span><span class=p>.</span><span class=n>All</span><span class=p>.</span><span class=n>SendAsync</span><span class=p>(</span><span class=s>&#34;ReceiveUpdate&#34;</span><span class=p>,</span> <span class=n>cnt</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=k>while</span> <span class=p>(</span><span class=n>cnt</span> <span class=p>&lt;</span> <span class=m>10</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>await</span> <span class=n>Clients</span><span class=p>.</span><span class=n>All</span><span class=p>.</span><span class=n>SendAsync</span><span class=p>(</span><span class=s>&#34;Finished&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1>// ...</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// Code</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// ...</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用 Hub：配置端点，加入</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=c1>// 使用Hub，参数为亲求的端点</span>
+</span></span><span class=line><span class=cl><span class=n>endpoints</span><span class=p>.</span><span class=n>MapHub</span><span class=p>&lt;</span><span class=n>CountHub</span><span class=p>&gt;(</span><span class=s>&#34;/count&#34;</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p>创建一个控制器 <code>CountController</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>using</span> <span class=nn>Microsoft.AspNetCore.Mvc</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>using</span> <span class=nn>Microsoft.AspNetCore.SignalR</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>using</span> <span class=nn>System.Threading.Tasks</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>SignalRDemo.Controllers</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=na>    [Route(&#34;api/count&#34;)]</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>CountController</span><span class=p>:</span> <span class=n>Controller</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kd>private</span> <span class=k>readonly</span> <span class=n>IHubContext</span><span class=p>&lt;</span><span class=n>CountHub</span><span class=p>&gt;</span> <span class=n>CntHub</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1>// 注入Hub</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=n>CountController</span><span class=p>(</span><span class=n>IHubContext</span><span class=p>&lt;</span><span class=n>CountHub</span><span class=p>&gt;</span> <span class=n>cntHub</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>CntHub</span> <span class=p>=</span> <span class=n>cntHub</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1>// Post请求时返回执行客户端上的方法&#34;SomeFunc&#34;，传递参数对象</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>IActionResult</span><span class=p>&gt;</span> <span class=n>Post</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>await</span> <span class=n>CntHub</span><span class=p>.</span><span class=n>Clients</span><span class=p>.</span><span class=n>All</span><span class=p>.</span><span class=n>SendAsync</span><span class=p>(</span><span class=s>&#34;SomeFunc&#34;</span><span class=p>,</span> <span class=k>new</span> <span class=p>{</span> <span class=n>random</span> <span class=p>=</span> <span class=s>&#34;object&#34;</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>Accepted</span><span class=p>(</span><span class=m>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>在 Hub 中重写 <code>OnConnectedAsync()</code> 来执行一些方法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>override</span> <span class=kd>async</span> <span class=n>Task</span> <span class=n>OnConnectedAsync</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>常见的操作有：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=c1>// 获取ConnectId</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>ConnectId</span> <span class=p>=</span> <span class=n>Context</span><span class=p>.</span><span class=n>ConnectionId</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=c1>// 获取当前客户端</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>client</span> <span class=p>=</span> <span class=n>Clients</span><span class=p>.</span><span class=n>Client</span><span class=p>(</span><span class=n>ConnectId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 执行客户端上面的一个方法，参数为 方法名、参数（对象）</span>
+</span></span><span class=line><span class=cl><span class=k>await</span> <span class=n>client</span><span class=p>.</span><span class=n>SendAsync</span><span class=p>(</span><span class=s>&#34;SomeFunc&#34;</span><span class=p>,</span> <span class=k>new</span> <span class=p>{</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 除了这个客户端（指定ConnectId）以外，其它的客户端执行</span>
+</span></span><span class=line><span class=cl><span class=k>await</span> <span class=n>Clients</span><span class=p>.</span><span class=n>AllExcept</span><span class=p>(</span><span class=n>ConnectId</span><span class=p>).</span><span class=n>SendAsync</span><span class=p>(</span><span class=s>&#34;SomeFunc&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 将某个客户端加入组，参数为ConnectId和字符串组名</span>
+</span></span><span class=line><span class=cl><span class=k>await</span> <span class=n>Groups</span><span class=p>.</span><span class=n>AddToGroupAsync</span><span class=p>(</span><span class=n>ConnectId</span><span class=p>,</span> <span class=s>&#34;myGroup&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// 将某个客户端移除，参数同上</span>
+</span></span><span class=line><span class=cl><span class=k>await</span> <span class=n>Groups</span><span class=p>.</span><span class=n>RemoveFromGroupAsync</span><span class=p>(</span><span class=n>ConnectId</span><span class=p>,</span> <span class=s>&#34;myGroup&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// 对某组中的客户端执行某个方法</span>
+</span></span><span class=line><span class=cl><span class=k>await</span> <span class=n>Clients</span><span class=p>.</span><span class=n>Group</span><span class=p>(</span><span class=s>&#34;myGroup&#34;</span><span class=p>).</span><span class=n>SendAsync</span><span class=p>(</span><span class=s>&#34;SomeFunc&#34;</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用 Hub 身份认证，需要加入 <code>[Authorize]</code> 属性</p><p>可以使用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>userName</span> <span class=p>=</span> <span class=n>Context</span><span class=p>.</span><span class=n>User</span><span class=p>.</span><span class=n>Identity</span><span class=p>.</span><span class=n>Name</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>获取认证的用户名。其它属性也类似。</p><blockquote><p>至于 SignalR，我会以后有时间来研究一下。</p></blockquote><h4 id=客户端>客户端</h4><p>使用 libman 安装 <code>SignalR@next</code></p><h5 id=javascript>JavaScript</h5><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=line><span class=cl><span class=kd>let</span> <span class=nx>connection</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>setupConnection</span> <span class=o>=</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 设置连接，其中withUrl是请求的url
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>connection</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>signalR</span><span class=p>.</span><span class=nx>HubConnectionBuilder</span><span class=p>().</span><span class=nx>withUrl</span><span class=p>(</span><span class=s2>&#34;/api/count&#34;</span><span class=p>).</span><span class=nx>build</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 获得返回值，这里的第一个字符串参数是Hub中Clint.SendAsync(&#34;ReceiveUpdate&#34;, cnt)中的第一个参数（？可以看作是双方的一个约定）
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>connection</span><span class=p>.</span><span class=nx>on</span><span class=p>(</span><span class=s2>&#34;ReceiveUpdate&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nx>update</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 打印返回的更新数据
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>update</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 更改ID为resultDiv的节点内容（jq）
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>$</span><span class=p>(</span><span class=s2>&#34;##resultDiv&#34;</span><span class=p>).</span><span class=nx>text</span><span class=p>(</span><span class=nx>update</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>connection</span><span class=p>.</span><span class=nx>on</span><span class=p>(</span><span class=s2>&#34;SomeFunc&#34;</span><span class=p>,</span> <span class=kd>function</span> <span class=p>(</span><span class=nx>obj</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>obj</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// SomeFunc是客户端的方法，obj则是传入的参数
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 开始这个连接
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>connection</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=nx>start</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=k>catch</span><span class=p>((</span><span class=nx>error</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=nx>console</span><span class=p>.</span><span class=nx>error</span><span class=p>(</span><span class=s2>&#34;ERROR!&#34;</span> <span class=o>+</span> <span class=nx>error</span><span class=p>.</span><span class=nx>toString</span><span class=p>()));</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>setupConnection</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 执行服务端方法，字符串参数为方法名，后面为参数
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>connection</span><span class=p>.</span><span class=nx>invoke</span><span class=p>(</span><span class=s2>&#34;GetLatestCount&#34;</span><span class=p>,</span> <span class=nx>id</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div></section><footer class=article-footer><section class=article-tags><a href=/tags/csharp/>CSharp</a>
+<a href=/tags/dotnet/>DotNET</a>
+<a href=/tags/aspnetcore/>AspNetCore</a>
+<a href=/tags/%E7%BC%96%E7%A8%8B/>编程</a>
+<a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a>
+<a href=/tags/%E5%90%8E%E7%AB%AF/>后端</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class=article-lastmod><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>最后更新于 2025 Jan 13 22:54</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/aspnetcore-webapi-note4-http_method/><div class=article-details><h2 class=article-title>GET、POST都是什么——常用的HTTP方法——ASP.NET Core Web API(4)</h2></div></a></article><article><a href=/passages/aspnetcore-webapi-note3-standard/><div class=article-details><h2 class=article-title>怎么设计优雅的API——普通API对外合约——ASP.NET Core Web API(3)</h2></div></a></article><article><a href=/passages/aspnetcore-webapi-note2-restful/><div class=article-details><h2 class=article-title>什么是 REST——RESTful API 简介——ASP.NET Core Web API(2)</h2></div></a></article><article><a href=/passages/aspnetcore-webapi-note1-start/><div class=article-details><h2 class=article-title>如何创建 ASP.NET Core Web API——准备工作——ASP.NET Core Web API(1)</h2></div></a></article><article><a href=/passages/aspnetcore-note3-config/><div class=article-details><h2 class=article-title>如何配置 ASP.NET Core 应用程序——配置文件——ASP.NET Core 入门(2)</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2025 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

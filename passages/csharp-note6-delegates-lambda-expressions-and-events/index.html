@@ -1,0 +1,199 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 委托、lambda 表达式和事件 8 - 委托、lambda 表达式和事件 8.1 - 引用方法 委托是寻址方法的 .NET 版本。在C++中，函数指针只不过是一个指向内存位置的指针，我们不知道它实际指向什么，参数和返回类型就更无从知晓了。而 .NET 的委托是安全的，它定义了返回类型和参数的类型，它不仅包含对方法的引用，也可以包含对多个方法的引用。\n"><title>C#的委托、lambda 表达式和事件 - C#笔记</title>
+<link rel=canonical href=https://blog.gaein.cn/passages/csharp-note6-delegates-lambda-expressions-and-events/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="C#的委托、lambda 表达式和事件 - C#笔记"><meta property='og:description' content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 委托、lambda 表达式和事件 8 - 委托、lambda 表达式和事件 8.1 - 引用方法 委托是寻址方法的 .NET 版本。在C++中，函数指针只不过是一个指向内存位置的指针，我们不知道它实际指向什么，参数和返回类型就更无从知晓了。而 .NET 的委托是安全的，它定义了返回类型和参数的类型，它不仅包含对方法的引用，也可以包含对多个方法的引用。\n"><meta property='og:url' content='https://blog.gaein.cn/passages/csharp-note6-delegates-lambda-expressions-and-events/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='笔记'><meta property='article:tag' content='编程'><meta property='article:tag' content='CSharp'><meta property='article:tag' content='dotNET'><meta property='article:published_time' content='2021-05-05T21:23:03+08:00'><meta property='article:modified_time' content='2021-05-05T21:23:03+08:00'><meta name=twitter:title content="C#的委托、lambda 表达式和事件 - C#笔记"><meta name=twitter:description content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 委托、lambda 表达式和事件 8 - 委托、lambda 表达式和事件 8.1 - 引用方法 委托是寻址方法的 .NET 版本。在C++中，函数指针只不过是一个指向内存位置的指针，我们不知道它实际指向什么，参数和返回类型就更无从知晓了。而 .NET 的委托是安全的，它定义了返回类型和参数的类型，它不仅包含对方法的引用，也可以包含对多个方法的引用。\n"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico><head><meta itemprop=name content="C#的委托、lambda 表达式和事件 - C#笔记"><meta itemprop=image content="http://img.cdn.gaein.cn/website_used/avatars/avatar-256x.webp"><meta itemprop=description content="目录
+
+C#基础
+C#面向对象
+C#泛型
+C#运算符和强制类型转换
+C#中数组的使用
+C#的委托、lambda 表达式和事件
+C#字符串和正则表达式
+
+委托、lambda 表达式和事件
+8 - 委托、lambda 表达式和事件
+8.1 - 引用方法
+委托是寻址方法的 .NET 版本。在C++中，函数指针只不过是一个指向内存位置的指针，我们不知道它实际指向什么，参数和返回类型就更无从知晓了。而 .NET 的委托是安全的，它定义了返回类型和参数的类型，它不仅包含对方法的引用，也可以包含对多个方法的引用。"></head></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu_d97b16840c038ea4.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#目录>目录</a></li><li><a href=#委托lambda-表达式和事件>委托、lambda 表达式和事件</a><ol><li><a href=#8---委托lambda-表达式和事件>8 - 委托、lambda 表达式和事件</a><ol><li><a href=#81---引用方法>8.1 - 引用方法</a></li><li><a href=#82---委托>8.2 - 委托</a></li><li><a href=#83---lambda-表达式>8.3 - lambda 表达式</a></li><li><a href=#84---事件>8.4 - 事件</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/csharp-note6-delegates-lambda-expressions-and-events/>C#的委托、lambda 表达式和事件 - C#笔记</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2021 May 05</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 6 分钟</time></div></footer></div></header><section class=article-content><h2 id=目录>目录</h2><ul><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note1-Basic/ target=_blank rel=noopener>C#基础</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note2-OOP/ target=_blank rel=noopener>C#面向对象</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note3-Generics-Type/ target=_blank rel=noopener>C#泛型</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note4-Operators-and-TypeCasts/ target=_blank rel=noopener>C#运算符和强制类型转换</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note5-Array/ target=_blank rel=noopener>C#中数组的使用</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note6-Delegates-lambda-Expressions-and-Events/ target=_blank rel=noopener>C#的委托、lambda 表达式和事件</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note7-String-and-Regular/ target=_blank rel=noopener>C#字符串和正则表达式</a></li></ul><h2 id=委托lambda-表达式和事件>委托、lambda 表达式和事件</h2><h3 id=8---委托lambda-表达式和事件>8 - 委托、lambda 表达式和事件</h3><h4 id=81---引用方法>8.1 - 引用方法</h4><p>委托是寻址方法的 <code>.NET</code> 版本。在C++中，函数指针只不过是一个指向内存位置的指针，我们不知道它实际指向什么，参数和返回类型就更无从知晓了。而 <code>.NET</code> 的委托是安全的，它定义了返回类型和参数的类型，它不仅包含对方法的引用，也可以包含对多个方法的引用。</p><p>lambda 表达式与委托直接相关。当参数是委托类型的时候，就可以使用 lambda 表达式实现委托引用的方法。</p><h4 id=82---委托>8.2 - 委托</h4><p>当要把方法作为参数传递给方法的时候，就需要使用委托。</p><h5 id=821---声明委托>8.2.1 - 声明委托</h5><p>首先必须定义要使用的委托，对于委托，定义就是告诉编译器这种类型的委托表示哪种类型的方法。然后必须将委托实例化，编译器将在后台创建该委托的一个类。</p><p>语法如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>delegate</span> <span class=k>void</span> <span class=n>IntMethodInvoker</span><span class=p>(</span><span class=kt>int</span> <span class=n>x</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p>声明了一个类型为 <code>IntMethodInvoker</code> 的委托，交给委托的方法带有一个 <code>int</code> 类型的参数，并且返回 <code>void</code>。在定义委托的时候必须指定好方法的参数和返回类型，这样才安全嘛。</p><p>委托语法类似于方法的定义，但是没有主体，而且要加上关键字 <code>delegate</code> 。因为委托基本上算是定义一个新类，所以基本上来说，在能定义类的地方就能定义委托。可以在类的内部定义委托，也可以和类平级。还可以给委托加上修饰符：<code>public</code> 、 <code>private</code> 、 <code>protected</code> 等。</p><h5 id=822---使用委托>8.2.2 - 使用委托</h5><p>可以使用委托的“构造函数”向内传递一个方法的名字来创建一个委托：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>private</span> <span class=kt>string</span> <span class=n>GetString</span><span class=p>();</span>     <span class=c1>// 声明委托</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=k>void</span> <span class=n>Main</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>x</span> <span class=p>=</span><span class=m>40</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>invokeMethod</span> <span class=p>=</span> <span class=k>new</span> <span class=n>GetString</span><span class=p>(</span><span class=n>x</span><span class=p>.</span><span class=n>ToString</span><span class=p>);</span>   <span class=c1>// 将方法委托给 invokeMethod</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>invokeMethod</span><span class=p>());</span>              <span class=c1>// 执行了 invokeMethod，invokeMethod 又执行了 x.ToString 方法</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>在CSharp中，委托在语法上总是接受一个参数类型的构造函数，这个参数就是委托所引用的方法。这个方法必须要匹配定义委托时候的签名。</p><p>实际上，使用 <code>invokeMethod()</code> 和 <code>invokeMethod.Invoke()</code> 完全相同。</p><p>为了减少输入量，在需要委托实例的每个位置都可以只传送方法名称，这称为委托推断：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>invokeMethod</span> <span class=p>=</span> <span class=k>new</span> <span class=n>GetString</span><span class=p>(</span><span class=n>x</span><span class=p>.</span><span class=n>ToString</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>invokeMethod2</span> <span class=p>=</span> <span class=n>x</span><span class=p>.</span><span class=n>ToString</span><span class=p>;</span>     <span class=c1>// 等价</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>注意：不要输入圆括号，仅输入方法名代表了方法的地址，而使用圆括号则是调用了方法并返回一个值。</p></blockquote><p>除了实例一个委托之外，还能实例委托的数组：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>GetString</span><span class=p>[]</span> <span class=n>methods</span> <span class=p>=</span> <span class=k>new</span><span class=p>[]</span> 
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>x</span><span class=p>.</span><span class=n>ToString</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>y</span><span class=p>.</span><span class=n>ToString</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 返回 string 类型并且不接受参数的方法都行</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=824---action-和-func>8.2.4 - Action<t> 和 Func<t></h5><p>为每个参数和返回类型都定义一个委托太麻烦了，所以可以使用 <code>Action&lt;T></code> 和 <code>Func&lt;T></code> 委托。</p><p>泛型 <code>Action&lt;T></code> 代表引用一个 <code>void</code> 返回类型的委托。没有泛型参数的 <code>Action&lt;T></code> 类可以调用没有参数的方法。<code>Action&lt;in T></code> 调用带一个参数（类型为 <code>T</code>）的方法，以此类推，<code>Action&lt;in T1, in T2></code> 调用带两个参数的方法。最多有16个参数。</p><p>泛型 <code>Func&lt;T></code> 可以引用有返回类型的委托， <code>Func&lt;out TResult></code> 委托类型可以调用带返回类型且无参数的委托。而 <code>Func&lt;in T, out TResult></code> 委托类型可以调用带一个参数的方法，最后一个泛型是返回类型。</p><h5 id=826---多播委托>8.2.6 - 多播委托</h5><p>委托也可以包含多个方法，这种委托也可以包含多个方法。这种委托称为多播委托。如果调用多播委托，就可以按照顺序连续调用多个方法。所以，多播委托方法的返回类型必须为 <code>void</code> ；否则，只能获取最后一个调用的委托的方法结果。</p><p>多播委托重载了运算符 <code>+</code> 以及 <code>+=</code> ，可以通过 <code>+</code> 来为多播委托添加一个方法。当然，也重载了 <code>-</code> 和 <code>-=</code> ，可以使用 <code>-</code> 运算符移除一个方法。</p><blockquote><p>注意：对同一个委托，调用其方法链的顺序并未定义，因此，应<strong>避免编写依赖于特定顺序调用的代码</strong>。</p></blockquote><p>多播委托包含一个逐个调用的委托集合。如果通过委托调用其中一个方法抛出了异常，整个迭代就会终止，剩余委托的方法即使是正常的也不会被调用。</p><p>为了避免这种问题，应该自己迭代方法列表。 <code>Delegate</code> 类定义了 <code>GetInvocationList</code> 方法，它返回一个 <code>Delegate</code> 对象数组。</p><h5 id=827---匿名方法>8.2.7 - 匿名方法</h5><blockquote><p>注意：这种匿名方法的语法在CSharp2中引入。在新的程序中，并不需要这个语法，lambda 表达式明显比这个好用。</p></blockquote><p>语法如下，大致看看就得了：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>mid</span> <span class=p>=</span> <span class=s>&#34;, middle part,&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Func</span><span class=p>&lt;</span><span class=kt>string</span><span class=p>,</span> <span class=kt>string</span><span class=p>&gt;</span> <span class=n>annoDel</span> <span class=p>=</span> 
+</span></span><span class=line><span class=cl>    <span class=k>delegate</span> <span class=p>(</span><span class=kt>string</span> <span class=n>param</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>param</span> <span class=p>+=</span> <span class=n>mid</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>param</span> <span class=p>+=</span> <span class=s>&#34; and this was added to the string.&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>param</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=c1>// 代码的第四行到第九行是匿名方法。</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=83---lambda-表达式>8.3 - lambda 表达式</h4><p>lambda 运算符 <code>=></code> 左边列出了需要的参数（一个参数可以省略括号），而右边定义了赋予 lambda 变量的方法的实现代码。</p><h5 id=831---参数>8.3.1 - 参数</h5><p>lambda 表达式有几种定义参数的方法，如果只有一个参数那就写出参数名就行了，编译器根据委托自动推断参数类型，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>Func</span><span class=p>&lt;</span><span class=kt>string</span><span class=p>,</span> <span class=kt>string</span><span class=p>&gt;</span> <span class=n>oneParam</span> <span class=p>=</span>  <span class=n>s</span> <span class=p>=&gt;</span> 
+</span></span><span class=line><span class=cl>    <span class=s>$&#34;change uppercase {s.ToUpper()}&#34;</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>有多个参数的时候，将参数放在圆括号中，用逗号分隔。当然，为了方便起见，也可以在参数前加上类型。</p><h5 id=832---多行代码>8.3.2 - 多行代码</h5><p>如果 lambda 表达式只有一条语句，则不方法块内不需要花括号和 <code>return</code> 语句，因为编译器会添加一条隐式的 <code>return</code> 语句。但是如果 lambda 表达式的实现代码中需要多条语句，那么就要添加花括号和 <code>return</code> 了。</p><h5 id=833---闭包>8.3.3 - 闭包</h5><p>通过 lambda 表达式可以访问表达式块外部的变量，这成为闭包。闭包是非常好用的功能，但是<strong>使用不当也会造成大灾难</strong>。</p><blockquote><p>注意：如果给多个线程使用闭包，就可能遇到并发冲突。最好仅给闭包使用不可变的类型（readonly），这样就可以确保不改变值，也不需要同步。</p></blockquote><h4 id=84---事件>8.4 - 事件</h4><p>事件基于委托，为委托提供了一种发布/订阅的机制。比如在桌面程序中：<code>Button</code> 出发了 <code>Click</code> 事件。这类事件就是委托。触发 <code>Click</code> 事件时调用的处理程序方法需要得到定义，而其参数由委托定义。</p><p>使用 <code>event</code> 关键字来定义事件：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>using</span> <span class=nn>System</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>Program</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 用于事件传参的参数，继承于 EventArgs</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>CarInfoEventArgs</span><span class=p>:</span> <span class=n>EventArgs</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 构造函数</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=n>CarInfoEventArgs</span><span class=p>(</span><span class=kt>string</span> <span class=n>car</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=n>Car</span> <span class=p>=</span> <span class=n>car</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kt>string</span> <span class=n>Car</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>CarDealer</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 事件，需要在泛型中写出传递给它的参数</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=k>event</span> <span class=n>EventHandler</span><span class=p>&lt;</span><span class=n>CarInfoEventArgs</span><span class=p>&gt;</span> <span class=n>NewCarInfo</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=k>void</span> <span class=n>NewCar</span><span class=p>(</span><span class=kt>string</span> <span class=n>car</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>$&#34;new car {car}&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// 触发事件，第一个参数是触发者，第二个参数是传递的参数</span>
+</span></span><span class=line><span class=cl>            <span class=n>NewCarInfo</span><span class=p>?.</span><span class=n>Invoke</span><span class=p>(</span><span class=k>this</span><span class=p>,</span> <span class=k>new</span> <span class=n>CarInfoEventArgs</span><span class=p>(</span><span class=n>car</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>作为一个约定，事件通常用带两个参数的方法</p><ol><li>第一个参数是一个对象，包含事件的发送者。</li><li>第二个参数提供了事件的相关信息。</li></ol><p><code>EventHandler&lt;TEventArgs></code> 定义了一个处理程序，它返回 <code>void</code> ，接受两个参数，第二个参数类型通过泛型指定，并且必须继承于 <code>EventArgs</code> （上面代码中的 <code>CarInfoEventArgs</code> 就是）。</p><p>另外，事件有自动生成一个私有字段，类似于自动生成的属性访问器吧：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>event</span> <span class=n>EventHandler</span><span class=p>&lt;</span><span class=n>CarInfoEventArgs</span><span class=p>&gt;</span> <span class=n>NewCarInfo</span><span class=p>;</span>     <span class=c1>// 简记</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>private</span> <span class=n>EventHandler</span><span class=p>&lt;</span><span class=n>CarInfoEventArgs</span><span class=p>&gt;</span> <span class=n>_newCarInfo2</span><span class=p>;</span>        <span class=c1>// 写全</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=k>event</span> <span class=n>EventHandler</span><span class=p>&lt;</span><span class=n>CarInfoEventArgs</span><span class=p>&gt;</span> <span class=n>NewCarInfo2</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>add</span> <span class=p>=&gt;</span> <span class=n>_newCarInfo</span> <span class=p>+=</span> <span class=k>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>remove</span> <span class=p>=&gt;</span> <span class=n>_newCarInfo</span> <span class=p>-=</span> <span class=k>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>CarDealer</code> 类通过调用委托的 <code>Invoke</code> 方法来触发事件，这与多播委托一样，顺序无法保证的。</p><h5 id=842---使劲按侦听器>8.4.2 - 使劲按侦听器</h5><p>下面实现的 <code>Consumer</code> 类用作事件的侦听器。这个类订阅了 <code>CarDealer</code> 类的事件：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>Consumer</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kt>string</span> <span class=n>_name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 构造函数</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>Consumer</span><span class=p>(</span><span class=kt>string</span> <span class=n>name</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=n>_name</span> <span class=p>=</span> <span class=n>name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// 事件被触发时调用此方法，这个是被委托的方法</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>void</span> <span class=n>NewCarIsHere</span><span class=p>(</span><span class=kt>object</span> <span class=n>sender</span><span class=p>,</span> <span class=n>CarInfoEvent</span> <span class=n>e</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>$&#34;{_name}: car {e.car} is new&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用 <code>CarDealer</code> 类的 <code>NewCarInfo</code> 事件（前面定义的那个 <code>EventHandler</code> 类型的“变量”），通过 <code>+=</code> 运算符创建一个订阅：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>dealer</span> <span class=p>=</span> <span class=k>new</span> <span class=n>CarDealer</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>consumer</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Consumer</span><span class=p>(</span><span class=s>&#34;A&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>dealer</span><span class=p>.</span><span class=n>NewCarInfo</span> <span class=p>+=</span> <span class=n>consumer</span><span class=p>.</span><span class=n>NewCarIsHere</span><span class=p>;</span>      <span class=c1>// 添加订阅</span>
+</span></span><span class=line><span class=cl><span class=n>dealer</span><span class=p>.</span><span class=n>NewCar</span><span class=p>(</span><span class=s>&#34;B&#34;</span><span class=p>);</span>     <span class=c1>// 这个方法会触发事件，然后执行委托</span>
+</span></span></code></pre></td></tr></table></div></div><p>最后会输出：</p><blockquote><p>new car B</p><p>A: car B is new</p></blockquote></section><footer class=article-footer><section class=article-tags><a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a>
+<a href=/tags/%E7%BC%96%E7%A8%8B/>编程</a>
+<a href=/tags/csharp/>CSharp</a>
+<a href=/tags/dotnet/>DotNET</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/csharp-note5-array/><div class=article-details><h2 class=article-title>C#中数组的使用 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note7-string-and-regular/><div class=article-details><h2 class=article-title>C#字符串和正则表达式 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note3-generics-type/><div class=article-details><h2 class=article-title>C#中的泛型 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note2-oop/><div class=article-details><h2 class=article-title>C#面向对象——对象和类型与继承 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note1-basic/><div class=article-details><h2 class=article-title>C#编程基础 - C#笔记</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2025 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

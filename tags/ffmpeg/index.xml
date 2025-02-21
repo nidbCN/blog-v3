@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FFmpeg on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/ffmpeg/</link><description>Recent content in FFmpeg on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 22 Feb 2025 00:35:00 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/ffmpeg/index.xml" rel="self" type="application/rss+xml"/><item><title>A Beginner's Guide to FFmpeg.AutoGen</title><link>https://blog.gaein.cn/passages/beginner-guide-to-ffmpeg-autogen/</link><pubDate>Sat, 22 Feb 2025 00:35:00 +0800</pubDate><guid>https://blog.gaein.cn/passages/beginner-guide-to-ffmpeg-autogen/</guid><description>&lt;h1 id="a-beginners-guide-to-ffmpegautogen">A Beginner&amp;rsquo;s Guide to FFmpeg.AutoGen
+&lt;/h1>&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>FFmpeg.AutoGen is an auto-generated unsafe bindings for C#/.NET and Mono. It can be used in C#/.NET to invoke ffmpeg&amp;rsquo;s C/C++ libraries.&lt;/p>
+&lt;p>The usage is the same as C/C++ API so you can refer to ffmpeg official documents. However, in C#/.NET, we need to load the libraries first, which confused me for a long time.&lt;/p>
+&lt;p>Here I concluded the some useful information for beginners to start using ffmpeg.AutoGen.&lt;/p>
+&lt;p>This guide addresses the following questions:&lt;/p>
+&lt;ul>
+&lt;li>which nuget package should I use?&lt;/li>
+&lt;li>how to configure the libraries root path?&lt;/li>
+&lt;li>how to load libraries from system default path?&lt;/li>
+&lt;li>how to solve &lt;code>System.NotSupportedException&lt;/code>?&lt;/li>
+&lt;/ul>
+&lt;h2 id="which-nuget-package-should-i-use---ffmpegautogen-packages">which nuget package should I use? - ffmpeg.AutoGen packages
+&lt;/h2>&lt;h3 id="packages-list">packages list
+&lt;/h3>&lt;p>FFmpeg.AutoGen has the following packages on NuGet:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.nuget.org/packages/FFmpeg.AutoGen" target="_blank" rel="noopener"
+>FFmpeg.AutoGen&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.nuget.org/packages/FFmpeg.AutoGen.Abstractions" target="_blank" rel="noopener"
+>FFmpeg.AutoGen.Abstractions&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.nuget.org/packages/FFmpeg.AutoGen.Bindings.DynamicallyLoaded" target="_blank" rel="noopener"
+>FFmpeg.AutoGen.Bindings.DynamicallyLoaded&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.nuget.org/packages/FFmpeg.AutoGen.Bindings.DynamicallyLinked" target="_blank" rel="noopener"
+>FFmpeg.AutoGen.Bindings.DynamicallyLinked&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.nuget.org/packages/FFmpeg.AutoGen.Bindings.StaticallyLinked" target="_blank" rel="noopener"
+>FFmpeg.AutoGen.Bindings.StaticallyLinked&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="introduct-to-each-packages">Introduct to each packages
+&lt;/h3>&lt;h4 id="ffmpegautogenbindingsdynamicallylinked">FFmpeg.AutoGen.Bindings.DynamicallyLinked
+&lt;/h4>&lt;p>&lt;code>FFmpeg.AutoGen.Bindings.DynamicallyLinked&lt;/code> uses &lt;code>DllImport&lt;/code> to load libraries.&lt;/p>
+&lt;p>It loads libraries from the default path.&lt;/p>
+&lt;p>But the file name passed to &lt;code>DllImport&lt;/code> is hard-coded in Windows file naming convention, such as something like &amp;ldquo;avutil-59&amp;rdquo;. That means you &lt;strong>can not use this package directly on other platforms&lt;/strong>. But you can implement a custom resolver to adapt the filename convention from windows to others platforms by using the code below:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">LibraryUtil&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">IntPtr&lt;/span> &lt;span class="n">LinuxFfMpegDllImportResolver&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">libraryName&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Assembly&lt;/span> &lt;span class="n">assembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">DllImportSearchPath&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">searchPath&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">FfMpegDllImportResolverCore&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">libraryName&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">assembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">searchPath&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;so&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">IntPtr&lt;/span> &lt;span class="n">MacOsFfMpegDllImportResolver&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">libraryName&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Assembly&lt;/span> &lt;span class="n">assembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">DllImportSearchPath&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">searchPath&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">FfMpegDllImportResolverCore&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">libraryName&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">assembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">searchPath&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;dylib&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">IntPtr&lt;/span> &lt;span class="n">FfMpegDllImportResolverCore&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ReadOnlySpan&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="kt">char&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">loadNameSpan&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Assembly&lt;/span> &lt;span class="n">assembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">DllImportSearchPath&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">searchPath&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">extension&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">partedIndex&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">loadNameSpan&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IndexOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sc">&amp;#39;-&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// contains 0 or multi &amp;#39;-&amp;#39;, format not ffmpeg library&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">partedIndex&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="p">-&lt;/span>&lt;span class="m">1&lt;/span> &lt;span class="p">||&lt;/span> &lt;span class="n">loadNameSpan&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LastIndexOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sc">&amp;#39;-&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">!=&lt;/span> &lt;span class="n">partedIndex&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">NativeLibrary&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Load&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">loadNameSpan&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ToString&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">assembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">searchPath&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">libraryName&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">loadNameSpan&lt;/span>&lt;span class="p">[..&lt;/span>&lt;span class="n">partedIndex&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// library not in map table, not ffmpeg library&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(!&lt;/span>&lt;span class="n">DynamicallyLoadedBindings&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LibraryVersionMap&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ContainsKey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">libraryName&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ToString&lt;/span>&lt;span class="p">()))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">NativeLibrary&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Load&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">loadNameSpan&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ToString&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">assembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">searchPath&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">versionName&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">loadNameSpan&lt;/span>&lt;span class="p">[(&lt;/span>&lt;span class="n">partedIndex&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">)..];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">styledName&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">$&amp;#34;{libraryName}.{extension}.{versionName}&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">NativeLibrary&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Load&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">styledName&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">assembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">searchPath&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>And using thos codes to configure DllImport use custom resolver:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// instantiate the logger before here or change `logger.LogInformation` to `Console.WriteLine`&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="p">(!&lt;/span>&lt;span class="n">RuntimeInformation&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsOSPlatform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">OSPlatform&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Windows&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// not windows&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">bindingAssembly&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">typeof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">DynamicallyLinkedBindings&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">Assembly&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">RuntimeInformation&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsOSPlatform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">OSPlatform&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Linux&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">||&lt;/span> &lt;span class="n">RuntimeInformation&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsOSPlatform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">OSPlatform&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">FreeBSD&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">logger&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LogInformation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Linux/FreeBSD platform, use resolver {name} for assembly `{asm}`.&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">LibraryUtil&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LinuxFfMpegDllImportResolver&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">bindingAssembly&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">GetName&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">NativeLibrary&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SetDllImportResolver&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">bindingAssembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">LibraryUtil&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LinuxFfMpegDllImportResolver&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">RuntimeInformation&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsOSPlatform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">OSPlatform&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">OSX&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">logger&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LogInformation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;OSX platform, use resolver {name} for assembly `{asm}`.&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">LibraryUtil&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LinuxFfMpegDllImportResolver&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">bindingAssembly&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">GetName&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">NativeLibrary&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SetDllImportResolver&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">bindingAssembly&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">LibraryUtil&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">MacOsFfMpegDllImportResolver&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">PlatformNotSupportedException&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="ffmpegautogenbindingsdynamicallyloaded">FFmpeg.AutoGen.Bindings.DynamicallyLoaded
+&lt;/h4>&lt;p>&lt;code>FFmpeg.AutoGen.Bindings.DynamicallyLoaded&lt;/code> use &lt;code>LoadLibrary&lt;/code> method in &lt;code>Kernel32&lt;/code> library on Windows, use &lt;code>dlopen&lt;/code> method in &lt;code>Libdl&lt;/code> on Linux and MacOS.&lt;/p>
+&lt;h4 id="ffmpegautogenbindingsstaticallylinked">FFmpeg.AutoGen.Bindings.StaticallyLinked
+&lt;/h4>&lt;p>This package use &lt;code>DllImport(&amp;quot;__Internal&amp;quot;)&lt;/code> to import libraries, it required you build the library into assembly.&lt;/p>
+&lt;h4 id="ffmpegautogenabstractions">FFmpeg.AutoGen.Abstractions
+&lt;/h4>&lt;p>This package contains definitions about structs and functions. But you can&amp;rsquo;t invoke functions define in this package, because it&amp;rsquo;s only have definitions but no body, you need install others &lt;code>Bindings&lt;/code> package and use &lt;code>DynamicallyLinkedBindings.Initialize();&lt;/code> or &lt;code>DynamicallyLoadedBindings.Initialize();&lt;/code> method to initialize.&lt;/p>
+&lt;h4 id="ffmpegautogen">FFmpeg.AutoGen
+&lt;/h4>&lt;p>This package looks like a combine of &lt;code>FFmpeg.AutoGen.Abstractions&lt;/code> and &lt;code>FFmpeg.AutoGen.Bindings.DynamicallyLoaded&lt;/code> with a few properties changed.&lt;/p>
+&lt;p>The offical example use ``FFmpeg.AutoGen.Bindings.DynamicallyLoadedBindings&lt;code>instead of&lt;/code>FFmpeg.AutoGen&lt;code>, but the README use &lt;/code>ffmpeg.RootPath = &lt;code>to set libraries path which is defined in&lt;/code>FFmpeg.AutoGen`.&lt;/p>
+&lt;h3 id="conclusion-of-which-package-should-i-choose">conclusion of which package should I choose
+&lt;/h3>&lt;ul>
+&lt;li>
+&lt;p>If you&amp;rsquo;re using ffmpeg in Mono, choose &lt;code>FFmpeg.AutoGen.Bindings.StaticallyLinked&lt;/code> and &lt;code>FFmpeg.AutoGen.Abstractions&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>If your app only run on Windows, choose &lt;code>FFmpeg.AutoGen.Bindings.DynamicallyLinked&lt;/code> and &lt;code>FFmpeg.AutoGen.Abstractions&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>If your app running on mult-platform, choose &lt;code>FFmpeg.AutoGen.Bindings.DynamicallyLoaded&lt;/code> and &lt;code>FFmpeg.AutoGen.Abstractions&lt;/code> or &lt;code>FFmpeg.AutoGen.Bindings.DynamicallyLinked&lt;/code> with custom resolver. Use &lt;code>FFmpeg.AutoGen&lt;/code> is also a good choice.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-to-configure-the-libraries-root-path---use-prop-in-dynamicallyloaded-or-ffmpegautogen">how to configure the libraries root path? - use prop in DynamicallyLoaded or FFmpeg.AutoGen
+&lt;/h2>&lt;p>&lt;code>DynamicallyLinked&lt;/code> can&amp;rsquo;t specify a custom root path for libraries.&lt;/p>
+&lt;p>If you want to use the library files which are not in the default search path, use &lt;code>DynamicallyLoaded&lt;/code> and set the path to property &lt;code>DynamicallyLoadedBindings.LibrariesPath&lt;/code>.&lt;/p>
+&lt;p>&lt;code>ffmpeg.RootPath&lt;/code> from package &lt;code>FFmpeg.AutoGen&lt;/code> is the same as &lt;code>DynamicallyLoadedBindings.LibrariesPath&lt;/code>.&lt;/p>
+&lt;p>By the way, the libraries root should contains libs like &lt;code>avutil-59.dll&lt;/code> on Windows, and &lt;code>libavutil.59.so&lt;/code> on Linux.&lt;/p>
+&lt;h2 id="hot-to-load-libraries-from-system-default-path---just-do-nothing">hot to load libraries from system default path - just do nothing
+&lt;/h2>&lt;p>In the previous section, I explained the libraries load function of each packages. According to Microsoft Docs and Linux manual page we can find the search order.&lt;/p>
+&lt;h3 id="search-order-on-windows-and-linux">Search order on Windows and Linux
+&lt;/h3>&lt;p>On windows, the main search order are:&lt;/p>
+&lt;ol>
+&lt;li>Application directory;&lt;/li>
+&lt;li>System directory;&lt;/li>
+&lt;li>Windows directory;&lt;/li>
+&lt;li>Current work directory;&lt;/li>
+&lt;li>Directories in the &lt;code>PATH&lt;/code> environment variable;&lt;/li>
+&lt;/ol>
+&lt;p>For more information, see reference:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order" target="_blank" rel="noopener"
+>Dynamic-link library search order - Win32 apps | Microsoft Learn&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>On Linux, the main search order are:&lt;/p>
+&lt;ol>
+&lt;li>Directories in the &lt;code>LD_LIBRARY_PATH&lt;/code> environment variable;&lt;/li>
+&lt;li>&lt;code>/etc/ld.so.cache&lt;/code> directory;&lt;/li>
+&lt;li>&lt;code>/lib&lt;/code> and &lt;code>/usr/lib&lt;/code> directories.&lt;/li>
+&lt;/ol>
+&lt;p>For more information, see reference:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://man7.org/linux/man-pages/man3/dlopen.3.html#DESCRIPTION" target="_blank" rel="noopener"
+>dlopen(3) - Linux manual page&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://man7.org/linux/man-pages/man8/ld.so.8.html#DESCRIPTION" target="_blank" rel="noopener"
+>ld.so(8) - Linux manual page&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/Ruslan-B/FFmpeg.AutoGen/tree/master/FFmpeg.AutoGen.Bindings.DynamicallyLoaded/Native" target="_blank" rel="noopener"
+>FFmpeg.AutoGen/FFmpeg.AutoGen.Bindings.DynamicallyLoaded/Native at master · Ruslan-B/FFmpeg.AutoGen&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>I have no computer with MacOS, so I haven&amp;rsquo;t figured out the search order on MacOS, but I guess it maybe very like the order on Linux.&lt;/p>
+&lt;p>If you want to use &lt;code>DynamicallyLoaded&lt;/code> with default path, just do not modify &lt;code>DynamicallyLoadedBindings.LibrariesPath&lt;/code> or ensure its value are &lt;code>string.Empty&lt;/code>. This prop will be added to the front of library name and version. Keep it empty and the package will deliver pure library file name to the method which load the library to memory, that will lead the load method use default search path.&lt;/p>
+&lt;h2 id="hot-to-solve-systemnotsupportexception---a-few-debug-tips">hot to solve &lt;code>System.NotSupportException&lt;/code>? - a few debug tips
+&lt;/h2>&lt;p>If you invoke a &lt;code>ffmpeg.*&lt;/code> function and throw this exception, it is often because you didn&amp;rsquo;t load the libraries successfully.&lt;/p>
+&lt;p>First, make sure you install the &lt;code>FFmpeg.AutoGen.Bindings&lt;/code> or &lt;code>FFmpeg.AutoGen&lt;/code> and called the &lt;code>Initialize()&lt;/code>.&lt;/p>
+&lt;p>Second, make sure your libraries files are in correct path with correct file name. If you use the custom root path, just open it and have a look, If you use system default path, try using the system tools to ensure it can be found, such as &lt;code>ldconfig -p -N | grep lib&amp;lt;name&amp;gt;.&amp;lt;version&amp;gt;&lt;/code>.&lt;/p>
+&lt;p>Third, make sure all libraries are fine. You can set &lt;code>DynamicallyLoadedBindings.ThrowErrorIfFunctionNotFound&lt;/code> to &lt;code>true&lt;/code>, then the exception will sent during libraries loading. I suggess you print all libriaries version to ensure they are all loaded with the code below:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// instantiate the logger before here or change `logger.Log*` to `Console.WriteLine`&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">try&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">ffmpeg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">av_version_info&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">libraryVersion&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">StringBuilder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">48&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">DynamicallyLoadedBindings&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LibraryVersionMap&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Count&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">foreach&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">var&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">library&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">requiredVersion&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">DynamicallyLoadedBindings&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LibraryVersionMap&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">versionFunc&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">typeof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ffmpeg&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">GetMethod&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">$&amp;#34;{library}_version&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">versionInfo&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">VersionInfo&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="kt">uint&lt;/span>&lt;span class="p">)(&lt;/span>&lt;span class="n">versionFunc&lt;/span>&lt;span class="p">?.&lt;/span>&lt;span class="n">Invoke&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">??&lt;/span> &lt;span class="m">0&lt;/span>&lt;span class="n">u&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">libraryVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AppendLine&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">$&amp;#34;\tLibrary: {library}, require `{requiredVersion}`, load `{versionInfo}`&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">libraryVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Remove&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">libraryVersion&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Length&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="c1">// remove &amp;#39;\n&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">logger&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LogInformation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Load ffmpeg, version `{v}`&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">version&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">logger&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LogInformation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Load ffmpeg, libraries:\n{libInfo}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">libraryVersion&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">NotSupportedException&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">logger&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LogCritical&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Failed to load ffmpeg, exit.&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">appLifeTime&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">provider&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">GetRequiredService&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IHostApplicationLifetime&lt;/span>&lt;span class="p">&amp;gt;();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">appLifeTime&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">StopApplication&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>You can also just add the project source code as a dependency of your project and debug in file &lt;code>FunctionResolverBase.cs&lt;/code> or files under &lt;code>Native&lt;/code> folder.&lt;/p></description></item></channel></rss>

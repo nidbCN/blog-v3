@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>身份认证 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/</link><description>Recent content in 身份认证 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 09 Jul 2021 04:49:35 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/index.xml" rel="self" type="application/rss+xml"/><item><title>C#实现使用微软账户集成登录</title><link>https://blog.gaein.cn/passages/ms-account-integrated-signin-via-cssharp/</link><pubDate>Fri, 09 Jul 2021 04:49:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/ms-account-integrated-signin-via-cssharp/</guid><description>&lt;h2 id="版权声明">版权声明
+&lt;/h2>&lt;blockquote>
+&lt;p>&amp;ldquo;&lt;a class="link" href="https://anduin.aiursoft.com/post/2020/3/18/microsoft-account-integrated-sign-in-via-c#" target="_blank" rel="noopener"
+>Microsoft account integrated sign in via C#&lt;/a>&amp;rdquo; by &lt;a class="link" href="https://anduin.aiursoft.com/" target="_blank" rel="noopener"
+>Anduin Xue&lt;/a>, used under &lt;a class="link" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"
+>CC AS 4.0&lt;/a>, ‎translate from original.&lt;/p>
+&lt;p>本文翻译自 &lt;a class="link" href="https://anduin.aiursoft.com/" target="_blank" rel="noopener"
+>Anduin Xue&lt;/a> 的 &amp;ldquo;&lt;a class="link" href="https://anduin.aiursoft.com/post/2020/3/18/microsoft-account-integrated-sign-in-via-c#" target="_blank" rel="noopener"
+>Microsoft account integrated sign in via C#&lt;/a>&amp;rdquo; ，依据 &lt;a class="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="noopener"
+>CC AS 4.0&lt;/a> 协议授权。&lt;/p>&lt;/blockquote>
+&lt;hr>
+&lt;p>下面的简单代码说明了如何构建一个支持使用 Microsoft 账户的 OAuth 身份认证。&lt;/p>
+&lt;p>在开始打代码之前，我们需要在你的 Azure portal 中先创建一个App。 &lt;a class="link" href="https://portal.azure.com" target="_blank" rel="noopener"
+>https://portal.azure.com&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/01.webp"
+loading="lazy"
+alt="azure portal"
+>&lt;/p>
+&lt;p>这个名字是你的App显示的名字。选中让你的应用可以访问任何组织账号和个人账号的那项。至于重定向URI，它必须是你的服务器重定向地址，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">https://gateway.aiursoft.com/debug
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/02.webp"
+loading="lazy"
+alt="创建应用"
+>&lt;/p>
+&lt;p>创建完应用后，在这里复制你的 application id：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/03.webp"
+loading="lazy"
+alt="app id"
+>&lt;/p>
+&lt;p>然后创建一个 secret。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/04.webp"
+loading="lazy"
+alt="secret"
+>&lt;/p>
+&lt;p>别忘了复制那个 secret。&lt;/p>
+&lt;p>运行下面说的代码需要一些像 &lt;code>AiurUrl&lt;/code> 和 &lt;code>Aiursoft.XelNaga.Services.HTTPService&lt;/code> 这样的类。运行下面这行命令来获取：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ dotnet add package Aiursoft.XelNaga
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>为了让用户登录，我们需要重定向到微软的登录门户。复制以下的代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">GetBindRedirectLink&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;https://login.microsoftonline.com&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">$&amp;#34;/{_tenant}/oauth2/v2.0/authorize&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MicrosoftAuthAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">_clientId&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://gateway.aiursoft.com/debug&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ResponseType&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;code&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Scope&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;user.read&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">State&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}).&lt;/span>&lt;span class="n">ToString&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftAuthAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;redirect_uri&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;state&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">State&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;scope&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Scope&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;response_type&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ResponseType&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>只需要返回给浏览器一个&lt;code>redirect result&lt;/code> 和从 &lt;code>GetRedirectLink()&lt;/code> 函数获取到的重定向链接。&lt;/p>
+&lt;p>用户成功的登录了他的账户的时候，将会带着一个码重定向回到你设置的 &lt;code>RedirectUri&lt;/code>。这个码正式我们需要的。&lt;/p>
+&lt;p>通过这个码，你可以调用 &lt;code>GetUserDetail()&lt;/code> 方法来获取用户的信息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IUserDetail&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetUserDetail&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">token&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">GetAccessToken&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">_clientId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">_clientSecret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">GetUserInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>_clientId&lt;/code> 和 &lt;code>_clientSecret&lt;/code> 是你创建这个 app 时候复制的。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">private&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetAccessToken&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">clientId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">clientSecret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">apiAddress&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://login.microsoftonline.com&amp;#34;&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="s">$&amp;#34;/{_tenant}/oauth2/v2.0/token&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">url&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">apiAddress&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">form&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MicrosoftAccessTokenAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">clientId&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientSecret&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">clientSecret&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Code&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Scope&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;user.read&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://gateway.aiursoft.com/debug&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">GrantType&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;authorization_code&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">json&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Post&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">response&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">JsonConvert&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DeserializeObject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">AccessTokenResponse&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsNullOrWhiteSpace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AccessToken&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurAPIModelException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ErrorType&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Unauthorized&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Invalid Microsoft crenditial&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AccessToken&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">WebException&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurAPIModelException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ErrorType&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Unauthorized&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Invalid Microsoft API response&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftAccessTokenAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_secret&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientSecret&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;code&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Code&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;scope&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Scope&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;grant_type&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">GrantType&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;redirect_uri&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>GetAccessToken()&lt;/code> 方法能够帮助你获取一个有效的能够让你下载到用户信息的 access token。&lt;/p>
+&lt;p>你拿到了 access token 之后，只需要调用 &lt;code>GetUserInfo()&lt;/code> 即可。下面我们将调用 graph API 来获取当前用户的信息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">private&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">MicrosoftUserDetail&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetUserInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">accessToken&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">apiAddress&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://graph.microsoft.com/v1.0/me&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">request&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HttpRequestMessage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">HttpMethod&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Get&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">apiAddress&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Headers&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Authorization&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">$&amp;#34;Bearer {accessToken}&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">response&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_client&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SendAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsSuccessStatusCode&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">json&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Content&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ReadAsStringAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">user&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">JsonConvert&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DeserializeObject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">MicrosoftUserDetail&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">user&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">WebException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ReasonPhrase&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>返回的用户是一个 &lt;code>MicrosoftUserDetail&lt;/code> 的实例。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftUserDetail&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">IUserDetail&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Id&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;displayName&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">DisplayName&lt;/span>&lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;userPrincipalName&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">UserPrincipalName&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;jobTitle&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">JobTitle&lt;/span>&lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Id 是唯一的，可以使用这个来认证你的用户。&lt;/p>
+&lt;p>最后，构建一个个性化的网页，然后你的app就行力。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/05.webp"
+loading="lazy"
+alt="网页"
+>&lt;/p>
+&lt;p>源代码在这：&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/AiursoftWeb/Nexus/blob/master/Pylon/Services/Authentication/ToMicrosoftServer/MicrosoftService.cs" target="_blank" rel="noopener"
+>https://github.com/AiursoftWeb/Nexus/blob/master/Pylon/Services/Authentication/ToMicrosoftServer/MicrosoftService.cs&lt;/a>&lt;/p>
+&lt;p>This work is licensed under a &lt;a class="link" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"
+>Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a>&lt;/p></description></item></channel></rss>

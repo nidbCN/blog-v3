@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>工具 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E5%B7%A5%E5%85%B7/</link><description>Recent content in 工具 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 12 May 2021 22:32:26 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml"/><item><title>【过期内容】Adobe Premiere 导入 mkv 格式的视频</title><link>https://blog.gaein.cn/passages/import-hevc-for-old-adobe-premiere/</link><pubDate>Wed, 12 May 2021 22:32:26 +0800</pubDate><guid>https://blog.gaein.cn/passages/import-hevc-for-old-adobe-premiere/</guid><description>&lt;blockquote>
+&lt;p>注意：此内容已过期。Adobe Premiere 不能导入的本质原因的 PR 2020 前的版本不支持 HEVC/H.265 编码。旧版本使用 ffmpeg 进行转码即可正常使用，新版本没有此问题。&lt;br>
+有关视频编码、容器、格式等见：&lt;a class="link" href="https://blog.gaein.cn/passages/live-streaming-protocols/" target="_blank" rel="noopener"
+>直播推流常见协议及网页端实现 RTMP/STR/FLV/HLS/WebRTC&lt;/a>&lt;br>
+此文章内所述较为片面。&lt;/p>&lt;/blockquote>
+&lt;h2 id="mkv">mkv
+&lt;/h2>&lt;p>mkv格式本身是一个“容器”，它包括了视频、音频、章节等，其实，不需要转码，只需要把需要的视频和音频“拆”出来即可。&lt;/p>
+&lt;h2 id="工具">工具
+&lt;/h2>&lt;h3 id="mkvtoolnix">MKVToolNix
+&lt;/h3>&lt;p>该工具用于操作mkv文件（虽然我们只需要其中的解包部分）&lt;/p>
+&lt;ul>
+&lt;li>官网：https://mkvtoolnix.download/&lt;/li>
+&lt;li>Windows下载：https://www.fosshub.com/MKVToolNix.html&lt;/li>
+&lt;/ul>
+&lt;h3 id="mkvextractgui2">MKVExtractGUI2
+&lt;/h3>&lt;p>图形化界面的解包mkv的程序，需要放置在 MKVToolNix 的根目录下。&lt;/p>
+&lt;p>目录结构如下：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/AdobePr-import-mkv/01.webp"
+loading="lazy"
+alt="Dir"
+>&lt;/p>
+&lt;ul>
+&lt;li>sourceforge：https://sourceforge.net/projects/mkvextractgui-2/&lt;/li>
+&lt;/ul>
+&lt;h2 id="提取音视频">提取音视频
+&lt;/h2>&lt;p>可以直接双击点开 &lt;code>MKVExtractGUI2&lt;/code> ，选择 &lt;code>input&lt;/code> ，下面的框中将显示出来 Tracks，选择需要的然后导出即可。&lt;/p>
+&lt;blockquote>
+&lt;p>可惜我的并不能用，它什么也不显示，只能手动来一波了。&lt;/p>&lt;/blockquote>
+&lt;h2 id="提取音视频命令行">提取音视频（命令行）
+&lt;/h2>&lt;p>实际上 MKVExtractGUI2 也是调用的 MKVToolNix 命令行来提取的，而 MKVToolNix 的图形化又比较复杂，不会用。直接使用命令行甚至会方便一些。&lt;/p>
+&lt;p>在当前目录打开 powershell 后，输入：&lt;/p>
+&lt;p>&lt;code>.\mkvinfo.exe &amp;quot;&amp;lt;mkv文件路径&amp;gt;&amp;quot;&lt;/code> ，比如我这个是 &lt;code>.\mkvinfo.exe &amp;quot;C:\Users\Gaein_nidb\Videos\High School Fleet [01].mkv&amp;quot;&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/AdobePr-import-mkv/02.webp"
+loading="lazy"
+alt="Output"
+>&lt;/p>
+&lt;p>以VCB-S压制的 High School Fleet/高校舰队 为例，程序会输出一大坨mkv的信息，我们需要关注的为 &lt;code>Tracks&lt;/code> ，其中的每一个 &lt;code>Track&lt;/code> 为一条轨道，其中包括：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Track number&lt;/code>：轨道ID（在mkvextract工具中轨道ID从0开始）&lt;/li>
+&lt;li>&lt;code>Track type&lt;/code>：轨道的类型（视频或音频等）&lt;/li>
+&lt;li>&lt;code>Codec ID&lt;/code>：编码ID&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>以上均用 &amp;ldquo;//&amp;rdquo; 做了伪注释&lt;/p>&lt;/blockquote>
+&lt;p>以及一些其它重要信息&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">|+ Tracks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track // 第一条轨道
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track number: 1 (track ID for mkvmerge &amp;amp; mkvextract: 0) // 在mkvextract工具中轨道ID为0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track UID: 16171542915234837125
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track type: video // 视频
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + &amp;#34;Lacing&amp;#34; flag: 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Minimum cache: 1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec ID: V_MPEGH/ISO/HEVC // 格式为HEVC
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Language: und
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Video track
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Pixel width: 1920
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Pixel height: 1080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Display width: 1920
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Display height: 1080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec&amp;#39;s private data: size 1151 (HEVC profile: Main 10 @L4.1)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Default duration: 00:00:00.041708333 (23.976 frames/fields per second for a video track)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track // 第二条轨道
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track number: 2 (track ID for mkvmerge &amp;amp; mkvextract: 1) // ID为1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track UID: 11899936184913956278
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track type: audio // 音频
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec ID: A_FLAC // 格式为flac
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec&amp;#39;s private data: size 113
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Default duration: 00:00:00.085333333 (11.719 frames/fields per second for a video track)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Language: jpn
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Audio track
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Sampling frequency: 48000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Channels: 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Bit depth: 24
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track // 第三条轨道
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track number: 3 (track ID for mkvmerge &amp;amp; mkvextract: 2) // ID为2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track UID: 10563629169812897935
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track type: audio // 音频
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + &amp;#34;Default track&amp;#34; flag: 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec ID: A_AAC // 格式为ACC
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec&amp;#39;s private data: size 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Default duration: 00:00:00.021333333 (46.875 frames/fields per second for a video track)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Language: jpn
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Audio track
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Sampling frequency: 48000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Channels: 2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>那么我们需要提取的有：&lt;/p>
+&lt;ol>
+&lt;li>HEVC视频，轨道0&lt;/li>
+&lt;li>FLAC音频，轨道1&lt;/li>
+&lt;/ol>
+&lt;p>当然你想要ACC不要FLAC也行，咋都行，看需求而来&lt;/p>
+&lt;p>使用 &lt;code>mkvextract&lt;/code> 工具来解mkv文件，输入命令：&lt;/p>
+&lt;p>&lt;code>.\mkvextract.exe &amp;quot;&amp;lt;mkv文件&amp;gt;&amp;quot; tracks 0:video.hevc 1:audio.flac&lt;/code>&lt;/p>
+&lt;p>其中，tracks后面的参数为 &lt;code>&amp;lt;轨道ID&amp;gt;:&amp;lt;输出文件&amp;gt;&lt;/code> ，根据你想解的轨道，输入上面看信息看到的轨道ID即可。&lt;/p>
+&lt;p>然后，在这个文件夹中，我们得到了 &lt;code>video.hevc&lt;/code> 和 &lt;code>audio.flac&lt;/code> 两个文件。&lt;/p>
+&lt;h2 id="导入pr">导入PR
+&lt;/h2>&lt;p>尽管我们已经解开了，但是仍然不能导入，PR会说不支持的文件格式。&lt;/p>
+&lt;p>&lt;del>对于视频来说，解决的方法很简单：更改后缀名为PR能识别的，比如 &lt;code>mp4&lt;/code>&lt;/del>&lt;/p>
+&lt;p>&lt;del>对于flac音频来说：更改后缀名为 &lt;code>wav&lt;/code>&lt;/del>&lt;/p>
+&lt;p>请使用 ffmpeg 或其他工具进行 re-mux 或 re-enc&lt;/p></description></item><item><title>CSharp批量重命名图片为指定格式</title><link>https://blog.gaein.cn/passages/renamer-files/</link><pubDate>Sun, 04 Nov 2018 14:11:09 +0800</pubDate><guid>https://blog.gaein.cn/passages/renamer-files/</guid><description>&lt;p>最近社里面交图片，要求格式为 姓名-编号
+作为一个懒癌晚期患者，我默默打开了visual studio
+下面是代码，原理是获取文件名，保存到数组中，再循环重命名到最后一个&lt;/p>
+&lt;!-- More -->
+&lt;p>最近社里面交图片，要求格式为 姓名-编号
+作为一个懒癌晚期患者，我默默打开了visual studio
+下面是代码，原理是获取文件名，保存到数组中，再循环重命名到最后一个&lt;/p>
+&lt;blockquote>
+&lt;p>2021年2月补充
+（我2年前写的什么玩意是）重命名采用MoveTo方法就行了，因为我联想到Linux下重命名也是mv&amp;hellip;&lt;/p>&lt;/blockquote>
+&lt;p>重命名采用的方法是引用VB.NET里面的重命名&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;span class="lnt">64
+&lt;/span>&lt;span class="lnt">65
+&lt;/span>&lt;span class="lnt">66
+&lt;/span>&lt;span class="lnt">67
+&lt;/span>&lt;span class="lnt">68
+&lt;/span>&lt;span class="lnt">69
+&lt;/span>&lt;span class="lnt">70
+&lt;/span>&lt;span class="lnt">71
+&lt;/span>&lt;span class="lnt">72
+&lt;/span>&lt;span class="lnt">73
+&lt;/span>&lt;span class="lnt">74
+&lt;/span>&lt;span class="lnt">75
+&lt;/span>&lt;span class="lnt">76
+&lt;/span>&lt;span class="lnt">77
+&lt;/span>&lt;span class="lnt">78
+&lt;/span>&lt;span class="lnt">79
+&lt;/span>&lt;span class="lnt">80
+&lt;/span>&lt;span class="lnt">81
+&lt;/span>&lt;span class="lnt">82
+&lt;/span>&lt;span class="lnt">83
+&lt;/span>&lt;span class="lnt">84
+&lt;/span>&lt;span class="lnt">85
+&lt;/span>&lt;span class="lnt">86
+&lt;/span>&lt;span class="lnt">87
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Collections.Generic&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.IO&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Linq&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Text&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Threading.Tasks&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Controls&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Data&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Documents&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Forms&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Input&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Media&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Media.Imaging&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Navigation&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">System.Windows.Shapes&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">using&lt;/span> &lt;span class="nn">Microsoft.VisualBasic.Devices&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">namespace&lt;/span> &lt;span class="nn">Rename&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cs">/// &amp;lt;summary&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cs">/// MainWindow.xaml 的交互逻辑&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cs">/// &amp;lt;/summary&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">partial&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MainWindow&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">Window&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">MainWindow&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">InitializeComponent&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Output&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;窗口初始化完成&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">private&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">P_Click&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">object&lt;/span> &lt;span class="n">sender&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">RoutedEventArgs&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Output&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;初始化..&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">string&lt;/span> &lt;span class="n">path&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">Bin&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">string&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="n">files&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">10000&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">string&lt;/span> &lt;span class="n">name&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">Name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="m">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Output&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;初始化变量成功&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">DirectoryInfo&lt;/span> &lt;span class="n">folder&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DirectoryInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">@path&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="p">&amp;lt;&lt;/span> &lt;span class="n">folder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">GetFiles&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;*.jpg&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">Count&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">files&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">folder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">GetFiles&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;*.jpg&amp;#34;&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">Name&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">i&lt;/span>&lt;span class="p">++;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Output&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;文件获取成功，共&amp;#34;&lt;/span>&lt;span class="p">+&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">+&lt;/span>&lt;span class="s">&amp;#34;个&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">s&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="m">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">s&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Computer&lt;/span> &lt;span class="n">MyComputer&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Computer&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">MyComputer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">FileSystem&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">RenameFile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="p">+&lt;/span>&lt;span class="s">@&amp;#34;\&amp;#34;&lt;/span>&lt;span class="p">+&lt;/span>&lt;span class="n">files&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="p">],&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">+&lt;/span>&lt;span class="s">&amp;#34;-&amp;#34;&lt;/span>&lt;span class="p">+&lt;/span> &lt;span class="n">Convert&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ToString&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="p">+&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">)+&lt;/span> &lt;span class="s">&amp;#34;.jpg&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Output&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;正在转换，&amp;#34;&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="n">s&lt;/span>&lt;span class="p">+&lt;/span>&lt;span class="s">&amp;#34;/&amp;#34;&lt;/span>&lt;span class="p">+&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="s">&amp;#34;个&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">s&lt;/span>&lt;span class="p">++;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Output&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;转换完成！&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">private&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">Where_Click&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">object&lt;/span> &lt;span class="n">sender&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">RoutedEventArgs&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Output&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;正在浏览文件夹&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FolderBrowserDialog&lt;/span> &lt;span class="n">dialog&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">FolderBrowserDialog&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dialog&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Description&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;请选择文件路径&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Windows&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Forms&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DialogResult&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">dialog&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ShowDialog&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">result&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Windows&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Forms&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DialogResult&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Cancel&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">string&lt;/span> &lt;span class="n">folderPath&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">dialog&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SelectedPath&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Trim&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">DirectoryInfo&lt;/span> &lt;span class="n">theFolder&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DirectoryInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">folderPath&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">theFolder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Exists&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bin&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">folderPath&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">finally&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Output&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Text&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;完成&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>

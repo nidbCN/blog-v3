@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CLion on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/clion/</link><description>Recent content in CLion on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 16 Dec 2020 23:51:22 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/clion/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows下CLion配置SDL2开发环境</title><link>https://blog.gaein.cn/passages/config-sdl2-on-clion-win/</link><pubDate>Wed, 16 Dec 2020 23:51:22 +0800</pubDate><guid>https://blog.gaein.cn/passages/config-sdl2-on-clion-win/</guid><description>&lt;p>SDL（Simple DirectMedia Layer）是一套开放源代码的跨平台多媒体开发库，使用 C 语言写成。SDL 提供了数种控制图像、声音、输出入的函数。简单易用。这篇文章介绍一下我在 Windows 下 CLion 配置 SDL2 开发环境的方法。&lt;/p>
+&lt;blockquote>
+&lt;p>配 SDL2 还是由于大一的 C 语言程序设计课设。由于我始终不愿意使用 EasyX，却由于 GLFW 太过复杂而担心无法完成作业&lt;/p>
+&lt;p>&lt;del>其实我的担心是多余的，以我的实力，根本不用担心，就是完不成&lt;/del>&lt;/p>
+&lt;p>所以采用了学 &lt;del>姐&lt;/del> 长 &lt;a class="link" href="https://mzdluo123.github.io/" target="_blank" rel="noopener"
+>@HelloWorld&lt;/a> 的建议，使用了 SDL。不过配置的过程中遇到了很多问题，在这里记录并分享一下。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>环境：&lt;/p>
+&lt;ol>
+&lt;li>CLion 2020.3 Build 203.5981.166&lt;/li>
+&lt;li>Windows10 20H2 19042.685&lt;/li>
+&lt;li>MinGW-w64 GCC 8.1.0(x86_64-posix-seh-rev0)&lt;/li>
+&lt;li>SDL2-2.0.12 [DEV]&lt;/li>
+&lt;/ol>&lt;/blockquote>
+&lt;h2 id="sdl2-配置">SDL2 配置
+&lt;/h2>&lt;h3 id="下载-sdl2">下载 SDL2
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>打开 SDL 官网的下载页 &lt;a class="link" href="https://www.libsdl.org/download-2.0.php" target="_blank" rel="noopener"
+>LibSDL.org&lt;/a>
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/01.webp"
+loading="lazy"
+alt="下载"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>下载 &amp;ldquo;Development Libraries&amp;rdquo; (开发版)中的 &amp;ldquo;Windows&amp;rdquo;-&amp;gt;&amp;ldquo;MinGW 32/64-bit&amp;rdquo;&lt;br>
+我下载的是&lt;a class="link" href="https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz" target="_blank" rel="noopener"
+>&amp;ldquo;SDL2-devel-2.0.12-mingw.tar.gz&amp;rdquo;&lt;/a>&lt;br>
+(注：此链接不确保时效性，请去官网下载最新版本)&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="配置-sdl2">配置 SDL2
+&lt;/h3>&lt;ol>
+&lt;li>解压缩下载的 &amp;ldquo;SDL2-devel-2.0.12-mingw.tar.gz&amp;rdquo; ，将 &amp;ldquo;x86_64-w64-mingw32&amp;rdquo; 中的所有文件复制到你 MinGW-w64 的目录中。&lt;br>
+如果你的 MinGW 是 i686 则复制&amp;quot;i686-w64-mingw32&amp;quot;中的所有文件。
+(注：在终端中使用 &lt;code>gcc -v&lt;/code> 可以查看到 MinGW-w64 的版本)
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/02.webp"
+loading="lazy"
+alt="解压"
+>
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/03.webp"
+loading="lazy"
+alt="复制"
+>
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/04.webp"
+loading="lazy"
+alt="粘贴"
+>&lt;/li>
+&lt;li>在项目目录下新建一个文件夹&amp;quot;SDL&amp;quot;，将&amp;quot;include&amp;quot;中的&amp;quot;SDL2&amp;quot;，复制到项目目录下&amp;quot;SDL&amp;quot;文件夹中
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/05.webp"
+loading="lazy"
+alt="SDL2"
+>&lt;/li>
+&lt;/ol>
+&lt;h2 id="cmake-配置">CMake 配置
+&lt;/h2>&lt;h3 id="新建">新建
+&lt;/h3>&lt;p>在 CLion 中点&amp;quot;文件&amp;quot;-&amp;gt;&amp;ldquo;新建项目&amp;rdquo;，选择 C++(C 也可以)
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/06.webp"
+loading="lazy"
+alt="新建"
+>&lt;/p>
+&lt;h4 id="配置">配置
+&lt;/h4>&lt;p>将&amp;quot;CMakeLists.txt&amp;quot;按照如下内容修改：&lt;br>
+(注：文件的内容根据你的项目决定，一般来说不用修改默认生成的)
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/07.webp"
+loading="lazy"
+alt="库"
+>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cmake" data-lang="cmake">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># 设置CMake需要的版本
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">&lt;/span>&lt;span class="nb">cmake_minimum_required&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">VERSION&lt;/span> &lt;span class="s">3.17&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="c"># 设置项目名称
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">&lt;/span>&lt;span class="nb">project&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">SDL2_Test&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="c"># 设置C++版本
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">&lt;/span>&lt;span class="nb">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">CMAKE_CXX_STANDARD&lt;/span> &lt;span class="s">20&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="c"># 设置includePath
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">&lt;/span>&lt;span class="nb">include_directories&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">SDL&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="c"># 生成文件
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">&lt;/span>&lt;span class="nb">add_executable&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">SDL2_Test&lt;/span> &lt;span class="s">main.cpp&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="err">&lt;/span>&lt;span class="c"># 链接库
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">&lt;/span>&lt;span class="nb">target_link_libraries&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">SDL2_Test&lt;/span> &lt;span class="s">mingw32&lt;/span> &lt;span class="s">SDL2main&lt;/span> &lt;span class="s">SDL2&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/08.webp"
+loading="lazy"
+alt="完成"
+>&lt;/p>
+&lt;h2 id="测试">测试
+&lt;/h2>&lt;p>在 &amp;ldquo;main.cpp&amp;rdquo; 中写入如下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;#34;SDL2/SDL.h&amp;#34;&lt;/span>&lt;span class="cp">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">char&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">argv&lt;/span>&lt;span class="p">[])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 初始化SDL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">SDL_Init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">SDL_INIT_VIDEO&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 创建SDL窗口指针
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">SDL_Window&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">window&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">SDL_CreateWindow&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s">&amp;#34;SDL2Test&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SDL_WINDOWPOS_UNDEFINED&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SDL_WINDOWPOS_UNDEFINED&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="mi">640&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="mi">480&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 创建渲染器
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">SDL_Renderer&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">renderer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">SDL_CreateRenderer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">SDL_RENDERER_SOFTWARE&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 设置渲染器
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">SDL_SetRenderDrawColor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">renderer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">SDL_ALPHA_OPAQUE&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SDL_RenderClear&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">renderer&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 渲染
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">SDL_RenderPresent&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">renderer&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 等待3000ms
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">SDL_Delay&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">3000&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 销毁窗口&amp;amp;退出
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">SDL_DestroyWindow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SDL_Quit&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/09.webp"
+loading="lazy"
+alt="源代码"
+>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Config-SDL2-On-CLion-Win/10.webp"
+loading="lazy"
+alt="结果"
+>&lt;/p>
+&lt;p>点击右上角的三角运行，如果出现&lt;/p>
+&lt;ol>
+&lt;li>无法找到头文件：检查是否复制&amp;quot;include&amp;quot;和设置&amp;quot;include_directories(SDL)&amp;quot;&lt;/li>
+&lt;li>找不到WinMain：检查是否复制库。或者尝试调换&amp;quot;target_link_libraries(SDL2_Test mingw32 SDL2main SDL2)&amp;ldquo;中库的顺序&lt;/li>
+&lt;/ol>
+&lt;h2 id="说明">说明
+&lt;/h2>&lt;ol>
+&lt;li>有些同学可能很迷惑：为什么要把SDL扔进MinGW-w64的目录里面呢？因为我在外面的目录尝试的时候各种报错，后来看了 &lt;a class="link" href="https://blog.csdn.net/ronaldinho2014/article/details/104835426" target="_blank" rel="noopener"
+>CSDN:CLion配置SDL2开发环境（Windows系统）&lt;/a>。貌似把SDL扔进mingw目录就能解决。具体原因还有待深究。&lt;/li>
+&lt;li>其它方法：使用vcpkg可以安装，也可以使用CMake模块：
+&lt;ol>
+&lt;li>&lt;a class="link" href="https://github.com/tcbrindle/sdl2-cmake-scripts" target="_blank" rel="noopener"
+>GitHub:SDL2-CMake-Scripts&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/binary132/cmake-sdl" target="_blank" rel="noopener"
+>GitHub:CMake-SDL&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ol>
+&lt;p>参考：&lt;/p>
+&lt;ol>
+&lt;li>&lt;a class="link" href="https://wiki.libsdl.org/" target="_blank" rel="noopener"
+>SDL官网:SDL-WIKI&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://trenki2.github.io/blog/2017/06/02/using-sdl2-with-cmake/" target="_blank" rel="noopener"
+>Trenki&amp;rsquo;s Dev Blog:Using SDL2 with CMake&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://intellij-support.jetbrains.com/hc/en-us/community/posts/360006864999-Configuring-SDL2-with-Clion" target="_blank" rel="noopener"
+>JetBrains-Community:Configuring SDL2 with CLion&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://adolfans.github.io/sdltutorialcn/" target="_blank" rel="noopener"
+>adolfans:SDL中文教程&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.csdn.net/ronaldinho2014/article/details/104835426" target="_blank" rel="noopener"
+>CSDN:CLion配置SDL2开发环境（Windows系统）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://cmake.org/cmake/help/latest/module/FindSDL.html" target="_blank" rel="noopener"
+>CMake:FindSDL&lt;/a>&lt;/li>
+&lt;/ol></description></item></channel></rss>

@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Java on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/java/</link><description>Recent content in Java on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 04 Oct 2020 14:43:04 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/java/index.xml" rel="self" type="application/rss+xml"/><item><title>比较——零基础学Java语言笔记（二）</title><link>https://blog.gaein.cn/passages/java-note2-compare/</link><pubDate>Sun, 04 Oct 2020 14:43:04 +0800</pubDate><guid>https://blog.gaein.cn/passages/java-note2-compare/</guid><description>&lt;p>距离笔记1大概有两周了，由于Java、C、C++、CSharp都是C like语言，它们的有很多相似之处，因此没有再细致一点点看，而是从数组开始看起，将《零基础学习Java看完》。当然这几节只是非常基础的课程，所以笔记也比较简短。已经了解之处就不再做笔记了。&lt;/p>
+&lt;!--MORE-->
+&lt;blockquote>
+&lt;p>终于没有忍住去跟课程进度，而是去看了上次开课的视频。下一步的计划是看进阶的Java，或者是学习一下python。最近用python写了一个QQ bot，发现很是好用。&lt;/p>&lt;/blockquote>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/Java-Note1-Calculation/" target="_blank" rel="noopener"
+>计算——零基础学Java语言笔记（一）&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记-1">下一篇笔记
+&lt;/h2>&lt;p>暂无&lt;/p>
+&lt;h2 id="21-比较">2.1 比较
+&lt;/h2>&lt;p>Java语言使用&lt;code>// notes&lt;/code>和&lt;code>/*notes*/&lt;/code>来作注释&lt;/p>
+&lt;p>Java语言的关系运算符有&lt;code>&amp;gt;&lt;/code>、&lt;code>&amp;lt;&lt;/code>、&lt;code>==&lt;/code>、&lt;code>&amp;gt;=&lt;/code>、&lt;code>&amp;lt;=&lt;/code>、&lt;code>!=&lt;/code> 6个&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">5&lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出false&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">5&lt;/span>&lt;span class="o">&amp;gt;=&lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出true&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>所有关系运算符的优先级比算数运算符的低，但比赋值运算符&lt;code>=&lt;/code>高&lt;/p>
+&lt;h2 id="22-判断">2.2 判断
+&lt;/h2>&lt;blockquote>
+&lt;p>建议不管有几条语句在if或else后总要跟上一对花括号，这样利于人类阅读&lt;/p>&lt;/blockquote>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">// if语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">else&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">// if-else语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">else&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*条件2*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 代码&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">// if-elseif语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="23-分支">2.3 分支
+&lt;/h2>&lt;p>switch-case&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="k">switch&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="cm">/*控制表达式，通常是某个变量*/&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">case&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="cm">/*常量*/&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">break&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">case&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="cm">/*常量*/&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">default&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 语句&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// ...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行完分支中的语句后，如果后面没有&lt;code>break;&lt;/code>，就会进入下面的&lt;code>case&lt;/code>里面去，直到遇到&lt;code>break;&lt;/code>或者&lt;code>switch&lt;/code>结束为止&lt;/p>
+&lt;h2 id="24-判断语句常见错误">2.4 判断语句常见错误
+&lt;/h2>&lt;h2 id="2x-小测验">2.x 小测验
+&lt;/h2>&lt;h6 id="1写出以下代码段的执行结果">1.写出以下代码段的执行结果：
+&lt;/h6>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">34&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">max&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">30&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;gt;=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">max&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;zhang&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;huang&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;zhu&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>huang\n&lt;/p>&lt;/blockquote>
+&lt;h6 id="2写出以下代码段的执行结果">2.写出以下代码段的执行结果：
+&lt;/h6>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">limit&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">100&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">15&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">40&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">limit&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">limit&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;lemon&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;lime&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;grape&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="n">zhu&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>lime\ngrape&lt;/p>&lt;/blockquote>
+&lt;h2 id="第二周编程题">第二周编程题
+&lt;/h2>&lt;h6 id="第一题时间换算">第一题——时间换算
+&lt;/h6>&lt;blockquote>
+&lt;p>题目内容：
+&lt;code>UTC&lt;/code>是世界协调时，&lt;code>BJT&lt;/code>是北京时间，&lt;code>UTC&lt;/code>时间相当于&lt;code>BJT&lt;/code>减去&lt;code>8&lt;/code>。&lt;br>
+现在，你的程序要读入一个整数，表示&lt;code>BJT&lt;/code>的时和分。&lt;br>
+整数的个位和十位表示分，百位和千位表示小时。&lt;br>
+如果小时小于&lt;code>10&lt;/code>，则没有千位部分；如果小时是&lt;code>0&lt;/code>，则没有百位部分；如果分小于&lt;code>10&lt;/code>分，需要保留十位上的&lt;code>0&lt;/code>。 &lt;br>
+如&lt;code>1124&lt;/code>表示&lt;code>11&lt;/code>点&lt;code>24&lt;/code>分，而&lt;code>905&lt;/code>表示&lt;code>9&lt;/code>点&lt;code>5&lt;/code>分，&lt;code>36&lt;/code>表示&lt;code>0&lt;/code>点&lt;code>36&lt;/code>分，&lt;code>7&lt;/code>表示&lt;code>0&lt;/code>点&lt;code>7&lt;/code>分。&lt;br>
+有效的输入范围是&lt;code>0&lt;/code>到&lt;code>2359&lt;/code>，即你的程序不可能从测试服务器读到&lt;code>0&lt;/code>到&lt;code>2359&lt;/code>以外的输入数据。&lt;br>
+你的程序要输出这个时间对应的&lt;code>UTC&lt;/code>时间，输出的格式和输入的相同，即输出一个整数，表示&lt;code>UTC&lt;/code>的时和分。&lt;br>
+整数的个位和十位表示分，百位和千位表示小时。&lt;br>
+如果小时小于&lt;code>10&lt;/code>，则没有千位部分；如果小时是&lt;code>0&lt;/code>，则没有百位部分；如果分小于&lt;code>10&lt;/code>分，需要保留十位上的&lt;code>0&lt;/code>。&lt;br>
+提醒：&lt;strong>要小心跨日的换算。&lt;/strong>&lt;br>
+输入格式:&lt;br>
+一个整数，表示&lt;code>BJT&lt;/code>的时和分。整数的个位和十位表示分，百位和千位表示小时。如果小时小于&lt;code>10&lt;/code>，则没有千位部分；如果小时是&lt;code>0&lt;/code>，则没有百位部分；如果小时不是&lt;code>0&lt;/code>而且分小于&lt;code>10&lt;/code>分，需要保留十位上的&lt;code>0&lt;/code>。&lt;br>
+输出格式： &lt;br>
+一个整数，表示&lt;code>UTC&lt;/code>的时和分。整数的个位和十位表示分，百位和千位表示小时。如果小时小于&lt;code>10&lt;/code>，则没有千位部分；如果小时是&lt;code>0&lt;/code>，则没有百位部分；如果小时不是&lt;code>0&lt;/code>而且分小于&lt;code>10&lt;/code>分，需要保留十位上的&lt;code>0&lt;/code>。&lt;br>
+输入样例：&lt;code>933&lt;/code>&lt;br>
+输出样例：&lt;code>133&lt;/code>&lt;br>
+时间限制：500ms内存限制：32000kb&lt;/p>&lt;/blockquote>
+&lt;p>需要注意的问题：&lt;/p>
+&lt;ol>
+&lt;li>是从BJT转到UTC&lt;/li>
+&lt;li>UTC = BJT - 8&lt;/li>
+&lt;li>跨日期需要加上24小时&lt;/li>
+&lt;/ol>
+&lt;p>提交的代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nn">java.util.Scanner&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">Main&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Args&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">BJT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输入北京时间&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">UTC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">BJT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">800&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 转换成UTC&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">UTC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 判断是否跨日&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">UTC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">2400&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">UTC&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h6 id="第二题信号报告">第二题——信号报告
+&lt;/h6>&lt;blockquote>
+&lt;p>题目内容：
+无线电台的RS制信号报告是由三两个部分组成的：&lt;br>
+&lt;code>R(Readability)&lt;/code> 信号可辨度即清晰度.&lt;br>
+&lt;code>S(Strength)&lt;/code> 信号强度即大小.&lt;br>
+其中&lt;code>R&lt;/code>位于报告第一位，共分5级，用1—5数字表示.&lt;br>
+&lt;code>1---Unreadable&lt;/code>&lt;br>
+&lt;code>2---Barely readable, occasional words distinguishable&lt;/code>&lt;br>
+&lt;code>3---Readable with considerable difficulty&lt;/code>&lt;br>
+&lt;code>4---Readable with practically no difficulty&lt;/code>&lt;br>
+&lt;code>5---Perfectly readable&lt;/code>&lt;br>
+报告第二位是&lt;code>S&lt;/code>，共分九个级别，用1—9中的一位数字表示&lt;br>
+&lt;code>1---Faint signals, barely perceptible&lt;/code>&lt;br>
+&lt;code>2---Very weak signals&lt;/code>&lt;br>
+&lt;code>3---Weak signals&lt;/code>&lt;br>
+&lt;code>4---Fair signals&lt;/code>&lt;br>
+&lt;code>5---Fairly good signals&lt;/code>&lt;br>
+&lt;code>6---Good signals&lt;/code>&lt;br>
+&lt;code>7---Moderately strong signals&lt;/code>&lt;br>
+&lt;code>8---Strong signals&lt;/code>&lt;br>
+&lt;code>9---Extremely strong signals&lt;/code>&lt;br>
+现在，你的程序要读入一个信号报告的数字，然后输出对应的含义。如读到59，则输出：&lt;br>
+&lt;code>Extremely strong signals, perfectly readable.&lt;/code>&lt;br>
+输入格式:&lt;br>
+一个整数，信号报告。整数的十位部分表示可辨度，个位部分表示强度。输入的整数范围是&lt;code>[11,59]&lt;/code>内有效的数字，这个范围外的数字不可能出现在测试数据中。&lt;br>
+输出格式：&lt;br>
+一句话，表示这个信号报告的意义。按照题目中的文字，先输出表示强度的文字，跟上逗号和空格，然后是表示可辨度的文字，跟上句号。注意可辨度的句子的第一个字母是小写的。注意这里的标点符号都是英文的。&lt;br>
+输入样例：&lt;br>
+&lt;code>33&lt;/code>&lt;br>
+输出样例：&lt;br>
+&lt;code>Weak signals, readable with considerable difficulty.&lt;/code>&lt;br>
+时间限制：500ms内存限制：32000kb&lt;/p>&lt;/blockquote>
+&lt;p>需要注意的问题：&lt;/p>
+&lt;ol>
+&lt;li>输出时候先输出S再输出R&lt;/li>
+&lt;li>输出的格式为&lt;code>S,□R.&lt;/code>（“□”代表空格）&lt;/li>
+&lt;li>R的第一个字母要小写&lt;/li>
+&lt;/ol>
+&lt;p>解决方案：&lt;/p>
+&lt;ol>
+&lt;li>获取R和S数字值：
+假设输入的是input，那么我们用input除以10可以得到十位上的数字，对它取余10可以得到个位上的数字
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">r&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>出题者的意图显然是用&lt;code>switch-case&lt;/code>来解决问题，但是未免太麻烦了点，至少看起来很难受。因为懒得用map所以我的解决方案是使用字符串数组，按顺序将字符串放在单元中，然后用&lt;code>s&lt;/code>或者&lt;code>r&lt;/code>减去&lt;code>1&lt;/code>的值作为索引就可以了。&lt;/li>
+&lt;/ol>
+&lt;p>提交的代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nn">java.util.Scanner&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">Main_2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Args&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 获取输入&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">r&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 解析获取R&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">input&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">10&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 解析获取S&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">rDic&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;unreadable&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;barely readable, occasional words distinguishable&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;readable with considerable difficulty&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;readable with practically no difficulty&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;perfectly readable&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">};&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 定义字符串数组存储R对应的字符串&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sDic&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Faint signals, barely perceptible&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Very weak signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Weak signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Fair signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Fairly good signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Good signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Moderately strong signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Strong signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;Extremely strong signals&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">};&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 定义字符串数组存储S对应的字符串&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">sDic&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">1&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;, &amp;#34;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">rDic&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">r&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">1&lt;/span>&lt;span class="o">]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;.&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出结果&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>计算——零基础学Java语言笔记（一）</title><link>https://blog.gaein.cn/passages/java-note1-calculation/</link><pubDate>Tue, 22 Sep 2020 20:56:21 +0800</pubDate><guid>https://blog.gaein.cn/passages/java-note1-calculation/</guid><description>&lt;p>那么看完了C语言的课程之后呢，在@&lt;a class="link" href="https://farewell12345.github.io/" target="_blank" rel="noopener"
+>伞菌&lt;/a>大佬的指点下我准备下一步去学习Java语言，至于课程选择嘛我就直接选择了浙江大学翁恺教授的课（毕竟看了有一段时间了有点不舍emm）并且这门课是国家精品课程，不过是面向零基础的。Java和CSharp很像，本来没有想这么细致的去学习，但是碰巧又赶上这门课程在开课，可以去讨论区互动和交作业等，于是便准备养老一般的跟着课程走。&lt;/p>
+&lt;!--MORE-->
+&lt;blockquote>
+&lt;p>那么Java这门语言呢，我准备跟着开课的进度一点一点学。（当然我看了一眼进度有点猴急，准备跟着上一次开课去学，然后跟着这个次开课去做题）。毕竟它和CSharp非常相似，我觉得把课跟下来应该不是特别难，当然，学好是另外一回事了。因为前面几周很多东西都偏基础，所以这些笔记可能会很短、很短&lt;/p>&lt;/blockquote>
+&lt;p>&lt;a class="link" href="https://www.icourse163.org/learn/ZJU-9001" target="_blank" rel="noopener"
+>浙江大学-零基础学习Java&lt;/a>&lt;/p>
+&lt;h2 id="下一篇笔记">下一篇笔记
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/Java-Note2-Compare/" target="_blank" rel="noopener"
+>比较——零基础学Java语言笔记（二）&lt;/a>&lt;/p>
+&lt;h2 id="11-第一个java程序">1.1 第一个Java程序
+&lt;/h2>&lt;p>IDEA新建项目、新建模块、然后新建包、新建类，在class中写入&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">){&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;HelloWorld&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>来输出HelloWorld，其中main函数是主函数，程序的入口点&lt;/p>
+&lt;p>输出时println函数括号里面的运算要用括号括起来，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;3 + 2 = &amp;#34;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">2&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出32&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;3 + 2 = &amp;#34;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">2&lt;/span>&lt;span class="p">));&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出5&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Java语言使用“+”来拼接字符串&lt;/p>
+&lt;h2 id="12-变量与计算">1.2 变量与计算
+&lt;/h2>&lt;h4 id="121-输入">1.2.1 输入
+&lt;/h4>&lt;p>Java获取输入需要首先定义一个Scanner&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">Scanner&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>并且在前面&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nn">java.util.Scanner&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 自动生成&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextLine&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 读取一行输入&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 读取输入的整数&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c1">// 其余类型的类似&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="122-变量">1.2.2 变量
+&lt;/h4>&lt;p>Java是强类型语言，所有的变量在使用前都需要经过定义并且有明确的类型并且被初始化。&lt;/p>
+&lt;p>使用 &amp;quot; 变量类型 + 变量名 &amp;quot; 定义变量，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">myVar&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>变量的名字叫做标识(zhi4)符，只能由字母、数字和下划线，第一个字符只能是字母或下划线，&lt;strong>不能用Java的关键字做标识符&lt;/strong>&lt;/p>
+&lt;p>在一行当中定义多个变量，每一个变量都应该有单独的赋值，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">amount&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">price&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// [!]推荐一行定义一个变量&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">final&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">AMOUNT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 在前面加上final来定义常量&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="123-赋值">1.2.3 赋值
+&lt;/h4>&lt;p>等于号 &amp;quot; = &amp;quot; 是赋值运算，将右边的值给左边&lt;/p>
+&lt;h2 id="13-浮点数计算">1.3 浮点数计算
+&lt;/h2>&lt;h4 id="131-浮点数">1.3.1 浮点数
+&lt;/h4>&lt;p>double用于定义double类型的浮点数变量
+浮点数计算是有误差的&lt;/p>
+&lt;h4 id="132-计算的优先级">1.3.2 计算的优先级
+&lt;/h4>&lt;p>如果不能确定计算的优先级可以加上括号来确保万无一失
+大部分计算的优先级是按照人正常的思维来规定的
+单目运算符只有一个算子，通常单目运算符的优先级较高&lt;/p>
+&lt;h4 id="133-类型的转换">1.3.3 类型的转换
+&lt;/h4>&lt;p>Java使用(类型)进行强制转换（和C一样）
+比如说：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">)((&lt;/span>&lt;span class="n">3&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">0&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">2&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">5&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="1x-在中国大学mooc上面提交编程作业">1.x 在中国大学MOOC上面提交编程作业：
+&lt;/h4>&lt;ol>
+&lt;li>需要将 &lt;code>package&lt;/code> 以下的内容复制过去&lt;/li>
+&lt;li>将&lt;code>class&lt;/code>名改为&lt;code>Main&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;h2 id="第一周编程题">第一周编程题
+&lt;/h2>&lt;blockquote>
+&lt;p>题目内容：
+写一个将华氏温度转换成摄氏温度的程序，转换的公式是：&lt;br>
+&lt;code>°F = (9/5)*°C + 32&lt;/code>&lt;br>
+其中C表示摄氏温度，F表示华氏温度。&lt;br>
+程序的输入是一个整数，&lt;strong>表示华氏温度&lt;/strong>。输出对应的摄氏温度，也是一个整数。&lt;br>
+提示，为了把计算结果的浮点数转换成整数，需要使用下面的表达式：&lt;br>
+&lt;code>(int)x;&lt;/code>&lt;br>
+其中x是要转换的那个浮点数。&lt;br>
+注意：除了题目要求的输出，不能输出任何其他内容，比如输入时的提示，输出时的说明等等都不能。&lt;br>
+这道题目要求转换后的数字，程序就只能输出这个数字，除此之外任何内容都不能输出。&lt;br>
+输入格式:&lt;br>
+&lt;code>一个整数&lt;/code>&lt;br>
+输出格式：&lt;br>
+&lt;code>一个整数&lt;/code>&lt;br>
+输入样例：&lt;br>
+&lt;code>100&lt;/code>&lt;br>
+输出样例：&lt;br>
+&lt;code>37&lt;/code>&lt;br>
+时间限制：500ms 内存限制：32000kb&lt;/p>&lt;/blockquote>
+&lt;p>需要注意的问题：&lt;/p>
+&lt;p>给的公式是摄氏度转华氏度，而程序的目的是华氏度转摄氏度&lt;/p>
+&lt;p>提交的代码&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nn">java.util.Scanner&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">Main&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">[]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">new&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Scanner&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">F&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">in&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">nextInt&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// F代表读取的华氏度&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kt">double&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">C&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">0&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// C代表读取的摄氏度&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">C&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">F&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">32&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">9&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">5&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">0&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 根据公式运算（需要把公式导一下）&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="n">C&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c1">// 输出，并强制转换为int&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>

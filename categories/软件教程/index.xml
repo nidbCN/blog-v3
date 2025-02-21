@@ -1,0 +1,1499 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>软件教程 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/categories/%E8%BD%AF%E4%BB%B6%E6%95%99%E7%A8%8B/</link><description>Recent content in 软件教程 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 14 Aug 2022 00:23:38 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/categories/%E8%BD%AF%E4%BB%B6%E6%95%99%E7%A8%8B/index.xml" rel="self" type="application/rss+xml"/><item><title>J1900软路由+小米AC2100 / OpenWRT —— 我的家庭网络方案</title><link>https://blog.gaein.cn/passages/home-network/</link><pubDate>Sun, 14 Aug 2022 00:23:38 +0800</pubDate><guid>https://blog.gaein.cn/passages/home-network/</guid><description>&lt;blockquote>
+&lt;p>一定要勤备份配置&lt;/p>&lt;/blockquote>
+&lt;h2 id="前言">前言
+&lt;/h2>&lt;p>&lt;del>我似乎好久好久没写过博客了&lt;/del>&lt;/p>
+&lt;p>&lt;del>怎么感觉一不小心写成流水日记了&lt;/del>&lt;/p>
+&lt;h3 id="树莓派-server-时代">树莓派 server 时代
+&lt;/h3>&lt;p>上学期疫情在家整整呆了半年，越看家里网络越不顺眼。以前是电信的光猫+华为路由器，不能用zt连学校资源，也不怎么好挂pt，也没有代理服务器（clash 跑在本机有些太费电）。于是着手弄我朋友送我的一个树莓派，刷单臂软路由，无奈 DHCP 一直配不好&amp;hellip;结果就鸽子了，跑个 ubuntu server 当内网服务器用了&amp;hellip;&lt;/p>
+&lt;h3 id="折腾-openwrt-与-小米ac2100">折腾 OpenWRT 与 小米AC2100
+&lt;/h3>&lt;p>后来在 TJUPT 内部群唠嗑90收了一个小米AC2100，我家的旧华为路由器海鲜市场卖了110，还挺神奇的。&lt;/p>
+&lt;p>于是，小米AC2100开始刷 OpenWRT，最开始在恩山上面找了许多包，不过都有些小问题（WLAN 得手动开的、配置防火墙卡死的&amp;hellip;）直到用了我同学推荐的 &lt;a class="link" href="https://supes.top/" target="_blank" rel="noopener"
+>OpenWRT固件下载与在线定制编译&lt;/a>，一个大佬适配的固件，貌似是用 GithubAction 在线编译。虽然一些功能需要赞助才能开（自定义主机名之类的）不过也就无所谓了。光猫桥接、开 ipv6、拨号上网一气呵成，舒服多了。&lt;/p>
+&lt;h3 id="公网ip-与-3965u-软路由">公网IP 与 3965U 软路由
+&lt;/h3>&lt;p>之后我家的网络大抵稳定了一段时间，直到看见同学找电信客服（或许是安徽电信）要了个公网IP，想了一想似乎也挺方便，我也去问问。不过河北的在线客服不能直接办，要留你的联系方式等着当地的维修师傅打电话。当时已经傍晚了，没想到过了一个小时师傅来了电话，和我谈妥了。他说明天上午保电信局审批，到时候告诉我，我重新拨号试试。我一觉呼呼大睡起来就有了。&lt;/p>
+&lt;p>关于公网 IP ，似乎电信要起来更方便一些。至于端口是 REJECT 了 &lt;code>80&lt;/code>、 &lt;code>443&lt;/code>、&lt;code>8080&lt;/code> ，应该是工信部的要求。&lt;/p>
+&lt;p>寻思着都这样了，不如再搞个软路由挂 PT？正好很久以前拖欠的黑工工钱到了，就去海鲜市场买了个 3965U 软路由，4t HGST 的机械硬盘，一台 H3C 铁壳千兆交换机（问就是“企业级”）、AMP 的网线、mPCIE 千兆网卡&amp;hellip;&lt;/p>
+&lt;p>外壳切了，把 mPCIE 网卡的 RJ45 口引出来。&lt;/p>
+&lt;p>mSATA 的硬盘没法插电脑，传统的镜像写入软件写不了硬盘，最后弄了个 WTG 在软路由本机刷机。&lt;/p>
+&lt;p>后来因为手贱更新之类又炸了两次，终于一切弄好装进弱电柜——电源炸了，连带主板一起开不开了。拔下电源万用表测输出 AC 12V，可能是整流器坏了&amp;hellip;？&lt;/p>
+&lt;h3 id="j1900-软路由一体化供电">J1900 软路由，一体化供电
+&lt;/h3>&lt;p>弄都弄了，干脆又买了一台 J1900 （因为实在买不到那么便宜的 3965U 了），刷系统、小米 AC2100 刷系统做 ap&amp;hellip;&lt;/p>
+&lt;p>另外有一点非常神奇的是，我所有的设备全是 12v 直流供电，因此直接买了一个 12v 直流电源（100W 的大概二三十）。服务器电源改 比较便宜但是弱电柜放不下，看了半天尺寸只好买了一个明纬的二手电源。&lt;/p>
+&lt;p>顺便 3.5 寸的 SATA 硬盘也需要一个 12v 供电，改了一个上去，5v 和 GND 依旧用软路由自带的供电。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Home-Network/01.webp"
+loading="lazy"
+alt="供电"
+>&lt;/p>
+&lt;p>看上去好危险啊（小声）&lt;/p>
+&lt;h2 id="软路由-openwrt-安装">软路由 OpenWRT 安装
+&lt;/h2>&lt;p>为了更方便的刷写 mSATA 硬盘，我买了一个 mSATA 转 SATA 的硬盘盒，再接一个 SATA 转 USB 的&amp;hellip;&lt;/p>
+&lt;p>使用 &lt;a class="link" href="https://www.balena.io/etcher/" target="_blank" rel="noopener"
+>balenaEtcher&lt;/a> 可以刷写硬盘而不仅仅是 U 盘，当然，使用 Linux 系统的 &lt;code>dd&lt;/code> 命令、或者在 WinPE 下使用 &lt;code>physdiskwrite.exe&lt;/code> 来写入：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">physdiskwrite.exe -u openwrt-21.02.0-x86-64-generic-ext4-combined.img.gz -d &lt;span class="m">0&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装完后直接进入系统即可，我在这遇到了一点小问题：我的机器无法进入 UEFI 固件设置，没办法改启动项，所以只好在 EFI 分区中编写 &lt;code>startup.nsh&lt;/code> 脚本。&lt;/p>
+&lt;p>内容如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">fs0:\efi\boot\bootx64.efi
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="配置软路由-openwrt">配置软路由 OpenWRT
+&lt;/h2>&lt;p>安装完系统后连接到软路由（网线、无线皆可）&lt;/p>
+&lt;h3 id="拨号上网">拨号上网
+&lt;/h3>&lt;p>更改 WAN 口为 “PPPOE”，输入宽带账号密码即可。IPv6将会自动分配。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Home-Network/02.webp"
+loading="lazy"
+alt="WAN口"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>如图，WAN 口显示的 IP 地址中，如果在 &lt;code>192.168.0.0/16&lt;/code>、&lt;code>172.16.0.0/12&lt;/code> 或 &lt;code>10.0.0.0/8&lt;/code> 中的话，则是“私有地址”，即你运营商的大内网，除此之外分配给你的地址基本都会是“公网IP”。&lt;/p>&lt;/blockquote>
+&lt;h3 id="连接到光猫设置页面">连接到光猫设置页面
+&lt;/h3>&lt;p>因为需要用路由器拨号，所以将光猫改为成“桥接模式”，光猫的 IP 地址为 &lt;code>192.168.9.1&lt;/code>，因此我无法直接访问光猫的设置界面。&lt;/p>
+&lt;p>解决方案是在 WAN 口的设备上新增加一个 IP 在 &lt;code>192.168.9.0/24&lt;/code> 子网的接口，通过该接口访问 &lt;code>192.168.9.1&lt;/code>。&lt;/p>
+&lt;p>新建接口，命名为 “lan_wan” ，协议为“静态IP”，地址为 &lt;code>192.168.9.2&lt;/code> （子网内的任意 IP 地址均可）。设备处选择“以太网适配器eth0”。&lt;/p>
+&lt;blockquote>
+&lt;p>设备名可能会不同，留意一下 wan 口的连接设备即可。IP 地址仅作示范，具体还需要根据网络情况设置。&lt;/p>&lt;/blockquote>
+&lt;p>添加完成后在“高级设置”中，找到“使用网关跃点”项，填写为 &lt;code>64&lt;/code> （或者任意一个较大的数字）。这样可以避免默认流量从非上网用的接口走。&lt;/p>
+&lt;blockquote>
+&lt;p>网关跃点可以解释为类似于“优先级”的东西，跃点数越大代表“从这个网络走的代价越大”，即效果是优先级低。&lt;/p>&lt;/blockquote>
+&lt;p>配置完后路由器的路由表中将多出 &lt;code>192.168.9.0/24 via 192.168.9.2&lt;/code> 这样类似的条目。以后再使用 192.168.9.1 访问光猫配置页面时候就会从这个口走了。&lt;/p>
+&lt;h3 id="argon-主题设置">Argon 主题设置
+&lt;/h3>&lt;p>没想到吧接下来居然要说这个。&lt;/p>
+&lt;p>OpenWRT 官方的主题并谈不上好看，Edge 这个主题我又不是很喜欢。之前用过 &lt;a class="link" href="https://www.right.com.cn/forum/thread-4003173-1-1.html" target="_blank" rel="noopener"
+>Infinity Freedom&lt;/a> 这个主题，不过不是特别兼容我的系统，所以只好选择了经典的 &lt;code>Argon&lt;/code> 来用。&lt;/p>
+&lt;p>在“软件包”中安装插件 &lt;code>luci-app-argon-config&lt;/code> ，可以在 luci 中添加一个设置主题的界面。&lt;/p>
+&lt;p>然后来到设置界面中上传自己喜欢的壁纸，和更改自己喜欢的主题色。&lt;/p>
+&lt;p>我设置了 &lt;code>#F19EC2&lt;/code> 作为我的主题色，不会有人不喜欢樱花粉吧？&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Home-Network/03.webp"
+loading="lazy"
+alt="HEX预览"
+>&lt;/p>
+&lt;p>首页效果：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Home-Network/04.webp"
+loading="lazy"
+alt="效果图"
+>&lt;/p>
+&lt;h3 id="对网段进行限速">对网段进行限速
+&lt;/h3>&lt;p>有些莫名奇妙的需求，因为我家里所有设备全分配了静态 IP 地址：&lt;/p>
+&lt;ol>
+&lt;li>网络设备（路由器等） &lt;code>192.168.8.1&lt;/code> - &lt;code>192.168.8.31&lt;/code>；&lt;/li>
+&lt;li>Windows 设备（台式笔记本等） &lt;code>192.168.8.32&lt;/code> - &lt;code>192.168.8.47&lt;/code>；&lt;/li>
+&lt;li>移动设备（手机） &lt;code>192.168.8.48&lt;/code> - &lt;code>192.168.8.63&lt;/code>；&lt;/li>
+&lt;li>DHCP地址 &lt;code>192.168.8.64&lt;/code> - &lt;code>192.168.8.127&lt;/code>；&lt;/li>
+&lt;/ol>
+&lt;p>所以在 &lt;code>192.168.8.64&lt;/code> - &lt;code>192.168.8.127&lt;/code> 段的设备基本都是客人之类的——总之不是家里的固定设备，所以想要进行限速。使用的插件如下：&lt;/p>
+&lt;ol>
+&lt;li>luci-app-eqos&lt;/li>
+&lt;/ol>
+&lt;p>在插件后台启用，然后填写 &lt;code>IP段&lt;/code> 进行限速就可以了。比如我需要限制的是 &lt;code>192.168.8.64/26&lt;/code>&lt;/p>
+&lt;h2 id="配置-ap-openwrt">配置 AP OpenWRT
+&lt;/h2>&lt;p>前前后后不知道配置了多少次&amp;hellip;主要问题还是如果弄错了很可能就直接连不上后台了:D&lt;/p>
+&lt;p>主要的办法就是把 &lt;code>WAN&lt;/code> 和 &lt;code>LAN&lt;/code> 全接在一个接口上，&lt;code>WLAN&lt;/code> 也接上去就行了，没有像厂家固件那样方便的改一个什么 “有线中继” 那么方便。作为 AP 的话真的很推荐使用原厂固件（但是 MiWiFi 一直在那请求 &lt;code>api.miwifi.com&lt;/code> 在后台看 log 看的我实在心烦）&lt;/p>
+&lt;h3 id="nat模式">NAT模式
+&lt;/h3>&lt;p>能上网也是最省心的模式，构建的时候设置好一个不同于上面的 LAN IP 即可（比如 &lt;code>192.168.7.1&lt;/code>），WAN 口设置 DHCP地址。&lt;/p>
+&lt;p>太不优雅啦（大声&lt;/p>
+&lt;h3 id="ap模式">AP模式
+&lt;/h3>&lt;p>参阅：&lt;/p>
+&lt;ol>
+&lt;li>&lt;a class="link" href="https://openwrt.org/docs/guide-user/network/wifi/dumbap" target="_blank" rel="noopener"
+>[OpenWrt Wiki] Wireless Access Point / Dumb Access Point&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;p>网络 &amp;gt; 接口 &amp;gt; 设备中选择 &lt;code>br-lan&lt;/code> 的 “配置”，将接口中加入 &lt;code>wan&lt;/code> 口。&lt;/p>
+&lt;p>关闭 &lt;code>LAN&lt;/code> 口的 DHCP 服务器（我是根本没安装 Dnsmasq ）&lt;/p>
+&lt;p>将 &lt;code>WAN&lt;/code> 口协议改为 “DHCP客户端” 或 “静态地址”&lt;/p>
+&lt;ul>
+&lt;li>如果你的上级路由（比如软路由）配置好了静态地址给这台 AP，就可以用 “DHCP客户端”，管理起来也更方便；&lt;/li>
+&lt;li>如果静态地址没配好，那就选择“静态地址”并且填写一个同网段的地址（比如 &lt;code>192.168.8.2&lt;/code>）；&lt;/li>
+&lt;/ul>
+&lt;p>将 &lt;code>WAN&lt;/code> 口的防火墙区域改为 &lt;code>lan&lt;/code>&lt;/p>
+&lt;p>将无线设置中接口由 &lt;code>lan&lt;/code> 改到 &lt;code>wan&lt;/code>&lt;/p>
+&lt;p>禁用防火墙&lt;/p>
+&lt;p>保存确认设置无误后删除 &lt;code>lan&lt;/code> 接口（留着也可以，以备万一）&lt;/p>
+&lt;h2 id="硬件改造">硬件改造
+&lt;/h2>&lt;p>其实很多精力还花费在对弱电柜内部的改造上&lt;/p>
+&lt;h3 id="改35硬盘供电">改3.5硬盘供电
+&lt;/h3>&lt;p>绝大多数工控小主机的 SATA 供电是为2.5寸硬盘设计的，2.5寸硬盘供电和3.5寸硬盘供电的主要区别就是2.5的少了一对 +12v 。所以我们只需要一个 12v 的直流电源，并且接到供电口就可以。&lt;/p>
+&lt;p>至于带有 12v 的 SATA 供电口，我手里有一个以前 ITX 用的，实在没有也可以考虑从旧的台式机 ATX 电源上面剪下来一个。&lt;/p>
+&lt;p>至于引脚定义详见下图：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Home-Network/05.webp"
+loading="lazy"
+alt="SATA供电口"
+>&lt;/p>
+&lt;p>正好接到我前言中说的 12v 开关电源上。&lt;/p>
+&lt;p>至于 SATA 线，我依旧是用锉刀挫开了一个槽，把线走了出去，千万注意不要太勉强，不然盖子把线压坏然后短路——后果不堪设想。&lt;/p>
+&lt;h3 id="弱电柜里的铁架子">弱电柜里的铁架子
+&lt;/h3>&lt;p>角钢真的是一种非常好的东西，便宜、而且非常容易 DIY，之前我的宿舍床上也是用这种角铁打了一个框架。至于价格的话，淘宝找那种卖二手角铁做货架的定制一下，我记得也就几十块钱。&lt;/p>
+&lt;p>只需要量好尺寸，想好放什么，比如我：&lt;/p>
+&lt;ul>
+&lt;li>第一层：H3C 交换机&lt;/li>
+&lt;li>第二层：软路由&lt;/li>
+&lt;li>第三层：光猫&lt;/li>
+&lt;/ul>
+&lt;p>而且上面密密麻麻的孔洞非常适合绑扎带和走线&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Home-Network/06.webp"
+loading="lazy"
+alt="弱电柜"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>虽然这还不是完全走好了之后的图，不过这么绑起来也很舒服&lt;/p>&lt;/blockquote>
+&lt;p>具体的各种配置有很多，前前后后也折腾了十天半个月，一些复杂一点的配置我就分开写博客再说（）&lt;/p></description></item><item><title>C#实现使用微软账户集成登录</title><link>https://blog.gaein.cn/passages/ms-account-integrated-signin-via-cssharp/</link><pubDate>Fri, 09 Jul 2021 04:49:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/ms-account-integrated-signin-via-cssharp/</guid><description>&lt;h2 id="版权声明">版权声明
+&lt;/h2>&lt;blockquote>
+&lt;p>&amp;ldquo;&lt;a class="link" href="https://anduin.aiursoft.com/post/2020/3/18/microsoft-account-integrated-sign-in-via-c#" target="_blank" rel="noopener"
+>Microsoft account integrated sign in via C#&lt;/a>&amp;rdquo; by &lt;a class="link" href="https://anduin.aiursoft.com/" target="_blank" rel="noopener"
+>Anduin Xue&lt;/a>, used under &lt;a class="link" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"
+>CC AS 4.0&lt;/a>, ‎translate from original.&lt;/p>
+&lt;p>本文翻译自 &lt;a class="link" href="https://anduin.aiursoft.com/" target="_blank" rel="noopener"
+>Anduin Xue&lt;/a> 的 &amp;ldquo;&lt;a class="link" href="https://anduin.aiursoft.com/post/2020/3/18/microsoft-account-integrated-sign-in-via-c#" target="_blank" rel="noopener"
+>Microsoft account integrated sign in via C#&lt;/a>&amp;rdquo; ，依据 &lt;a class="link" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="noopener"
+>CC AS 4.0&lt;/a> 协议授权。&lt;/p>&lt;/blockquote>
+&lt;hr>
+&lt;p>下面的简单代码说明了如何构建一个支持使用 Microsoft 账户的 OAuth 身份认证。&lt;/p>
+&lt;p>在开始打代码之前，我们需要在你的 Azure portal 中先创建一个App。 &lt;a class="link" href="https://portal.azure.com" target="_blank" rel="noopener"
+>https://portal.azure.com&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/01.webp"
+loading="lazy"
+alt="azure portal"
+>&lt;/p>
+&lt;p>这个名字是你的App显示的名字。选中让你的应用可以访问任何组织账号和个人账号的那项。至于重定向URI，它必须是你的服务器重定向地址，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">https://gateway.aiursoft.com/debug
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/02.webp"
+loading="lazy"
+alt="创建应用"
+>&lt;/p>
+&lt;p>创建完应用后，在这里复制你的 application id：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/03.webp"
+loading="lazy"
+alt="app id"
+>&lt;/p>
+&lt;p>然后创建一个 secret。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/04.webp"
+loading="lazy"
+alt="secret"
+>&lt;/p>
+&lt;p>别忘了复制那个 secret。&lt;/p>
+&lt;p>运行下面说的代码需要一些像 &lt;code>AiurUrl&lt;/code> 和 &lt;code>Aiursoft.XelNaga.Services.HTTPService&lt;/code> 这样的类。运行下面这行命令来获取：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ dotnet add package Aiursoft.XelNaga
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>为了让用户登录，我们需要重定向到微软的登录门户。复制以下的代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">GetBindRedirectLink&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;https://login.microsoftonline.com&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">$&amp;#34;/{_tenant}/oauth2/v2.0/authorize&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MicrosoftAuthAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">_clientId&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://gateway.aiursoft.com/debug&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ResponseType&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;code&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Scope&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;user.read&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">State&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}).&lt;/span>&lt;span class="n">ToString&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftAuthAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;redirect_uri&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;state&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">State&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;scope&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Scope&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;response_type&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ResponseType&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>只需要返回给浏览器一个&lt;code>redirect result&lt;/code> 和从 &lt;code>GetRedirectLink()&lt;/code> 函数获取到的重定向链接。&lt;/p>
+&lt;p>用户成功的登录了他的账户的时候，将会带着一个码重定向回到你设置的 &lt;code>RedirectUri&lt;/code>。这个码正式我们需要的。&lt;/p>
+&lt;p>通过这个码，你可以调用 &lt;code>GetUserDetail()&lt;/code> 方法来获取用户的信息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IUserDetail&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetUserDetail&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">token&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">GetAccessToken&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">_clientId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">_clientSecret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">GetUserInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>_clientId&lt;/code> 和 &lt;code>_clientSecret&lt;/code> 是你创建这个 app 时候复制的。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">private&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetAccessToken&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">clientId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">clientSecret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">apiAddress&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://login.microsoftonline.com&amp;#34;&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="s">$&amp;#34;/{_tenant}/oauth2/v2.0/token&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">url&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">apiAddress&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">form&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurUrl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MicrosoftAccessTokenAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">clientId&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ClientSecret&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">clientSecret&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Code&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">code&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Scope&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;user.read&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://gateway.aiursoft.com/debug&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">GrantType&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;authorization_code&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">json&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_http&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Post&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">response&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">JsonConvert&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DeserializeObject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">AccessTokenResponse&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsNullOrWhiteSpace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AccessToken&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurAPIModelException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ErrorType&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Unauthorized&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Invalid Microsoft crenditial&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AccessToken&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">WebException&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">AiurAPIModelException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ErrorType&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Unauthorized&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Invalid Microsoft API response&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftAccessTokenAddressModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientId&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;client_secret&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">ClientSecret&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;code&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Code&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;scope&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Scope&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;grant_type&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">GrantType&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [FromQuery(Name = &amp;#34;redirect_uri&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">RedirectUri&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>GetAccessToken()&lt;/code> 方法能够帮助你获取一个有效的能够让你下载到用户信息的 access token。&lt;/p>
+&lt;p>你拿到了 access token 之后，只需要调用 &lt;code>GetUserInfo()&lt;/code> 即可。下面我们将调用 graph API 来获取当前用户的信息。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">private&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">MicrosoftUserDetail&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetUserInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">string&lt;/span> &lt;span class="n">accessToken&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">apiAddress&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;https://graph.microsoft.com/v1.0/me&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">request&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HttpRequestMessage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">HttpMethod&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Get&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">apiAddress&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Headers&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Authorization&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">$&amp;#34;Bearer {accessToken}&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">response&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_client&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SendAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">IsSuccessStatusCode&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">json&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Content&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ReadAsStringAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">user&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">JsonConvert&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DeserializeObject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">MicrosoftUserDetail&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">user&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">WebException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ReasonPhrase&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>返回的用户是一个 &lt;code>MicrosoftUserDetail&lt;/code> 的实例。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">MicrosoftUserDetail&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">IUserDetail&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;id&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Id&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;displayName&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">DisplayName&lt;/span>&lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;userPrincipalName&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">UserPrincipalName&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na"> [JsonProperty(&amp;#34;jobTitle&amp;#34;)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">JobTitle&lt;/span>&lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Id 是唯一的，可以使用这个来认证你的用户。&lt;/p>
+&lt;p>最后，构建一个个性化的网页，然后你的app就行力。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/MS-Account-Integrated-SignIn-via-CSsharp/05.webp"
+loading="lazy"
+alt="网页"
+>&lt;/p>
+&lt;p>源代码在这：&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/AiursoftWeb/Nexus/blob/master/Pylon/Services/Authentication/ToMicrosoftServer/MicrosoftService.cs" target="_blank" rel="noopener"
+>https://github.com/AiursoftWeb/Nexus/blob/master/Pylon/Services/Authentication/ToMicrosoftServer/MicrosoftService.cs&lt;/a>&lt;/p>
+&lt;p>This work is licensed under a &lt;a class="link" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"
+>Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a>&lt;/p></description></item><item><title>常见公共DNS服务&amp;Linux和Windows下修改DNS的方法</title><link>https://blog.gaein.cn/passages/use-public-dns-and-configure-dns/</link><pubDate>Sat, 12 Jun 2021 14:57:12 +0800</pubDate><guid>https://blog.gaein.cn/passages/use-public-dns-and-configure-dns/</guid><description>&lt;p>因为校园网 DNS 污染，导致我无法连接 &lt;code>githubusercontent.com&lt;/code> ，所以准备更换一个公共 DNS。以下为常见的一些公共 DNS 服务。&lt;/p>
+&lt;p>DNS 全称是 Domain Name System ，可以理解为负责把域名变成 IP 的一个玩意。&lt;/p>
+&lt;blockquote>
+&lt;p>注：所有 IPv6 地址均无阿里云测试，因为我服务器没有 v6。目前只有这两三种网络测试，选择 DNS 时候还是自己 ping 一下看看。&lt;/p>&lt;/blockquote>
+&lt;h2 id="常见公共-dns-服务">常见公共 DNS 服务
+&lt;/h2>&lt;h3 id="阿里-dns">阿里 DNS
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://alidns.com/" target="_blank" rel="noopener"
+>https://alidns.com/&lt;/a>&lt;/p>
+&lt;h4 id="ipv6">IPv6
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>2400:3200::1&lt;/td>
+&lt;td>2400:3200:baba::1&lt;/td>
+&lt;td>10ms&lt;/td>
+&lt;td>19ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="ipv4">IPv4
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>223.5.5.5&lt;/td>
+&lt;td>223.6.6.6&lt;/td>
+&lt;td>15ms&lt;/td>
+&lt;td>20ms&lt;/td>
+&lt;td>4ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="百度-dns">百度 DNS
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://dudns.baidu.com/" target="_blank" rel="noopener"
+>https://dudns.baidu.com/&lt;/a>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>180.76.76.76&lt;/td>
+&lt;td>无&lt;/td>
+&lt;td>13ms&lt;/td>
+&lt;td>18ms&lt;/td>
+&lt;td>5ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="dnspod腾讯">DNSPOD（腾讯）
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://www.dnspod.cn/products/public.dns" target="_blank" rel="noopener"
+>https://www.dnspod.cn/products/public.dns&lt;/a>&lt;/p>
+&lt;h4 id="免费版">免费版
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>119.29.29.29&lt;/td>
+&lt;td>无&lt;/td>
+&lt;td>12ms&lt;/td>
+&lt;td>21ms&lt;/td>
+&lt;td>7ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="专业版">专业版
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>见控制台&lt;/td>
+&lt;td>见控制台&lt;/td>
+&lt;td>20ms&lt;/td>
+&lt;td>未测试&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="114dns">114DNS
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://www.114dns.com/" target="_blank" rel="noopener"
+>https://www.114dns.com/&lt;/a>&lt;/p>
+&lt;h4 id="无劫持">无劫持
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>114.114.114.114&lt;/td>
+&lt;td>114.114.115.115&lt;/td>
+&lt;td>33ms&lt;/td>
+&lt;td>34ms&lt;/td>
+&lt;td>29ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="拦截-钓鱼病毒木马网站">拦截 钓鱼病毒木马网站
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>114.114.114.119&lt;/td>
+&lt;td>114.114.115.119&lt;/td>
+&lt;td>34ms&lt;/td>
+&lt;td>34ms&lt;/td>
+&lt;td>29ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="拦截-色情网站">拦截 色情网站
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>114.114.114.110&lt;/td>
+&lt;td>114.114.115.110&lt;/td>
+&lt;td>47ms&lt;/td>
+&lt;td>36ms&lt;/td>
+&lt;td>31ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="google-public-dns">Google Public DNS
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://dns.google.com/" target="_blank" rel="noopener"
+>https://dns.google.com/&lt;/a>&lt;/p>
+&lt;h4 id="ipv6-1">IPv6
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>2001:4860:4860::8888&lt;/td>
+&lt;td>2001:4860:4860::8844&lt;/td>
+&lt;td>43ms&lt;/td>
+&lt;td>253ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="ipv4-1">IPv4
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>8.8.8.8&lt;/td>
+&lt;td>8.8.4.4&lt;/td>
+&lt;td>58ms&lt;/td>
+&lt;td>49ms&lt;/td>
+&lt;td>54ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="1111">1.1.1.1
+&lt;/h3>&lt;p>网址: https://1.1.1.1/dns/&lt;/p>
+&lt;h4 id="ipv6-2">IPv6
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>2606:4700:4700::1111&lt;/td>
+&lt;td>2606:4700:4700::1001&lt;/td>
+&lt;td>79ms&lt;/td>
+&lt;td>202ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="ipv4-2">IPv4
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>1.1.1.1&lt;/td>
+&lt;td>1.0.0.1&lt;/td>
+&lt;td>188ms（辅）&lt;/td>
+&lt;td>165ms&lt;/td>
+&lt;td>165ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="配置-dns">配置 DNS
+&lt;/h2>&lt;h3 id="windows-10">Windows 10
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>点击右下角网络图标，然后点击&amp;quot;Network &amp;amp; Internat settings&amp;quot;；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/01.webp"
+loading="lazy"
+alt="图标"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击正在使用的网络（比如我的是&amp;quot;Ethernet&amp;quot;，如果你在使用 WiFi 这里应该会显示&amp;quot;Wi-Fi&amp;quot;），点击&amp;quot;Properties&amp;quot;；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/02.webp"
+loading="lazy"
+alt="设置页面"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在 &amp;ldquo;IP Settings&amp;rdquo; 处点击 &amp;ldquo;Edit&amp;rdquo;，依次输入 &amp;ldquo;Preferred DNS&amp;rdquo; 和 &amp;ldquo;Alternate DNS&amp;rdquo;，如果有 IPv6 那么在下面的 &amp;ldquo;IPv6&amp;rdquo; 栏的对应位置输入 IPv6 DNS。
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/03.webp"
+loading="lazy"
+alt="输入DNS"
+>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="ubuntu">Ubuntu
+&lt;/h3>&lt;p>我手里只有 Ubuntu，其它 Linux 如何配置未知。貌似更改 &lt;code>/etc/resolv.conf&lt;/code> 是通用方法。&lt;/p>
+&lt;p>由于我们使用的是 Ubuntu，Ubuntu 的 DNS 是由 systemd-resolve 来管理的，因此我们不需要手动更新 &lt;code>/etc/resolv.conf&lt;/code> （事实上更新了也会被覆盖）。&lt;/p>
+&lt;p>更好的方法还可以考虑使用 Netplan 来管理 DNS ， 详见 &lt;a class="link" href="https://netplan.io/examples/#using-dhcp-and-static-addressing" target="_blank" rel="noopener"
+>Using DHCP and static addressing&lt;/a> 中 &lt;code>nameservers&lt;/code> 一章的配置。&lt;/p>
+&lt;p>关于错误示范请见我在 18 年干的傻事：&lt;/p>
+&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/Fix-Ubuntu-DNS-Error/" target="_blank" rel="noopener"
+>Ubuntu 下 apt“无法解析域名”解决方案&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>确定使用的是 systemd 管理的解析服务：使用命令 &lt;code>systemd-resolve --status&lt;/code> 查看服务状态；&lt;/li>
+&lt;li>编辑 DNS 文件：&lt;code>/etc/systemd/resolved.conf&lt;/code>&lt;br>
+&lt;code>DNS&lt;/code> 为 DNS 地址，可以配置多个 DNS，用空格隔开。&lt;br>
+&lt;code>FallbackDNS&lt;/code> 为备用 DNS，同理。
+比如：
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[Resolve]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">DNS=223.5.5.5 119.29.29.29 180.76.76.76
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">FallbackDNS=223.6.6.6
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;p>另请参阅：&lt;a class="link" href="https://fedoramagazine.org/use-dns-over-tls/" target="_blank" rel="noopener"
+>Use DNS over TLS - Fedora Magazine&lt;/a>&lt;/p></description></item><item><title>【过期内容】Adobe Premiere 导入 mkv 格式的视频</title><link>https://blog.gaein.cn/passages/import-hevc-for-old-adobe-premiere/</link><pubDate>Wed, 12 May 2021 22:32:26 +0800</pubDate><guid>https://blog.gaein.cn/passages/import-hevc-for-old-adobe-premiere/</guid><description>&lt;blockquote>
+&lt;p>注意：此内容已过期。Adobe Premiere 不能导入的本质原因的 PR 2020 前的版本不支持 HEVC/H.265 编码。旧版本使用 ffmpeg 进行转码即可正常使用，新版本没有此问题。&lt;br>
+有关视频编码、容器、格式等见：&lt;a class="link" href="https://blog.gaein.cn/passages/live-streaming-protocols/" target="_blank" rel="noopener"
+>直播推流常见协议及网页端实现 RTMP/STR/FLV/HLS/WebRTC&lt;/a>&lt;br>
+此文章内所述较为片面。&lt;/p>&lt;/blockquote>
+&lt;h2 id="mkv">mkv
+&lt;/h2>&lt;p>mkv格式本身是一个“容器”，它包括了视频、音频、章节等，其实，不需要转码，只需要把需要的视频和音频“拆”出来即可。&lt;/p>
+&lt;h2 id="工具">工具
+&lt;/h2>&lt;h3 id="mkvtoolnix">MKVToolNix
+&lt;/h3>&lt;p>该工具用于操作mkv文件（虽然我们只需要其中的解包部分）&lt;/p>
+&lt;ul>
+&lt;li>官网：https://mkvtoolnix.download/&lt;/li>
+&lt;li>Windows下载：https://www.fosshub.com/MKVToolNix.html&lt;/li>
+&lt;/ul>
+&lt;h3 id="mkvextractgui2">MKVExtractGUI2
+&lt;/h3>&lt;p>图形化界面的解包mkv的程序，需要放置在 MKVToolNix 的根目录下。&lt;/p>
+&lt;p>目录结构如下：&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/AdobePr-import-mkv/01.webp"
+loading="lazy"
+alt="Dir"
+>&lt;/p>
+&lt;ul>
+&lt;li>sourceforge：https://sourceforge.net/projects/mkvextractgui-2/&lt;/li>
+&lt;/ul>
+&lt;h2 id="提取音视频">提取音视频
+&lt;/h2>&lt;p>可以直接双击点开 &lt;code>MKVExtractGUI2&lt;/code> ，选择 &lt;code>input&lt;/code> ，下面的框中将显示出来 Tracks，选择需要的然后导出即可。&lt;/p>
+&lt;blockquote>
+&lt;p>可惜我的并不能用，它什么也不显示，只能手动来一波了。&lt;/p>&lt;/blockquote>
+&lt;h2 id="提取音视频命令行">提取音视频（命令行）
+&lt;/h2>&lt;p>实际上 MKVExtractGUI2 也是调用的 MKVToolNix 命令行来提取的，而 MKVToolNix 的图形化又比较复杂，不会用。直接使用命令行甚至会方便一些。&lt;/p>
+&lt;p>在当前目录打开 powershell 后，输入：&lt;/p>
+&lt;p>&lt;code>.\mkvinfo.exe &amp;quot;&amp;lt;mkv文件路径&amp;gt;&amp;quot;&lt;/code> ，比如我这个是 &lt;code>.\mkvinfo.exe &amp;quot;C:\Users\Gaein_nidb\Videos\High School Fleet [01].mkv&amp;quot;&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/AdobePr-import-mkv/02.webp"
+loading="lazy"
+alt="Output"
+>&lt;/p>
+&lt;p>以VCB-S压制的 High School Fleet/高校舰队 为例，程序会输出一大坨mkv的信息，我们需要关注的为 &lt;code>Tracks&lt;/code> ，其中的每一个 &lt;code>Track&lt;/code> 为一条轨道，其中包括：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Track number&lt;/code>：轨道ID（在mkvextract工具中轨道ID从0开始）&lt;/li>
+&lt;li>&lt;code>Track type&lt;/code>：轨道的类型（视频或音频等）&lt;/li>
+&lt;li>&lt;code>Codec ID&lt;/code>：编码ID&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>以上均用 &amp;ldquo;//&amp;rdquo; 做了伪注释&lt;/p>&lt;/blockquote>
+&lt;p>以及一些其它重要信息&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">|+ Tracks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track // 第一条轨道
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track number: 1 (track ID for mkvmerge &amp;amp; mkvextract: 0) // 在mkvextract工具中轨道ID为0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track UID: 16171542915234837125
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track type: video // 视频
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + &amp;#34;Lacing&amp;#34; flag: 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Minimum cache: 1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec ID: V_MPEGH/ISO/HEVC // 格式为HEVC
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Language: und
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Video track
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Pixel width: 1920
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Pixel height: 1080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Display width: 1920
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Display height: 1080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec&amp;#39;s private data: size 1151 (HEVC profile: Main 10 @L4.1)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Default duration: 00:00:00.041708333 (23.976 frames/fields per second for a video track)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track // 第二条轨道
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track number: 2 (track ID for mkvmerge &amp;amp; mkvextract: 1) // ID为1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track UID: 11899936184913956278
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track type: audio // 音频
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec ID: A_FLAC // 格式为flac
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec&amp;#39;s private data: size 113
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Default duration: 00:00:00.085333333 (11.719 frames/fields per second for a video track)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Language: jpn
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Audio track
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Sampling frequency: 48000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Channels: 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Bit depth: 24
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track // 第三条轨道
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track number: 3 (track ID for mkvmerge &amp;amp; mkvextract: 2) // ID为2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track UID: 10563629169812897935
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Track type: audio // 音频
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + &amp;#34;Default track&amp;#34; flag: 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec ID: A_AAC // 格式为ACC
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Codec&amp;#39;s private data: size 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Default duration: 00:00:00.021333333 (46.875 frames/fields per second for a video track)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Language: jpn
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Audio track
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Sampling frequency: 48000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| + Channels: 2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>那么我们需要提取的有：&lt;/p>
+&lt;ol>
+&lt;li>HEVC视频，轨道0&lt;/li>
+&lt;li>FLAC音频，轨道1&lt;/li>
+&lt;/ol>
+&lt;p>当然你想要ACC不要FLAC也行，咋都行，看需求而来&lt;/p>
+&lt;p>使用 &lt;code>mkvextract&lt;/code> 工具来解mkv文件，输入命令：&lt;/p>
+&lt;p>&lt;code>.\mkvextract.exe &amp;quot;&amp;lt;mkv文件&amp;gt;&amp;quot; tracks 0:video.hevc 1:audio.flac&lt;/code>&lt;/p>
+&lt;p>其中，tracks后面的参数为 &lt;code>&amp;lt;轨道ID&amp;gt;:&amp;lt;输出文件&amp;gt;&lt;/code> ，根据你想解的轨道，输入上面看信息看到的轨道ID即可。&lt;/p>
+&lt;p>然后，在这个文件夹中，我们得到了 &lt;code>video.hevc&lt;/code> 和 &lt;code>audio.flac&lt;/code> 两个文件。&lt;/p>
+&lt;h2 id="导入pr">导入PR
+&lt;/h2>&lt;p>尽管我们已经解开了，但是仍然不能导入，PR会说不支持的文件格式。&lt;/p>
+&lt;p>&lt;del>对于视频来说，解决的方法很简单：更改后缀名为PR能识别的，比如 &lt;code>mp4&lt;/code>&lt;/del>&lt;/p>
+&lt;p>&lt;del>对于flac音频来说：更改后缀名为 &lt;code>wav&lt;/code>&lt;/del>&lt;/p>
+&lt;p>请使用 ffmpeg 或其他工具进行 re-mux 或 re-enc&lt;/p></description></item><item><title>认识与入门MarkDown</title><link>https://blog.gaein.cn/passages/hello-markdown/</link><pubDate>Sun, 28 Apr 2019 00:23:38 +0800</pubDate><guid>https://blog.gaein.cn/passages/hello-markdown/</guid><description>&lt;p>&lt;a class="link" href="https://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="noopener"
+>Markdown&lt;/a>是一种轻量级的 &lt;strong>「标记语言」&lt;/strong>，它的优点很多，目前也被越来越多的写作爱好&amp;gt;者，撰稿者广泛使用。看到这里请不要被 &lt;strong>「标记」&lt;/strong>、 &lt;strong>「语言」&lt;/strong> 所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分
+轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。&lt;/p>
+&lt;p>根据作者&lt;/p>
+&lt;blockquote>
+&lt;p>转载请注明原作者&lt;/p>&lt;/blockquote>
+&lt;p>转载&lt;/p>
+&lt;p>作者：Te_Lee&lt;/p>
+&lt;p>原文：https://www.jianshu.com/p/1e402922ee32&lt;/p>
+&lt;p>如有侵权请联系删除&lt;/p>
+&lt;p>&lt;strong>转载请注明原作者，如果你觉得这篇文章对你有帮助或启发，也可以来请我&lt;a class="link" href="https://link.jianshu.com?t=http://ww2.sinaimg.cn/large/6aee7dbbjw1eiixgkex2ij21kw0t7wn5.jpg" target="_blank" rel="noopener"
+>喝咖啡&lt;/a>&lt;/strong>&lt;/p>
+&lt;h2 id="导语">导语
+&lt;/h2>&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="noopener"
+>Markdown&lt;/a>是一种轻量级的 &lt;strong>「标记语言」&lt;/strong>，它的优点很多，目前也被越来越多的写作爱好&amp;gt;者，撰稿者广泛使用。看到这里请不要被 &lt;strong>「标记」&lt;/strong>、 &lt;strong>「语言」&lt;/strong> 所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分
+轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://ww3.sinaimg.cn/large/6aee7dbbjw1eqft66xcg3j21kw12mdub.jpg" data-original-src="http://ww3.sinaimg.cn/large/6aee7dbbjw1eqft66xcg3j21kw12mdub.jpg" alt="[Ulysses for Mac](http://www.ulyssesapp.com)" style="cursor: zoom-in;">&lt;div class="image-caption">&lt;a class="link" href="http://www.ulyssesapp.com" target="_blank" rel="noopener"
+>Ulysses for Mac&lt;/a>&lt;/div>&lt;/p>
+&lt;/div>
+&lt;h2>一，认识 Markdown&lt;/h2>
+&lt;p>在刚才的导语里提到，Markdown 是一种用来写作的轻量级&lt;strong>「标记语言」&lt;/strong>，它用简洁的语法代替排版，而不像一般我们用的字处理软件 &lt;em>Word&lt;/em> 或 &lt;em>Pages&lt;/em> 有大量的排版、字体设置。它使我们专心于码字，用「标记」语法，来代替常见的排版格式。例如此文从内容到格式，甚至插图，键盘就可以通通搞定了。目前来看，支持 Markdown 语法的编辑器有很多，包括很多网站（例如&lt;a href="https://www.jianshu.com" target="_blank">简书&lt;/a>）也支持了 Markdown 的文字录入。Markdown 从写作到完成，导出格式随心所欲，你可以导出 HTML 格式的文件用来网站发布，也可以十分方便的导出 PDF 格式，这种格式写出的简历更能得到 HR 的好感。甚至可以利用 &lt;a href="https://link.jianshu.com?t=http://www.getcloudapp.com" target="_blank" rel="nofollow">CloudApp&lt;/a> 这种云服务工具直接上传至网页用来分享你的文章，全球最大的轻博客平台 &lt;a href="https://link.jianshu.com?t=http://te1ee.tumblr.com" target="_blank" rel="nofollow">Tumblr&lt;/a>，也支持 Mou 这类 Markdown 工具的直接上传。&lt;/p>
+&lt;h3>Markdown 官方文档&lt;/h3>
+&lt;blockquote>
+&lt;p>这里可以看到官方的 Markdown 语法规则文档，当然，&lt;strong>后文我也会用自己的方式阐述这些语法的具体用法&lt;/strong>。&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://daringfireball.net/projects/markdown/syntax" target="_blank" rel="nofollow">&lt;em>创始人 John Gruber 的 Markdown 语法说明&lt;/em>&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://wowubuntu.com/markdown/##list" target="_blank" rel="nofollow">&lt;em>Markdown 中文版语法说明&lt;/em>&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3>使用 Markdown 的优点&lt;/h3>
+&lt;ul>
+&lt;li>专注你的文字内容而不是排版样式，安心写作。&lt;/li>
+&lt;li>轻松的导出 HTML、PDF 和本身的 .md 文件。&lt;/li>
+&lt;li>纯文本内容，兼容所有的文本编辑器与字处理软件。&lt;/li>
+&lt;li>随时修改你的文章版本，不必像字处理软件生成若干文件版本导致混乱。&lt;/li>
+&lt;li>可读、直观、学习成本低。&lt;/li>
+&lt;/ul>
+&lt;h3>使用 Markdown 的误区&lt;/h3>
+&lt;blockquote>
+&lt;p>*We believe that writing is about content, about what you want to say – not about fancy formatting. *&lt;/p>
+&lt;/blockquote>
+&lt;p>我们坚信写作写的是内容，所思所想，而不是花样格式。&lt;br>
+— &lt;em>Ulysses for Mac&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Markdown 旨在简洁、高效，也由于 Markdown 的易读易写，人们用不同的编程语言实现了多个版本的解析器和生成器，这就导致了目前不同的 Markdown 工具集成了不同的功能（基础功能大致相同），例如流程图与时序图，复杂表格与复杂公式的呈现，虽然功能的丰富并没有什么本质的缺点，但终归有些背离初衷，何况在编写的过程中很费神，不如使用专业的工具撰写来的更有效率，所以如果你需实现复杂功能，专业的图形界面工具会更加方便。&lt;strong>当然，如果你对折腾这些不同客户端对 Markdown 的定制所带来高阶功能感到愉悦的话，那也是无可厚非的。&lt;/strong>
+&lt;/li>
+&lt;/ul>
+&lt;div class="image-package">
+&lt;img src="https://ww2.sinaimg.cn/large/6aee7dbbgw1eq320claw3j21kw0kjdpc.jpg" data-original-src="http://ww2.sinaimg.cn/large/6aee7dbbgw1eq320claw3j21kw0kjdpc.jpg" alt="[flowchart.js on Github（使用 Markdown 绘制流程图）](https://github.com/adrai/flowchart.js)" style="cursor: zoom-in;">&lt;div class="image-caption">[flowchart.js on Github（使用 Markdown 绘制流程图）](https://github.com/adrai/flowchart.js)&lt;/div>
+&lt;/div>
+&lt;h3>我该用什么工具？&lt;/h3>
+&lt;div class="image-package">
+&lt;img src="https://ww2.sinaimg.cn/large/6aee7dbbgw1esvkj19bqmj20e80e874z.jpg" data-original-src="http://ww2.sinaimg.cn/large/6aee7dbbgw1esvkj19bqmj20e80e874z.jpg" alt="Mou for Mac" style="cursor: zoom-in;">&lt;div class="image-caption">Mou for Mac&lt;/div>
+&lt;/div>
+&lt;ul>
+&lt;li>在 Mac OS X 上，我强烈建议你用 &lt;a href="https://link.jianshu.com?t=http://mouapp.com" target="_blank" rel="nofollow">Mou&lt;/a> 这款免费且十分好用的 Markdown 编辑器，它支持&lt;strong>实时预览&lt;/strong>，既左边是你编辑 Markdown 语言，右边会实时的生成预览效果。不仅如此，Mou 还有一些有趣的偏好设置（&lt;em>Preference&lt;/em>），例如主题（&lt;em>Themes&lt;/em>）与样式（&lt;em>CSS&lt;/em>），它们可以配置出定制化的文本编辑效果与导出效果，如果你对自带的主题与样式不满意还可以到 &lt;a href="https://link.jianshu.com?t=https://github.com/search?utf8=%E2%9C%93&amp;amp;q=Mou" target="_blank" rel="nofollow">GitHub&lt;/a> 上搜索其它爱好者为 Mou 编写的更多主题样式，导入的方式可以在偏好设置的 Themes 或 CSS 选项中 选择 reload。&lt;/li>
+&lt;/ul>
+&lt;div class="image-package">
+&lt;img src="https://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" data-original-src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" alt="Mou 的编写与预览窗口" style="cursor: zoom-in;">&lt;div class="image-caption">Mou 的编写与预览窗口&lt;/div>
+&lt;/div>
+&lt;p>如果你从事文字工作，我强烈建议你购买 &lt;em>&lt;a href="https://link.jianshu.com?t=http://www.ulyssesapp.com" target="_blank" rel="nofollow">Ulysses for Mac&lt;/a>&lt;/em>，这款软件入围了苹果 Mac App Store 的 &lt;em>The Best of 2013&lt;/em>。它支持更多的写作格式、多文档的支持。Mou，iA writer 这些软件都是基于单文档的管理方式，而 Ulysses 支持 Folder、Filter 的管理，一个 Folder 里面可以创建多个 Sheet，Sheet 之间也可以进行 Combine 处理。&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww1.sinaimg.cn/large/6aee7dbbjw1eqgrj7suqoj217a0aiq4u.jpg" data-original-src="http://ww1.sinaimg.cn/large/6aee7dbbjw1eqgrj7suqoj217a0aiq4u.jpg" alt="Mac 上一些 Markdown 编辑器" style="cursor: zoom-in;">&lt;div class="image-caption">Mac 上一些 Markdown 编辑器&lt;/div>
+&lt;/div>
+&lt;ul>
+&lt;li>&lt;p>由于笔者很少接触 Windows，Windows 下的 Markdown 没有过多涉猎，经朋友介绍，有两款还算不错，一款叫做 &lt;a href="https://link.jianshu.com?t=http://www.markdownpad.com" target="_blank" rel="nofollow">MarkdownPad&lt;/a> ，另一款叫做 &lt;a href="https://link.jianshu.com?t=http://code52.org/DownmarkerWPF/" target="_blank" rel="nofollow">MarkPad&lt;/a>。&lt;/p>&lt;/li>
+&lt;li>&lt;p>iOS 端很多 app 早已经支持了 Markdown 录入，例如 Drafts，Day One，iA writer 等，另外 Ulysses for iPad 现在已经上架，可以说是 iOS 平台最好的编辑器了。&lt;/p>&lt;/li>
+&lt;li>&lt;p>在 Web端，我强烈推荐&lt;a href="https://www.jianshu.com" target="_blank">简书&lt;/a>这款产品，上面有无数热爱文字的人在不停的创造，分享。在 Web 端使用 Markdown 没有比简书更舒服的地方了，同样支持左右两栏的实时预览，字体优雅，简洁。&lt;/p>&lt;/li>
+&lt;/ul>
+&lt;div class="image-package">
+&lt;img src="https://ww2.sinaimg.cn/large/6aee7dbbgw1effdkfijo1j21220nigth.jpg" data-original-src="http://ww2.sinaimg.cn/large/6aee7dbbgw1effdkfijo1j21220nigth.jpg" alt="简书的编辑预览模式" style="cursor: zoom-in;">&lt;div class="image-caption">简书的编辑预览模式&lt;/div>
+&lt;/div>
+&lt;h2>二，Markdown 语法的简要规则&lt;/h2>
+&lt;h3>标题&lt;/h3>
+&lt;div class="image-package">
+&lt;img src="https://ww1.sinaimg.cn/large/6aee7dbbgw1effeaclhiyj20eh09cwez.jpg" data-original-src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effeaclhiyj20eh09cwez.jpg" alt="标题" style="cursor: zoom-in;">&lt;div class="image-caption">标题&lt;/div>
+&lt;/div>
+&lt;p>标题是每篇文章都需要也是最常用的格式，在 Markdown 中，如果一段文字被定义为标题，只要在这段文字前加 &lt;code>##&lt;/code> 号即可。&lt;/p>
+&lt;p>&lt;code>## 一级标题&lt;/code>&lt;/p>
+&lt;p>&lt;code>#### 二级标题&lt;/code>&lt;/p>
+&lt;p>&lt;code>###### 三级标题&lt;/code>&lt;/p>
+&lt;p>以此类推，总共六级标题，建议在井号后加一个空格，这是最标准的 Markdown 语法。&lt;/p>
+&lt;h3>列表&lt;/h3>
+&lt;p>熟悉 HTML 的同学肯定知道有序列表与无序列表的区别，在 Markdown 下，列表的显示只需要在文字前加上 &lt;code>-&lt;/code> 或 &lt;code>*&lt;/code> 即可变为无序列表，有序列表则直接在文字前加&lt;code>1.&lt;/code> &lt;code>2.&lt;/code> &lt;code>3.&lt;/code> 符号要和文字之间加上一个字符的空格。&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww4.sinaimg.cn/large/6aee7dbbgw1effew5aftij20d80bz3yw.jpg" data-original-src="http://ww4.sinaimg.cn/large/6aee7dbbgw1effew5aftij20d80bz3yw.jpg" alt="无序列表与有序列表" style="cursor: zoom-in;">&lt;div class="image-caption">无序列表与有序列表&lt;/div>
+&lt;/div>
+&lt;h3>引用&lt;/h3>
+&lt;p>如果你需要引用一小段别处的句子，那么就要用引用的格式。&lt;/p>
+&lt;blockquote>
+&lt;p>例如这样&lt;/p>
+&lt;/blockquote>
+&lt;p>只需要在文本前加入 &lt;code>&amp;gt;&lt;/code> 这种尖括号（大于号）即可&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww3.sinaimg.cn/large/6aee7dbbgw1effezhonxlj20e009c3yu.jpg" data-original-src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effezhonxlj20e009c3yu.jpg" alt="引用" style="cursor: zoom-in;">&lt;div class="image-caption">引用&lt;/div>
+&lt;/div>
+&lt;h3>图片与链接&lt;/h3>
+&lt;p>插入链接与插入图片的语法很像，区别在一个 &lt;code>!&lt;/code>号&lt;/p>
+&lt;p>图片为：&lt;code>![]()&lt;/code>&lt;/p>
+&lt;p>链接为：&lt;code>[]()&lt;/code>&lt;/p>
+&lt;p>插入图片的地址需要图床，这里推荐&lt;a href="https://link.jianshu.com?t=http://weibotuchuang.sinaapp.com" target="_blank" rel="nofollow">围脖图床修复计划&lt;/a> 与 &lt;a href="https://link.jianshu.com?t=http://www.getcloudapp.com" target="_blank" rel="nofollow">CloudApp&lt;/a> 的服务，生成URL地址即可。&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww2.sinaimg.cn/large/6aee7dbbgw1efffa67voyj20ix0ctq3n.jpg" data-original-src="http://ww2.sinaimg.cn/large/6aee7dbbgw1efffa67voyj20ix0ctq3n.jpg" alt="URL 与图片" style="cursor: zoom-in;">&lt;div class="image-caption">URL 与图片&lt;/div>
+&lt;/div>
+&lt;h3>粗体与斜体&lt;/h3>
+&lt;p>Markdown 的粗体和斜体也非常简单，用两个 &lt;code>*&lt;/code> 包含一段文本就是粗体的语法，用一个 &lt;code>*&lt;/code> 包含一段文本就是斜体的语法。&lt;/p>
+&lt;p>例如：&lt;strong>这里是粗体&lt;/strong> &lt;em>这里是斜体&lt;/em>&lt;/p>
+&lt;h3>表格&lt;/h3>
+&lt;p>表格是我觉得 Markdown 比较累人的地方，例子如下：&lt;/p>
+&lt;pre class="hljs ruby">&lt;code class="ruby">&lt;span class="hljs-params">| Tables |&lt;/span> Are &lt;span class="hljs-params">| Cool |&lt;/span>
+&lt;span class="hljs-params">| ------------- |&lt;/span>&lt;span class="hljs-symbol">:-------------&lt;/span>&lt;span class="hljs-symbol">:|&lt;/span> -----&lt;span class="hljs-symbol">:|&lt;/span>
+&lt;span class="hljs-params">| col 3 is |&lt;/span> right-aligned &lt;span class="hljs-params">| $1600 |&lt;/span>
+&lt;span class="hljs-params">| col 2 is |&lt;/span> centered &lt;span class="hljs-params">| $12 |&lt;/span>
+&lt;span class="hljs-params">| zebra stripes |&lt;/span> are neat &lt;span class="hljs-params">| $1 |&lt;/span>
+&lt;/code>&lt;/pre>
+&lt;p>这种语法生成的表格如下：&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Tables&lt;/th>
+&lt;th style="text-align:center">Are&lt;/th>
+&lt;th style="text-align:right">Cool&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>col 3 is&lt;/td>
+&lt;td style="text-align:center">right-aligned&lt;/td>
+&lt;td style="text-align:right">$1600&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>col 2 is&lt;/td>
+&lt;td style="text-align:center">centered&lt;/td>
+&lt;td style="text-align:right">$12&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>zebra stripes&lt;/td>
+&lt;td style="text-align:center">are neat&lt;/td>
+&lt;td style="text-align:right">$1&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3>代码框&lt;/h3>
+&lt;p>如果你是个程序猿，需要在文章里优雅的引用代码框，在 Markdown下实现也非常简单，只需要用两个 ` 把中间的代码包裹起来。图例：&lt;/p>
+&lt;div class="image-package">
+&lt;img src="https://ww3.sinaimg.cn/large/6aee7dbbgw1effg1lsa97j20lt0a8dgs.jpg" data-original-src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effg1lsa97j20lt0a8dgs.jpg" style="cursor: zoom-in;">&lt;div class="image-caption">&lt;/div>
+&lt;/div>
+&lt;p>使用 &lt;code>tab&lt;/code> 键即可缩进。&lt;/p>
+&lt;h3>分割线&lt;/h3>
+&lt;p>分割线的语法只需要三个 &lt;code>*&lt;/code> 号，例如：&lt;/p>
+&lt;hr>
+&lt;blockquote>
+&lt;p>到这里，Markdown 的基本语法在日常的使用中基本就没什么大问题了，只要多加练习，配合好用的工具，写起东西来肯定会行云流水。更多的语法规则，其实 Mou 的 Help 文档栗子很好，当你第一次使用 Mou 时，就会显示该文档。可以用来对用的查找和学习。&lt;/p>
+&lt;/blockquote>
+&lt;div class="image-package">
+&lt;img src="https://ww3.sinaimg.cn/large/6aee7dbbgw1effgmnpgqlj210j0us44j.jpg" data-original-src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effgmnpgqlj210j0us44j.jpg" style="cursor: zoom-in;">&lt;div class="image-caption">&lt;/div>
+&lt;/div>
+&lt;h2>
+&lt;strong>三，相关推荐&lt;/strong>:&lt;/h2>
+&lt;h3>&lt;strong>工具&lt;/strong>&lt;/h3>
+&lt;p>&lt;em>图床工具用来上传图片获取 URL 地址&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://droplr.com" target="_blank" rel="nofollow">Droplr&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://www.getcloudapp.com" target="_blank" rel="nofollow">Cloudapp&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://link.jianshu.com?t=https://itunes.apple.com/cn/app/yi-xiang/id672522335?mt=12&amp;amp;uo=4" target="_blank" rel="nofollow">ezShare for Mac&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://weibotuchuang.sinaapp.com" target="_blank" rel="nofollow">围脖图床修复计划&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>在线好用的Markdown工具，为印象笔记而生&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://link.jianshu.com?t=http://maxiang.info" target="_blank" rel="nofollow">马克飞象，专为印象笔记打造的Markdown编辑器，非常推荐&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3>
+&lt;strong>相关文章阅读&lt;/strong>：&lt;/h3>
+&lt;ul>
+&lt;li>&lt;p>&lt;a href="https://www.jianshu.com/p/qqgjln" target="_blank">为什么作家应该用 Markdown 保存自己的文稿&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://www.yangzhiping.com/tech/r-markdown-knitr.html" target="_blank" rel="nofollow">Markdown写作浅谈&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://www.appinn.com/markdown-tools/" target="_blank" rel="nofollow">Markdown 工具补完&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://www.jianshu.com/p/63HYZ6" target="_blank">Drafts + Scriptogr.am + Dropbox 打造移动端 Markdown 风格博客&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://www.ituring.com.cn/article/23" target="_blank" rel="nofollow">图灵社区，怎样使用Markdown&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://news.cnblogs.com/n/139649/" target="_blank" rel="nofollow">为什么我们要学习Markdown的三个理由&lt;/a>&lt;/p>&lt;/li>
+&lt;li>&lt;p>&lt;a href="https://link.jianshu.com?t=http://ibuick.me/?p=4093" target="_blank" rel="nofollow">Markdown 语法写作入门指南 by ibuick&lt;/a>&lt;/p>&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;p>&lt;strong>本文首发在&lt;a href="https://link.jianshu.com?t=http://sspai.com/25137" target="_blank" rel="nofollow">少数派&lt;/a>转载请注明原作者，如果你觉得这篇文章对你有帮助或启发，也可以来请我&lt;a href="https://link.jianshu.com?t=http://ww2.sinaimg.cn/large/6aee7dbbjw1eiixgkex2ij21kw0t7wn5.jpg" target="_blank" rel="nofollow">喝咖啡&lt;/a>。&lt;br>
+利益相关：本篇文章所有涉及到的软件均为笔者日常所用工具，无任何广告费用。&lt;/strong>&lt;/p>
+&lt;pre>&lt;code> &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code>&lt;/pre></description></item><item><title>Minecraft启动器正版登录原理</title><link>https://blog.gaein.cn/passages/minecraft-login/</link><pubDate>Fri, 08 Feb 2019 21:04:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/minecraft-login/</guid><description>&lt;p>前阵子为了给服务器做个启动器，需要正版登录，于是研究了一下这方面的内容&amp;hellip;结果百度上是千篇一律的：
+&amp;ldquo;向MOJANG服务器POST账号密码&amp;rdquo;
+那么我们的当前的问题是：
+1、接收账号密码的服务器地址/IP是什么
+2、POST的格式
+至于如何POST数据，百度一搜一把
+于是我研究了一下HeyoX的代码，结果&amp;hellip;没看懂
+又是一番艰苦卓绝的百度，终于发现了一些有用的东西
+&lt;a class="link" href="https://blessing.studio/minecraft-yggdrasil-api-third-party-implementation" target="_blank" rel="noopener"
+>https://blessing.studio/minecraft-yggdrasil-api-third-party-implementation&lt;/a>
+原来MOJANG验证系统叫Yggdrasil啊&amp;hellip;或许搜这个能有所帮助
+于是，发现了神级WIKI，正式我需要的！
+&lt;a class="link" href="https://wiki.vg/Authentication" target="_blank" rel="noopener"
+>https://wiki.vg/Authentication&lt;/a>
+这里面详细的写了包括登录、刷新、登出等
+以下是翻译内容(&amp;quot;(?)是当前无法确定的翻译&amp;quot;)：
+从 Minecraft 1.6 起引入了一个名为yggdrasil的新认证方案，它完全取代了以前的认证系统。Mojang的另一个游戏——Scrolls，也使用这种身份验证方法。Mojang表示，每个人都应该使用这个认证系统进行自定义登录，但是不应该从用户那里收集凭证。&lt;/p>
+&lt;h2 id="目录">目录：
+&lt;/h2>&lt;ul>
+&lt;li>1.认证格式&lt;/li>
+&lt;li>2.错误&lt;/li>
+&lt;li>3.登录&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>4.刷新&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>5.生效(?Validate)&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>6.登出&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>7.失效&lt;/li>
+&lt;li>3.1.端点&lt;/li>
+&lt;li>3.2.有效负载(?Payload)&lt;/li>
+&lt;li>3.3.响应&lt;/li>
+&lt;li>8.加入服务器&lt;/li>
+&lt;/ul>
+&lt;h2 id="请求格式">请求格式
+&lt;/h2>&lt;p>所有发送到ygdrasil的请求都发送到以下服务器：
+&lt;a class="link" href="https://authserver.mojang.com" target="_blank" rel="noopener"
+>https://authserver.mojang.com&lt;/a>
+此外，它们还应遵守以下规则：&lt;/p>
+&lt;ul>
+&lt;li>是POST请求吗？&lt;/li>
+&lt;li>将content-type头设置为&amp;quot;application/json&amp;quot;&lt;/li>
+&lt;li>包含一个JSON编码的字典作为有效负载(?Payload)
+如果请求成功，服务器将响应：&lt;/li>
+&lt;li>HTTP状态码200&lt;/li>
+&lt;li>在下面有一个符合规范的JSON编码字典
+但是，如果请求失败，服务器将响应：&lt;/li>
+&lt;li>适当的非200 HTTP状态代码&lt;/li>
+&lt;li>遵循此格式（见下）的JSON编码字典：
+{
+&amp;ldquo;error&amp;rdquo;:&amp;ldquo;错误的简短描述&amp;rdquo;,
+&amp;ldquo;errormessage&amp;rdquo;:&amp;ldquo;可以向用户显示的较长描述&amp;rdquo;,
+&amp;ldquo;cause&amp;rdquo;:&amp;ldquo;错误原因&amp;rdquo; //可选
+}&lt;/li>
+&lt;/ul>
+&lt;h2 id="错误">错误
+&lt;/h2>&lt;p>以下是可能遇到的一些错误&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>错误&lt;/th>
+&lt;th>原因&lt;/th>
+&lt;th>错误信息&lt;/th>
+&lt;th>笔记&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Method Not Allowed&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>请求中的方法不允许用于请求URL的资源(?)&lt;/td>
+&lt;td>发送了除POST以外方法的请求&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Not Found&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>服务器上未找到任何与URL相匹配的内容&lt;/td>
+&lt;td>发送到了不存在的端点&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>用户迁移异常&lt;/td>
+&lt;td>无效的凭证。用户已迁移，请使用电子邮件作为用户名&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的凭证。用户名或密码错误&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的凭证&lt;/td>
+&lt;td>最近使用此用户名进行的登录尝试太多（详见/authenticate）。请注意，用户名和密码可能仍然有效！&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForbiddenOperationException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的令牌&lt;/td>
+&lt;td>accessToken失效&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>访问令牌已经分配了一个配置文件&lt;/td>
+&lt;td>选择配置文件尚未生效&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>凭证空&lt;/td>
+&lt;td>用户名/密码未提交&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IllegalArgumentException&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>无效的salt版本&lt;/td>
+&lt;td>？？？&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Unsupported Media Type&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>服务器拒绝回复请求，因为请求的格式不受请求方法的支持&lt;/td>
+&lt;td>数据未作为&amp;quot;application/json&amp;quot;提交&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="登录">登录
+&lt;/h2>&lt;p>使用用户的密码进行登录&lt;/p>
+&lt;h4 id="端点">端点
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">/authenticate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="有效负载">有效负载
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;agent&amp;#34;: { //默认是Minecraft
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;name&amp;#34;: &amp;#34;Minecraft&amp;#34;, //为了登录MOJANG的另外一款游戏Scrolls，应该使用&amp;#34;Scrolls&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;version&amp;#34;: 1 //数字可能会增长
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> //未来的普通客户端(?by the vanilla client in the future)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;username&amp;#34;: &amp;#34;MOJANG账户名&amp;#34;, //可以是电子邮件或者玩家名
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> //未迁移的账户（使用玩家名）
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;password&amp;#34;: &amp;#34;MOJANG账户的密码&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;clientToken&amp;#34;: &amp;#34;客户端标识符(client identifier)&amp;#34;,//可选
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;requestUser&amp;#34;: true //可选，默认: false; 选择true将在响应中加入用户对象
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>clientToken应该是随机生成的标识符，并且对于每个请求都必须是相同的。Vanilla启动程序在第一次运行时生成一个随机的（版本4）的uuid并保存它，在随后的每个请求中都重复使用它。如果它被省略，服务器将基于Java的UUID.toString()生成一个随机令牌，然后由客户端存储。但是，这也会使该用户以前获得的所有客户端访问令牌失效。&lt;/p>
+&lt;h4 id="响应">响应
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;accessToken&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;随机访问令牌（access token）&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制或&lt;/span>&lt;span class="n">JSON&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Web&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">Token&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="err">未确认&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="err">正常的&lt;/span>&lt;span class="n">accessToken能够在payload&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">JWT中找到&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">第二个由&lt;/span> &lt;span class="s1">&amp;#39;.&amp;#39;&lt;/span>&lt;span class="err">分割的&lt;/span>&lt;span class="n">Base64编码的&lt;/span> &lt;span class="n">JSON&lt;/span> &lt;span class="n">object&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="err">在关键词&lt;/span> &lt;span class="s2">&amp;#34;yggt&amp;#34;&lt;/span>&lt;span class="err">中&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;clientToken&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;客户端标识符(client identifier)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">与接收到的相同&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;availableProfiles&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有在收到&lt;/span>&lt;span class="n">agent字段时才出现&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;agent&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;minecraft&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">大概和以前相同的值&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;配置文件标识符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;玩家名&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;userId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;十六进制字符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;createdAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="err">数值&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">（账户创建时间）自&lt;/span>&lt;span class="mi">1970&lt;/span>&lt;span class="err">年&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="err">月&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="err">日起毫秒&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">即使失败也存在&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">很可能是否&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;paid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">很可能是是&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">即使是迁移账号也是否&lt;/span>&lt;span class="o">...&lt;/span>&lt;span class="err">?&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">bugs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">mojang&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">browse&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">WEB&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1461&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">（作者不确定）&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacy&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="bp">false&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有当为是时才会出现在应中。默认为&lt;/span>&lt;span class="bp">false&lt;/span>&lt;span class="err">。对新的&lt;/span>&lt;span class="n">legacyProfile而言是多余的&lt;/span>&lt;span class="err">。。。&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;selectedProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有在收到&lt;/span>&lt;span class="n">agent字段时才出现&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;无短线的uuid&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;游戏名&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;userId&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;十六进制字符&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;createdAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1325376000000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;paid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacy&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span> &lt;span class="err">或者&lt;/span> &lt;span class="bp">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;user&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">仅当请求负载中的&lt;/span>&lt;span class="n">requestUser为true时才存在&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user identifier&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">十六进制&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;email&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user@email.example&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">为迁移账户的&lt;/span> &lt;span class="n">Hashed&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">（作者不确定）&lt;/span> &lt;span class="err">值&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;username&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;user@email.example&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">未迁移帐户的常规名称，迁移帐户的电子邮件&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;registerIp&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;198.51.100.*&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">最后一次登录的&lt;/span>&lt;span class="n">IP地址&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migratedFrom&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;minecraft.net&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migratedAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1420070400000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;registeredAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1325376000000&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">或许比配置文件创造的时间稍早一些&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;passwordChangedAt&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">1569888000000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;dateOfBirth&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">2208988800000&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;suspended&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;blocked&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;secured&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;migrated&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">甚至在&lt;/span>&lt;span class="n">migratedAt和migratedFrom存在时似乎也是否&lt;/span>&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;emailVerified&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;legacyUser&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;verifiedByParent&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;properties&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;preferredLanguage&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">或许不是所有账户都存在此项&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;en&amp;#34;&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="n">Java&lt;/span> &lt;span class="n">locale&lt;/span> &lt;span class="err">格式&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">docs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">oracle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">javase&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">8&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">docs&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">api&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">java&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">util&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Locale&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="c1">##toString--)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;twitch_access_token&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">只有连接了&lt;/span>&lt;span class="n">twitch账户时才存在&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">see&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">account&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">mojang&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">me&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">settings&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;value&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;twitch oauth token&amp;#34;&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="n">OAuth&lt;/span> &lt;span class="mf">2.0&lt;/span> &lt;span class="n">Token&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">alphanumerical&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">g&lt;/span>&lt;span class="o">.&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">twitch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tv&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">kraken&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="n">oauth_token&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">...&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Twitch&lt;/span> &lt;span class="n">API的文档&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">github&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">justintv&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Twitch&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">API&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>未完待续
+Note: 如果用户希望保持登录状态，强烈建议您保存accesToken而不是密码本身。&lt;/p>
+&lt;p>目前每个账户仅有一个配置文件，但是未来可能会有多个配置文件。如果用户试图登录到没有随附Minecraft许可证的有效Mojang帐户，则身份验证将成功，但响应将不包含selectedProfile字段，并且availableProfiles数组将为空。&lt;/p>
+&lt;p>Some instances in the wild have been observed of Mojang returning a flat null for failed refresh attempts against legacy accounts. It&amp;rsquo;s not clear what the actual error tied to the null response is and it is extremely rare, but implementations should be wary of null output from the response.&lt;/p>
+&lt;p>This endpoint is severely rate-limited: multiple /authenticate requests for the same account in a short amount of time (think 3 requests in a few seconds), even with the correct password, will eventually lead to an Invalid credentials. response. This error clears up a few seconds later.
+Refresh&lt;/p>
+&lt;p>Refreshes a valid accessToken. It can be used to keep a user logged in between gaming sessions and is preferred over storing the user&amp;rsquo;s password in a file (see lastlogin).
+Endpoint&lt;/p>
+&lt;p>/refresh&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo;, // This needs to be identical to the one used
+// to obtain the accessToken in the first place
+&amp;ldquo;selectedProfile&amp;rdquo;: { // optional; sending it will result in an error
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;profile identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;player name&amp;rdquo;
+},
+&amp;ldquo;requestUser&amp;rdquo;: true // optional; default: false; true adds the user object to the response
+}&lt;/p>
+&lt;p>Note: The provided accessToken gets invalidated.
+Response&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;random access token&amp;rdquo;, // hexadecimal
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo;, // identical to the one received
+&amp;ldquo;selectedProfile&amp;rdquo;: {
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;profile identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;player name&amp;rdquo;
+},
+&amp;ldquo;user&amp;rdquo;: { // only present if requestUser was true in the request payload
+&amp;ldquo;id&amp;rdquo;: &amp;ldquo;user identifier&amp;rdquo;, // hexadecimal
+&amp;ldquo;properties&amp;rdquo;: [
+{
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;preferredLanguage&amp;rdquo;, // might not be present for all accounts
+&amp;ldquo;value&amp;rdquo;: &amp;ldquo;en&amp;rdquo; // Java locale format (https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html##toString&amp;ndash;)
+},
+{
+&amp;ldquo;name&amp;rdquo;: &amp;ldquo;twitch_access_token&amp;rdquo;, // only present if a twitch account is associated (see https://account.mojang.com/me/settings)
+&amp;ldquo;value&amp;rdquo;: &amp;ldquo;twitch oauth token&amp;rdquo; // OAuth 2.0 Token; alphanumerical; e.g. https://api.twitch.tv/kraken?oauth_token=[&amp;hellip;]
+// the Twitch API is documented here: https://github.com/justintv/Twitch-API
+}
+]
+}
+}&lt;/p>
+&lt;p>Validate&lt;/p>
+&lt;p>Checks if an accessToken is usable for authentication with a Minecraft server. The Minecraft Launcher (as of version 1.6.13) calls this endpoint on startup to verify that its saved token is still usable, and calls /refresh if this returns an error.&lt;/p>
+&lt;p>Note that an accessToken may be unusable for authentication with a Minecraft server, but still be good enough for /refresh. This mainly happens when one has used another client (e.g. played Minecraft on another PC with the same account). It seems only the most recently obtained accessToken for a given account can reliably be used for authentication (the next-to-last token also seems to remain valid, but don&amp;rsquo;t rely on it).&lt;/p>
+&lt;p>/validate may be called with or without a clientToken. If a clientToken is provided, it should match the one used to obtain the accessToken. The Minecraft Launcher does send a clientToken to /validate.
+Endpoint&lt;/p>
+&lt;p>/validate&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;associated clientToken&amp;rdquo; // optional, see above
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload (204 No Content) if successful, an error JSON with status 403 Forbidden otherwise.
+Signout&lt;/p>
+&lt;p>Invalidates accessTokens using an account&amp;rsquo;s username and password.
+Endpoint&lt;/p>
+&lt;p>/signout&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;username&amp;rdquo;: &amp;ldquo;mojang account name&amp;rdquo;,
+&amp;ldquo;password&amp;rdquo;: &amp;ldquo;mojang account password&amp;rdquo;
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload if successful.
+Invalidate&lt;/p>
+&lt;p>Invalidates accessTokens using a client/access token pair.
+Endpoint&lt;/p>
+&lt;p>/invalidate&lt;/p>
+&lt;p>Payload&lt;/p>
+&lt;p>{
+&amp;ldquo;accessToken&amp;rdquo;: &amp;ldquo;valid accessToken&amp;rdquo;,
+&amp;ldquo;clientToken&amp;rdquo;: &amp;ldquo;client identifier&amp;rdquo; // This needs to be identical to the one used
+// to obtain the accessToken in the first place
+}&lt;/p>
+&lt;p>Response&lt;/p>
+&lt;p>Returns an empty payload if successful.
+Joining a Server&lt;/p>
+&lt;p>See Protocol Encryption##Authentication&lt;/p></description></item></channel></rss>

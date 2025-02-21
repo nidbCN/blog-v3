@@ -1,0 +1,934 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>WebAPI on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/webapi/</link><description>Recent content in WebAPI on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 14 Jan 2025 10:17:00 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/webapi/index.xml" rel="self" type="application/rss+xml"/><item><title>GET、POST都是什么——常用的HTTP方法——ASP.NET Core Web API(4)</title><link>https://blog.gaein.cn/passages/aspnetcore-webapi-note4-http_method/</link><pubDate>Wed, 03 Feb 2021 23:45:55 +0800</pubDate><guid>https://blog.gaein.cn/passages/aspnetcore-webapi-note4-http_method/</guid><description>&lt;p>大家在处理 Web 程序的时候经常使用一些&lt;code>GET&lt;/code>、&lt;code>POST&lt;/code>等词汇，这是 HTTP 协议中规定的 HTTP 方法，用来发送给服务器表示对一些资源的处理。这里记录一下这些常见的 HTTP 方法的含义及作用。&lt;/p>
+&lt;h2 id="前言">前言
+&lt;/h2>&lt;blockquote>
+&lt;p>根据杨旭老师在哔哩哔哩上的课程 &lt;a class="link" href="https://www.bilibili.com/video/BV1XJ411q7yy" target="_blank" rel="noopener"
+>ASP.NET Core 3.x 构建 RESTful API&lt;/a> 记录的笔记，以后的笔记会根据课程进行更新。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>这一节主要说各种常见HTTP方法的用途和作用。&lt;/p>&lt;/blockquote>
+&lt;h2 id="http-请求方法">HTTP 请求方法
+&lt;/h2>&lt;blockquote>
+&lt;p>关于 HTTP 方法，可以参考&lt;a class="link" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods" target="_blank" rel="noopener"
+>HTTP 请求方法 - HTTP | MDN&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;p>不同的动作作用于同样一个 URI，区别他们的是 HTTP 方法&lt;/p>
+&lt;h3 id="增删改查">“增删改查”
+&lt;/h3>&lt;h4 id="http-post">HTTP POST
+&lt;/h4>&lt;p>创建/添加一个资源，比如发表一篇文章或者评论。&lt;/p>
+&lt;p>POST 的参数放在请求的 body 里。&lt;/p>
+&lt;p>POST 收到请求应该返回新创建的资源以及可以获取该资源的唯一标识 URI。&lt;/p>
+&lt;h4 id="http-get">HTTP GET
+&lt;/h4>&lt;p>获取一个资源，比如访问界面、列出产品列表等。&lt;/p>
+&lt;p>GET 的参数通常使用查询字符串，在 URI 的?后边，使用&amp;lt;参数&amp;gt; = &amp;lt;值&amp;gt;，多个查询使用&amp;quot;&amp;amp;&amp;ldquo;号连接。&lt;/p>
+&lt;p>GET 收到请求应该返回所查询的资源。&lt;/p>
+&lt;h4 id="http-delete">HTTP DELETE
+&lt;/h4>&lt;p>删除一个资源，比如删除用户、文章等。&lt;/p>
+&lt;p>DELETE 通常没有参数。&lt;/p>
+&lt;p>DELETE 收到请求后应该删除资源（或标记为删除），无需返回信息，返回状态码&lt;code>HTTP 204&lt;/code>即可。&lt;/p>
+&lt;h4 id="http-patch">HTTP PATCH
+&lt;/h4>&lt;p>更新一个资源的一部分，比如用户更改头像、联系方式。&lt;/p>
+&lt;p>PATCH 的参数放在请求的 body 里面。&lt;/p>
+&lt;p>PATCH 收到请求后应该更新资源，返回状态码 &lt;code>HTTP 204&lt;/code> 即可。&lt;/p>
+&lt;h4 id="http-put">HTTP PUT
+&lt;/h4>&lt;p>替换更新一个资源，Id 不变。如果没有这个资源则创建，但是多次请求结果不变。比如过户某账号。&lt;/p>
+&lt;p>PUT 的参数放在请求的 body 里，是完整的对象。&lt;/p>
+&lt;p>PUT 收到请求后应该替换资源但是 ID 不变，返回状态码 &lt;code>HTTP 204&lt;/code> 即可。&lt;/p>
+&lt;h2 id="总结">总结
+&lt;/h2>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>动作&lt;/th>
+&lt;th>HTTP 方法&lt;/th>
+&lt;th>Payload&lt;/th>
+&lt;th>参数位置&lt;/th>
+&lt;th>URI&lt;/th>
+&lt;th>请求更改&lt;/th>
+&lt;th>响应内容&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>查询&lt;/td>
+&lt;td>GET&lt;/td>
+&lt;td>查询参数&lt;/td>
+&lt;td>Query&lt;/td>
+&lt;td>端点 + ID&lt;/td>
+&lt;td>无修改&lt;/td>
+&lt;td>单个资源或多个资源的集合&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>添加/创建&lt;/td>
+&lt;td>POST&lt;/td>
+&lt;td>要创建的资源的对象&lt;/td>
+&lt;td>Body&lt;/td>
+&lt;td>端点&lt;/td>
+&lt;td>新建资源&lt;/td>
+&lt;td>新创建的资源&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>局部修改/更新&lt;/td>
+&lt;td>PATCH&lt;/td>
+&lt;td>待修改资源的JSON键值对&lt;/td>
+&lt;td>Body&lt;/td>
+&lt;td>端点 + ID&lt;/td>
+&lt;td>更新资源的某些字段&lt;/td>
+&lt;td>无需返回&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>替换&lt;/td>
+&lt;td>PUT&lt;/td>
+&lt;td>要替换的单个资源对象&lt;/td>
+&lt;td>Body&lt;/td>
+&lt;td>端点 + ID&lt;/td>
+&lt;td>替换除了ID外整个资源&lt;/td>
+&lt;td>无需返回&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>使用预定义的标识进行创建&lt;/td>
+&lt;td>PUT&lt;/td>
+&lt;td>要创建的单个资源对象&lt;/td>
+&lt;td>Body&lt;/td>
+&lt;td>端点 + ID&lt;/td>
+&lt;td>创建了新的资源&lt;/td>
+&lt;td>返回新创建的资源&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>移动/删除&lt;/td>
+&lt;td>DELETE&lt;/td>
+&lt;td>无&lt;/td>
+&lt;td>可含Query&lt;/td>
+&lt;td>端点 + ID&lt;/td>
+&lt;td>删除资源&lt;/td>
+&lt;td>无需返回&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item><item><title>怎么设计优雅的API——普通API对外合约——ASP.NET Core Web API(3)</title><link>https://blog.gaein.cn/passages/aspnetcore-webapi-note3-standard/</link><pubDate>Wed, 03 Feb 2021 00:49:55 +0800</pubDate><guid>https://blog.gaein.cn/passages/aspnetcore-webapi-note3-standard/</guid><description>&lt;blockquote>
+&lt;p>这篇博客出了亿点问题，很奇怪的和前面那个重复了，但是我明明写了的呜呜呜。可能是删错了（x&lt;/p>&lt;/blockquote>
+&lt;h2 id="前言">前言
+&lt;/h2>&lt;blockquote>
+&lt;p>根据杨旭老师在哔哩哔哩上的课程 &lt;a class="link" href="https://www.bilibili.com/video/BV1XJ411q7yy" target="_blank" rel="noopener"
+>ASP.NET Core 3.x 构建 RESTful API&lt;/a> 记录的笔记，以后的笔记会根据课程进行更新。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>这一节主要是说说啥是REST，REST的优点与约束以及成熟度模型。&lt;/p>&lt;/blockquote>
+&lt;h2 id="restful-api">RESTful API
+&lt;/h2>&lt;blockquote>
+&lt;p>主要是 REST 的概念和介绍（挺无聊的，抄 PPT）&lt;/p>&lt;/blockquote>
+&lt;h3 id="什么是-rest">什么是 REST
+&lt;/h3>&lt;p>REST:状态表述转换&lt;/p>
+&lt;p>符合 REST 的良好 Web 应用设计：&lt;/p>
+&lt;ol>
+&lt;li>一组网页的网络（一个虚拟状态机）；&lt;/li>
+&lt;li>点击链接来前进（状态转换）；&lt;/li>
+&lt;li>点击链接的结果是下一个网页（程序的下一个状态）。&lt;/li>
+&lt;/ol>
+&lt;p>REST 是一种架构风格，而不是规范或者标准，它需要一些规范、协议和标准来实现。REST 与协议无关。JSON 与 HTTP 并不是 REST 强制的（但是大部分都是）。&lt;/p>
+&lt;h3 id="优点">优点
+&lt;/h3>&lt;ol>
+&lt;li>简单高效；&lt;/li>
+&lt;li>可扩展性、可修改性高；&lt;/li>
+&lt;li>可移植性；&lt;/li>
+&lt;li>可靠性；&lt;/li>
+&lt;li>可视性。&lt;/li>
+&lt;/ol>
+&lt;h4 id="rest-的约束">REST 的约束
+&lt;/h4>&lt;p>考虑到以下约束，并确定不保证互不干扰&lt;/p>
+&lt;ol>
+&lt;li>客户端-服务端：独立部署（前后端分离）；&lt;/li>
+&lt;li>无状态：服务端不需要客户端的会话（相关请求需要全部包含，客户端要维护自己的状态）；&lt;/li>
+&lt;li>*统一的资源接口：API 接口必须统一，用相同标准的接口；
+&lt;ol>
+&lt;li>资源的标识：URI、数据类型（？）、媒体类型对数据进行描述（application/json 等）；&lt;/li>
+&lt;li>通过表述对资源进行操作：获取的时候服务端将删除或修改操作的 URI 返回；&lt;/li>
+&lt;li>带有自我描述的信息：把相关的信息随着请求一起发送到服务端；&lt;/li>
+&lt;li>超媒体作为应用程序状态的引擎：？；&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>多层系统：多层架构，每一层与不相邻的层解耦；&lt;/li>
+&lt;li>可缓存：每个响应信息都应返回它是否可缓存；&lt;/li>
+&lt;li>（按需编码）：服务器可以拓展客户端的功能，比如发送一些 JavaScript 给网页客户端。&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>如果一个 Web API 没有实现这五个约束，则不是 RESTful API。不是 RESTful API 并不能说明它不好。&lt;/p>&lt;/blockquote>
+&lt;h4 id="richardson-成熟度模型">Richardson 成熟度模型
+&lt;/h4>&lt;p>用来评估 RESTful API 的成熟度，有四个级别&lt;/p>
+&lt;h6 id="lv0-沼泽">Lv.0 沼泽
+&lt;/h6>&lt;p>仅仅使用 HTTP 协议，其余部分没有实现。比如在同一个 URI 上同一个 HTTP 动词做不同的操作（反正就是垃圾的一批）&lt;/p>
+&lt;h6 id="lv1-资源">Lv.1 资源
+&lt;/h6>&lt;p>URI 正确使用，不同的资源有 URI 做区分。但是 HTTP 动词没有正确（比如查询使用&lt;code>POST&lt;/code>方法）&lt;/p>
+&lt;h6 id="lv2-动词">Lv.2 动词
+&lt;/h6>&lt;p>HTTP 动词正确使用，返回 HTTP 状态码正确（符合统一资源接口）。&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;del>我也就这样了&lt;/del>&lt;/p>&lt;/blockquote>
+&lt;h6 id="lv3-超媒体">Lv.3 超媒体
+&lt;/h6>&lt;p>前面全部正确。同时返回了其它操作的链接。&lt;/p>
+&lt;blockquote>
+&lt;p>这仅仅是 RESTful 的前提，只有达到 Lv.3 才可能是 RESTful API。&lt;/p>&lt;/blockquote></description></item><item><title>什么是 REST——RESTful API 简介——ASP.NET Core Web API(2)</title><link>https://blog.gaein.cn/passages/aspnetcore-webapi-note2-restful/</link><pubDate>Tue, 02 Feb 2021 15:48:49 +0800</pubDate><guid>https://blog.gaein.cn/passages/aspnetcore-webapi-note2-restful/</guid><description>&lt;p>经常听说 RESTful API ，那么究竟什么是 REST，怎么判断一个 API 的成熟度呢？&lt;/p>
+&lt;h2 id="前言">前言
+&lt;/h2>&lt;blockquote>
+&lt;p>根据杨旭老师在哔哩哔哩上的课程 &lt;a class="link" href="https://www.bilibili.com/video/BV1XJ411q7yy" target="_blank" rel="noopener"
+>ASP.NET Core 3.x 构建 RESTful API&lt;/a> 记录的笔记，以后的笔记会根据课程进行更新。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>这一节主要是说说啥是 REST，REST 的优点与约束以及成熟度模型。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>关于 API 设计的规范，可以看微软的 API 指南：&lt;a class="link" href="https://github.com/microsoft/api-guidelines" target="_blank" rel="noopener"
+>microsoft/api-guidelines: Microsoft REST API Guidelines&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h2 id="restful-api">RESTful API
+&lt;/h2>&lt;blockquote>
+&lt;p>主要是 REST 的概念和介绍（挺无聊的，抄 PPT）&lt;/p>&lt;/blockquote>
+&lt;h3 id="什么是-rest">什么是 REST
+&lt;/h3>&lt;p>REST: 状态表述转换&lt;/p>
+&lt;p>符合 REST 的良好 Web 应用设计：&lt;/p>
+&lt;ol>
+&lt;li>一组网页的网络（一个虚拟状态机）；&lt;/li>
+&lt;li>点击链接来前进（状态转换）；&lt;/li>
+&lt;li>点击链接的结果是下一个网页（程序的下一个状态）。&lt;/li>
+&lt;/ol>
+&lt;p>REST 是一种架构风格，而不是规范或者标准，它需要一些规范、协议和标准来实现。REST 与协议无关。JSON 与 HTTP 并不是 REST 强制的（但是大部分都是）。&lt;/p>
+&lt;h3 id="优点">优点
+&lt;/h3>&lt;ol>
+&lt;li>简单高效；&lt;/li>
+&lt;li>可扩展性、可修改性高；&lt;/li>
+&lt;li>可移植性；&lt;/li>
+&lt;li>可靠性；&lt;/li>
+&lt;li>可视性。&lt;/li>
+&lt;/ol>
+&lt;h3 id="rest-的约束">REST 的约束
+&lt;/h3>&lt;p>考虑到以下约束，并确定不保证互不干扰&lt;/p>
+&lt;ol>
+&lt;li>客户端-服务端：独立部署（前后端分离）；&lt;/li>
+&lt;li>无状态：服务端不需要客户端的会话（相关请求需要全部包含，客户端要维护自己的状态）；&lt;/li>
+&lt;li>*统一的资源接口：API 接口必须统一，用相同标准的接口；
+&lt;ol>
+&lt;li>资源的标识：URI、数据类型（？）、媒体类型对数据进行描述（application/json 等）；&lt;/li>
+&lt;li>通过表述对资源进行操作：获取的时候服务端将删除或修改操作的 URI 返回；&lt;/li>
+&lt;li>带有自我描述的信息：把相关的信息随着请求一起发送到服务端；&lt;/li>
+&lt;li>超媒体作为应用程序状态的引擎：即使用 HTTP 状态码；&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>多层系统：多层架构，每一层与不相邻的层解耦；&lt;/li>
+&lt;li>可缓存：每个响应信息都应返回它是否可缓存；&lt;/li>
+&lt;li>（按需编码）：服务器可以拓展客户端的功能，比如发送一些 JavaScript 给网页客户端。&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>如果一个 Web API 没有实现这五个约束，则不是 RESTful API。不是 RESTful API 并不能说明它不好。合适才是最好的。&lt;/p>&lt;/blockquote>
+&lt;h3 id="richardson-成熟度模型">Richardson 成熟度模型
+&lt;/h3>&lt;p>用来评估 RESTful API 的成熟度，有四个级别&lt;/p>
+&lt;h4 id="lv0-沼泽">Lv.0 沼泽
+&lt;/h4>&lt;p>仅仅使用 HTTP 协议，其余部分没有实现。比如在同一个 URI 上同一个 HTTP 动词做不同的操作（反正就是垃圾的一批）&lt;/p>
+&lt;p>比如以前常见的 &lt;code>POST https://api.example.com/cmd.php?command=&amp;quot;getpost&amp;quot;&amp;amp;arg=&amp;quot;page\=3&amp;quot;&lt;/code> 多了之后容易令人迷迷糊糊，调试起来也不方便。&lt;/p>
+&lt;h4 id="lv1-资源">Lv.1 资源
+&lt;/h4>&lt;p>URI 正确使用，不同的资源有 URI 做区分。但是 HTTP 动词没有正确（比如查询使用&lt;code>POST&lt;/code>方法）&lt;/p>
+&lt;h4 id="lv2-动词">Lv.2 动词
+&lt;/h4>&lt;p>HTTP 动词正确使用，返回 HTTP 状态码正确（符合统一资源接口）。&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;del>我也就这样了&lt;/del>&lt;/p>&lt;/blockquote>
+&lt;h4 id="lv3-超媒体">Lv.3 超媒体
+&lt;/h4>&lt;p>前面全部正确。同时返回了其它操作的链接。&lt;/p>
+&lt;blockquote>
+&lt;p>这仅仅是 RESTful 的前提，只有达到 Lv.3 才可能是 RESTful API。&lt;/p>&lt;/blockquote></description></item><item><title>如何创建 ASP.NET Core Web API——准备工作——ASP.NET Core Web API(1)</title><link>https://blog.gaein.cn/passages/aspnetcore-webapi-note1-start/</link><pubDate>Sat, 30 Jan 2021 18:47:49 +0800</pubDate><guid>https://blog.gaein.cn/passages/aspnetcore-webapi-note1-start/</guid><description>&lt;h2 id="前言">前言
+&lt;/h2>&lt;blockquote>
+&lt;p>根据杨旭老师在哔哩哔哩上的课程 &lt;a class="link" href="https://www.bilibili.com/video/BV1XJ411q7yy" target="_blank" rel="noopener"
+>ASP.NET Core 3.x 构建 RESTful API&lt;/a> 记录的笔记，以后的笔记会根据课程进行更新。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>这一节主要是做一些准备工作，进行项目的创建。杨旭老师的教程里根据课程而编写了一个 RESTful Web API，我也将同步打代码，相关代码会储存在 GitHub 上。&lt;/p>&lt;/blockquote>
+&lt;h2 id="get-start">Get Start
+&lt;/h2>&lt;h3 id="准备工作">准备工作
+&lt;/h3>&lt;h4 id="ide">IDE
+&lt;/h4>&lt;ol>
+&lt;li>Visual Studio 2019&lt;/li>
+&lt;li>或 Rider、Visual Studio Code、VS for MAC&lt;/li>
+&lt;/ol>
+&lt;h4 id="工具">工具
+&lt;/h4>&lt;ol>
+&lt;li>Postman&lt;/li>
+&lt;/ol>
+&lt;h3 id="web-api">Web API
+&lt;/h3>&lt;ul>
+&lt;li>API: 应用程序接口&lt;/li>
+&lt;li>Web API: 使用 HTTP 协议并通过网络调用的 API，当然，也可以理解为使用 HTTP 网络协议的 Web API。&lt;/li>
+&lt;/ul>
+&lt;p>Web API 就是一个 Web 系统，通过访问 URI 可以与其进行信息交互。&lt;/p>
+&lt;h4 id="restful-api">RESTful API
+&lt;/h4>&lt;p>RESTful API 是一套 API 约束规范或者叫架构风格。&lt;/p>
+&lt;blockquote>
+&lt;p>大多数的 Web API 并不是完全符合 RESTful API&lt;/p>&lt;/blockquote>
+&lt;h4 id="mvc-模式">MVC 模式
+&lt;/h4>&lt;blockquote>
+&lt;p>前面我 MVC 的理解可能不太正确，它并不是一种前后端不分离的模式。MVC 并不是一个完整的应用程序架构，它只是 UI 的一种架构模式。&lt;/p>&lt;/blockquote>
+&lt;p>用于构建 UI 的一种架构模式，特点是松耦合和关注点分离。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Model——模型&lt;/p>
+&lt;p>负责程序数据的逻辑&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>View——视图&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>负责展示数据，在构建 API 的时候 View 就是数据或资源的展示，通常来说是 JSON 格式的文本。&lt;/p>
+&lt;ol start="3">
+&lt;li>
+&lt;p>Controller——控制器&lt;/p>
+&lt;p>负责视图和模型之间的交互。包括 API 消费者传入和请求的数据。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="创建项目">创建项目
+&lt;/h3>&lt;p>模板选择 “ASP.NET Core Web 应用程序”，项目模板选择 “.NET Core”、 “ASP.NET Core 5.0” 和 “ASP.NET Core Web API”&lt;/p>
+&lt;h4 id="programcs">Program.cs
+&lt;/h4>&lt;p>程序入口，创建 HostBuilder，调用 StartUp.cs&lt;/p>
+&lt;h4 id="startupcs">StartUp.cs
+&lt;/h4>&lt;p>构造函数注入了应用程序的设置 Configuration&lt;/p>
+&lt;p>方法 &lt;code>ConfigureServices&lt;/code> 用来注册服务：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 添加一个Singleton的服务&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">services&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AddSingleton&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="err">接口&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">实现&lt;/span>&lt;span class="p">&amp;gt;();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>生命周期分为三种：&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>Transient&lt;/code> : 每次被请求这个服务的时候都会生成一个新的实例；&lt;/li>
+&lt;li>&lt;code>Scoped&lt;/code> : 每次 Web 请求的时候生成一个新的实例，生命周期到 Web 请求最终处理完；&lt;/li>
+&lt;li>&lt;code>Singleton&lt;/code> : 一旦被创建，每次请求都是这一个实例；&lt;/li>
+&lt;/ol>
+&lt;p>方法 &lt;code>Configure&lt;/code> 用来加入管道中间件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 加入管道中间件路由&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">app&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">UseRouting&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>管道概念是HTTP请求通过的一个 “管子”，中间穿插有各种中间件进行处理，比如身份认证、路由等。&lt;/p>
+&lt;p>如果某个中间件处短路，则不会递给下一中间件而直接返回这个中间件对它处理的结果。比如身份验证未通过等。&lt;/p>
+&lt;p>如果一切正常则会在管道里一直走，到最后一个中间件进行处理，然后从管道里返回。&lt;/p>
+&lt;p>&lt;strong>中间件的顺序是非常重要的&lt;/strong>&lt;/p>
+&lt;p>默认的启动配置是在 &lt;code>./Properties/launchSettings.json&lt;/code> 中&lt;/p>
+&lt;h4 id="数据存储">数据存储
+&lt;/h4>&lt;blockquote>
+&lt;p>这里 ORM 框架使用 EF（EntityFrameworkCore），数据库使用 SQLite&lt;/p>&lt;/blockquote>
+&lt;h5 id="安装nuget包">安装NuGet包
+&lt;/h5>&lt;ol>
+&lt;li>Microsoft.EntityFrameworkCore.Sqlite&lt;/li>
+&lt;li>Microsoft.EntityFrameworkCore.Tools&lt;/li>
+&lt;/ol>
+&lt;h5 id="建立model">建立Model
+&lt;/h5>&lt;ol>
+&lt;li>创建文件夹 &lt;code>Entities&lt;/code>；&lt;/li>
+&lt;li>创建模型类&lt;br>
+可以键入&lt;code>prop&lt;/code> 然后按两下 &lt;code>TAB&lt;/code> 键使用代码片段自动补全字段
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">Company&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">Guid&lt;/span> &lt;span class="n">Id&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Name&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">Introduction&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">ICollection&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">Employees&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">Employee&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 主键&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">Guid&lt;/span> &lt;span class="n">Id&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 外键&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">Guid&lt;/span> &lt;span class="n">CompanyId&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">EmployeeNo&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">FirstName&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kt">string&lt;/span> &lt;span class="n">LastName&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">Gender&lt;/span> &lt;span class="n">Gender&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">DateTime&lt;/span> &lt;span class="n">DateOfBirth&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">Company&lt;/span> &lt;span class="n">Company&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">enum&lt;/span> &lt;span class="n">Gender&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Man&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">WoMan&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h5 id="建立数据库上下文">建立数据库上下文
+&lt;/h5>&lt;ol>
+&lt;li>创建文件夹 &lt;code>Data&lt;/code>&lt;/li>
+&lt;li>创建类 &lt;code>RoutineDbContext&lt;/code> ，继承于 &lt;code>DbContext&lt;/code> ，构造函数需要包含参数。并且要调用父类的构造函数将其传入。
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">RoutineDbContext&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">DbContextOptions&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">RoutineDbContext&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">options&lt;/span>&lt;span class="p">):&lt;/span> &lt;span class="k">base&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">options&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>添加 &lt;code>DbSet&lt;/code> 属性
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">DbSet&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">Companies&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">DbSet&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">Employees&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">get&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">set&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>对于实体一些属性的限制（比如是否必填等），通过重写 &lt;code>OnModelCreating&lt;/code> 来操作
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 对实体的限制&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">protected&lt;/span> &lt;span class="kd">override&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">OnModelCreating&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ModelBuilder&lt;/span> &lt;span class="n">modelBuilder&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 设置名称为必填&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">modelBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Entity&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">Property&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Name&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">IsRequired&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 设置简介的长度限制&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">modelBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Entity&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">Property&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Introduction&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">HasMaxLength&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">500&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">modelBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Entity&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">Property&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">IsRequired&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">modelBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Entity&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">Property&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">FirstName&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">IsRequired&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">modelBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Entity&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">Property&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">LastName&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">IsRequired&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 设置实体的关系&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Employee 对应一个 Company，一个 Company 对应多个 Employee。外键为CompanyId&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// OnDelete 是删除时如果 Company 有 Employee 则无法删除&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">modelBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Entity&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">HasOne&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">WithMany&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Employees&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">HasForeignKey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">CompanyId&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">OnDelete&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">DeleteBehavior&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Restrict&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 初始化添加一些成员&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">modelBuilder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Entity&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">HasData&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">new&lt;/span> &lt;span class="n">Company&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Id&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">NewGuid&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Name&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;Microsoft&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Introduction&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;巨硬公司&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h5 id="创建服务">创建服务
+&lt;/h5>&lt;ol>
+&lt;li>创建文件夹 &lt;code>Services&lt;/code>&lt;/li>
+&lt;li>创建一个接口 &lt;code>ICompanyRepository&lt;/code>&lt;br>
+写入
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">interface&lt;/span> &lt;span class="nc">ICompanyRepository&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IEnumerable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">GetCompaniesAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetCompanyAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IEnumerable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">GetCompaniesAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">IEnumerable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Guid&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">companyIds&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">void&lt;/span> &lt;span class="n">AddCompany&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Company&lt;/span> &lt;span class="n">company&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">void&lt;/span> &lt;span class="n">UpdateCompany&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Company&lt;/span> &lt;span class="n">company&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">void&lt;/span> &lt;span class="n">DeleteCompany&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Company&lt;/span> &lt;span class="n">company&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="kt">bool&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">CompanyExistsAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IEnumerable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">GetEmployeesAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetEmployeeAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Guid&lt;/span> &lt;span class="n">employeeId&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">void&lt;/span> &lt;span class="n">AddEmployee&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Employee&lt;/span> &lt;span class="n">employee&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">void&lt;/span> &lt;span class="n">UpdateEmployee&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Employee&lt;/span> &lt;span class="n">employee&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">void&lt;/span> &lt;span class="n">DeleteEmployee&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Employee&lt;/span> &lt;span class="n">employee&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="kt">bool&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">SaveAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>创建接口的实体类 &lt;code>CompanyRepository&lt;/code> 写入
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;span class="lnt">106
+&lt;/span>&lt;span class="lnt">107
+&lt;/span>&lt;span class="lnt">108
+&lt;/span>&lt;span class="lnt">109
+&lt;/span>&lt;span class="lnt">110
+&lt;/span>&lt;span class="lnt">111
+&lt;/span>&lt;span class="lnt">112
+&lt;/span>&lt;span class="lnt">113
+&lt;/span>&lt;span class="lnt">114
+&lt;/span>&lt;span class="lnt">115
+&lt;/span>&lt;span class="lnt">116
+&lt;/span>&lt;span class="lnt">117
+&lt;/span>&lt;span class="lnt">118
+&lt;/span>&lt;span class="lnt">119
+&lt;/span>&lt;span class="lnt">120
+&lt;/span>&lt;span class="lnt">121
+&lt;/span>&lt;span class="lnt">122
+&lt;/span>&lt;span class="lnt">123
+&lt;/span>&lt;span class="lnt">124
+&lt;/span>&lt;span class="lnt">125
+&lt;/span>&lt;span class="lnt">126
+&lt;/span>&lt;span class="lnt">127
+&lt;/span>&lt;span class="lnt">128
+&lt;/span>&lt;span class="lnt">129
+&lt;/span>&lt;span class="lnt">130
+&lt;/span>&lt;span class="lnt">131
+&lt;/span>&lt;span class="lnt">132
+&lt;/span>&lt;span class="lnt">133
+&lt;/span>&lt;span class="lnt">134
+&lt;/span>&lt;span class="lnt">135
+&lt;/span>&lt;span class="lnt">136
+&lt;/span>&lt;span class="lnt">137
+&lt;/span>&lt;span class="lnt">138
+&lt;/span>&lt;span class="lnt">139
+&lt;/span>&lt;span class="lnt">140
+&lt;/span>&lt;span class="lnt">141
+&lt;/span>&lt;span class="lnt">142
+&lt;/span>&lt;span class="lnt">143
+&lt;/span>&lt;span class="lnt">144
+&lt;/span>&lt;span class="lnt">145
+&lt;/span>&lt;span class="lnt">146
+&lt;/span>&lt;span class="lnt">147
+&lt;/span>&lt;span class="lnt">148
+&lt;/span>&lt;span class="lnt">149
+&lt;/span>&lt;span class="lnt">150
+&lt;/span>&lt;span class="lnt">151
+&lt;/span>&lt;span class="lnt">152
+&lt;/span>&lt;span class="lnt">153
+&lt;/span>&lt;span class="lnt">154
+&lt;/span>&lt;span class="lnt">155
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">CompanyRepository&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">ICompanyRepository&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">private&lt;/span> &lt;span class="k">readonly&lt;/span> &lt;span class="n">RoutineDbContext&lt;/span> &lt;span class="n">_context&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="n">CompanyRepository&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">RoutineDbContext&lt;/span> &lt;span class="n">context&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">_context&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">context&lt;/span> &lt;span class="p">??&lt;/span> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">context&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IEnumerable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">GetCompaniesAsync&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Companies&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">ToListAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetCompanyAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Companies&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">FirstOrDefaultAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IEnumerable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Company&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">GetCompaniesAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">IEnumerable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Guid&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">companyIds&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">companyIds&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">companyIds&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Companies&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">Where&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">companyIds&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Contains&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">OrderBy&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Name&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">ToListAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">AddCompany&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Company&lt;/span> &lt;span class="n">company&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">company&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">company&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">company&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">foreach&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">var&lt;/span> &lt;span class="n">employee&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">company&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Employees&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">employee&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Companies&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">company&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">UpdateCompany&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Company&lt;/span> &lt;span class="n">company&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 实际上EF对实体都有追踪，不需要显式的更改它们&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/*
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> if (company == null)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> throw new ArgumentNullException(nameof(company));
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> _context.Entry(company).State = EntityState.Modified;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">DeleteCompany&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Company&lt;/span> &lt;span class="n">company&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">company&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">company&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Companies&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Remove&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">company&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="kt">bool&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">CompanyExistsAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Companies&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AnyAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IEnumerable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;&lt;/span> &lt;span class="n">GetEmployeesAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Employees&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">Where&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">CompanyId&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">OrderBy&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">EmployeeNo&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">ToListAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Employee&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">GetEmployeeAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Guid&lt;/span> &lt;span class="n">employeeId&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">employeeId&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">employeeId&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Employees&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">Where&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">CompanyId&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">companyId&lt;/span> &lt;span class="p">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">employeeId&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">FirstOrDefaultAsync&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">AddEmployee&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Guid&lt;/span> &lt;span class="n">companyId&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Employee&lt;/span> &lt;span class="n">employee&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="n">Guid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Empty&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">companyId&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">employee&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">employee&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Employees&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">employee&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">UpdateEmployee&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Employee&lt;/span> &lt;span class="n">employee&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 同样，EF 会追踪其中的对象，不用做更改。&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="k">void&lt;/span> &lt;span class="n">DeleteEmployee&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Employee&lt;/span> &lt;span class="n">employee&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">employee&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArgumentNullException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nameof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">employee&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Remove&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">employee&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="kt">bool&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">SaveAsync&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 通常保存不写在Repository里&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">_context&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">SaveChangesAsync&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">&amp;gt;=&lt;/span> &lt;span class="m">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>我觉得可以把 &lt;code>_context.Employees&lt;/code> 等 &lt;strong>看作&lt;/strong> 一个 &lt;code>List&amp;lt;Employee&amp;gt;&lt;/code> 类型的变量。&lt;/li>
+&lt;li>在 &lt;code>StartUp&lt;/code> 中注册服务
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cs" data-lang="cs">&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 注册服务 Scoped: 每次HTTP请求实例化一次&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">services&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AddScoped&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">ICompanyRepository&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">CompanyRepository&lt;/span>&lt;span class="p">&amp;gt;();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 连接字符串&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">var&lt;/span> &lt;span class="n">connectionStr&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">@&amp;#34;Data Source=test.db;&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 注册数据库上下文&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">services&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AddDbContext&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">RoutineDbContext&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="n">option&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">option&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">UseSqlite&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">connectionStr&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h5 id="初始化数据库">初始化数据库
+&lt;/h5>&lt;p>在 NuGet 包管理器控制台中依次输入：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">Add-Migration InitialCreate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>和&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">Update-Database
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者使用 dotnet cli：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">dotnet ef migrations add InitialCreate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>和&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">dotnet ef database update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>有关迁移这部分的概述可以看 &lt;a class="link" href="https://docs.microsoft.com/zh-cn/ef/core/managing-schemas/migrations/" target="_blank" rel="noopener"
+>迁移概述 - EF Core | Microsoft Docs&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>!重要：杨旭老师在这里对 Program.cs 进行了一些修改，以便于后期讲解，我没有进行这些更改，弹幕说是个坑，先记住，如果出了什么奇怪问题就回来看看。&lt;/p>&lt;/blockquote></description></item></channel></rss>

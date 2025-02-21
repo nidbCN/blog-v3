@@ -1,0 +1,554 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="前言 根据杨旭老师在哔哩哔哩上的课程 ASP.NET Core 3.x 构建 RESTful API 记录的笔记，以后的笔记会根据课程进行更新。\n这一节主要是做一些准备工作，进行项目的创建。杨旭老师的教程里根据课程而编写了一个 RESTful Web API，我也将同步打代码，相关代码会储存在 GitHub 上。\n"><title>如何创建 ASP.NET Core Web API——准备工作——ASP.NET Core Web API(1)</title>
+<link rel=canonical href=https://blog.gaein.cn/passages/aspnetcore-webapi-note1-start/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="如何创建 ASP.NET Core Web API——准备工作——ASP.NET Core Web API(1)"><meta property='og:description' content="前言 根据杨旭老师在哔哩哔哩上的课程 ASP.NET Core 3.x 构建 RESTful API 记录的笔记，以后的笔记会根据课程进行更新。\n这一节主要是做一些准备工作，进行项目的创建。杨旭老师的教程里根据课程而编写了一个 RESTful Web API，我也将同步打代码，相关代码会储存在 GitHub 上。\n"><meta property='og:url' content='https://blog.gaein.cn/passages/aspnetcore-webapi-note1-start/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='CSharp'><meta property='article:tag' content='WebAPI'><meta property='article:tag' content='dotNET'><meta property='article:tag' content='AspNetCore'><meta property='article:tag' content='编程'><meta property='article:tag' content='笔记'><meta property='article:tag' content='后端'><meta property='article:published_time' content='2021-01-30T18:47:49+08:00'><meta property='article:modified_time' content='2025-01-14T10:01:00+08:00'><meta name=twitter:title content="如何创建 ASP.NET Core Web API——准备工作——ASP.NET Core Web API(1)"><meta name=twitter:description content="前言 根据杨旭老师在哔哩哔哩上的课程 ASP.NET Core 3.x 构建 RESTful API 记录的笔记，以后的笔记会根据课程进行更新。\n这一节主要是做一些准备工作，进行项目的创建。杨旭老师的教程里根据课程而编写了一个 RESTful Web API，我也将同步打代码，相关代码会储存在 GitHub 上。\n"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico><head><meta itemprop=name content="如何创建 ASP.NET Core Web API——准备工作——ASP.NET Core Web API(1)"><meta itemprop=image content="http://img.cdn.gaein.cn/website_used/avatars/avatar-256x.webp"><meta itemprop=description content="前言
+
+根据杨旭老师在哔哩哔哩上的课程 ASP.NET Core 3.x 构建 RESTful API 记录的笔记，以后的笔记会根据课程进行更新。
+
+这一节主要是做一些准备工作，进行项目的创建。杨旭老师的教程里根据课程而编写了一个 RESTful Web API，我也将同步打代码，相关代码会储存在 GitHub 上。"></head></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu_d97b16840c038ea4.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#前言>前言</a></li><li><a href=#get-start>Get Start</a><ol><li><a href=#准备工作>准备工作</a><ol><li><a href=#ide>IDE</a></li><li><a href=#工具>工具</a></li></ol></li><li><a href=#web-api>Web API</a><ol><li><a href=#restful-api>RESTful API</a></li><li><a href=#mvc-模式>MVC 模式</a></li></ol></li><li><a href=#创建项目>创建项目</a><ol><li><a href=#programcs>Program.cs</a></li><li><a href=#startupcs>StartUp.cs</a></li><li><a href=#数据存储>数据存储</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/aspnetcore-webapi-note1-start/>如何创建 ASP.NET Core Web API——准备工作——ASP.NET Core Web API(1)</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2021 Jan 30</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 5 分钟</time></div></footer></div></header><section class=article-content><h2 id=前言>前言</h2><blockquote><p>根据杨旭老师在哔哩哔哩上的课程 <a class=link href=https://www.bilibili.com/video/BV1XJ411q7yy target=_blank rel=noopener>ASP.NET Core 3.x 构建 RESTful API</a> 记录的笔记，以后的笔记会根据课程进行更新。</p></blockquote><blockquote><p>这一节主要是做一些准备工作，进行项目的创建。杨旭老师的教程里根据课程而编写了一个 RESTful Web API，我也将同步打代码，相关代码会储存在 GitHub 上。</p></blockquote><h2 id=get-start>Get Start</h2><h3 id=准备工作>准备工作</h3><h4 id=ide>IDE</h4><ol><li>Visual Studio 2019</li><li>或 Rider、Visual Studio Code、VS for MAC</li></ol><h4 id=工具>工具</h4><ol><li>Postman</li></ol><h3 id=web-api>Web API</h3><ul><li>API: 应用程序接口</li><li>Web API: 使用 HTTP 协议并通过网络调用的 API，当然，也可以理解为使用 HTTP 网络协议的 Web API。</li></ul><p>Web API 就是一个 Web 系统，通过访问 URI 可以与其进行信息交互。</p><h4 id=restful-api>RESTful API</h4><p>RESTful API 是一套 API 约束规范或者叫架构风格。</p><blockquote><p>大多数的 Web API 并不是完全符合 RESTful API</p></blockquote><h4 id=mvc-模式>MVC 模式</h4><blockquote><p>前面我 MVC 的理解可能不太正确，它并不是一种前后端不分离的模式。MVC 并不是一个完整的应用程序架构，它只是 UI 的一种架构模式。</p></blockquote><p>用于构建 UI 的一种架构模式，特点是松耦合和关注点分离。</p><ol><li><p>Model——模型</p><p>负责程序数据的逻辑</p></li><li><p>View——视图</p></li></ol><p>负责展示数据，在构建 API 的时候 View 就是数据或资源的展示，通常来说是 JSON 格式的文本。</p><ol start=3><li><p>Controller——控制器</p><p>负责视图和模型之间的交互。包括 API 消费者传入和请求的数据。</p></li></ol><h3 id=创建项目>创建项目</h3><p>模板选择 “ASP.NET Core Web 应用程序”，项目模板选择 “.NET Core”、 “ASP.NET Core 5.0” 和 “ASP.NET Core Web API”</p><h4 id=programcs>Program.cs</h4><p>程序入口，创建 HostBuilder，调用 StartUp.cs</p><h4 id=startupcs>StartUp.cs</h4><p>构造函数注入了应用程序的设置 Configuration</p><p>方法 <code>ConfigureServices</code> 用来注册服务：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=c1>// 添加一个Singleton的服务</span>
+</span></span><span class=line><span class=cl><span class=n>services</span><span class=p>.</span><span class=n>AddSingleton</span><span class=p>&lt;</span><span class=err>接口</span><span class=p>,</span> <span class=err>实现</span><span class=p>&gt;();</span>
+</span></span></code></pre></td></tr></table></div></div><p>生命周期分为三种：</p><ol><li><code>Transient</code> : 每次被请求这个服务的时候都会生成一个新的实例；</li><li><code>Scoped</code> : 每次 Web 请求的时候生成一个新的实例，生命周期到 Web 请求最终处理完；</li><li><code>Singleton</code> : 一旦被创建，每次请求都是这一个实例；</li></ol><p>方法 <code>Configure</code> 用来加入管道中间件：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=c1>// 加入管道中间件路由</span>
+</span></span><span class=line><span class=cl><span class=n>app</span><span class=p>.</span><span class=n>UseRouting</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><p>管道概念是HTTP请求通过的一个 “管子”，中间穿插有各种中间件进行处理，比如身份认证、路由等。</p><p>如果某个中间件处短路，则不会递给下一中间件而直接返回这个中间件对它处理的结果。比如身份验证未通过等。</p><p>如果一切正常则会在管道里一直走，到最后一个中间件进行处理，然后从管道里返回。</p><p><strong>中间件的顺序是非常重要的</strong></p><p>默认的启动配置是在 <code>./Properties/launchSettings.json</code> 中</p><h4 id=数据存储>数据存储</h4><blockquote><p>这里 ORM 框架使用 EF（EntityFrameworkCore），数据库使用 SQLite</p></blockquote><h5 id=安装nuget包>安装NuGet包</h5><ol><li>Microsoft.EntityFrameworkCore.Sqlite</li><li>Microsoft.EntityFrameworkCore.Tools</li></ol><h5 id=建立model>建立Model</h5><ol><li>创建文件夹 <code>Entities</code>；</li><li>创建模型类<br>可以键入<code>prop</code> 然后按两下 <code>TAB</code> 键使用代码片段自动补全字段<div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl> <span class=kd>public</span> <span class=k>class</span> <span class=nc>Company</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=n>Guid</span> <span class=n>Id</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kt>string</span> <span class=n>Name</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kt>string</span> <span class=n>Introduction</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=n>ICollection</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;</span> <span class=n>Employees</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> <span class=kd>public</span> <span class=k>class</span> <span class=nc>Employee</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span>
+</span></span><span class=line><span class=cl>     <span class=c1>// 主键</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=n>Guid</span> <span class=n>Id</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=c1>// 外键</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=n>Guid</span> <span class=n>CompanyId</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kt>string</span> <span class=n>EmployeeNo</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kt>string</span> <span class=n>FirstName</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kt>string</span> <span class=n>LastName</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=n>Gender</span> <span class=n>Gender</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=n>DateTime</span> <span class=n>DateOfBirth</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=n>Company</span> <span class=n>Company</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> <span class=kd>public</span> <span class=kd>enum</span> <span class=n>Gender</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span>
+</span></span><span class=line><span class=cl>     <span class=n>Man</span><span class=p>,</span> <span class=n>WoMan</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div></li></ol><h5 id=建立数据库上下文>建立数据库上下文</h5><ol><li>创建文件夹 <code>Data</code></li><li>创建类 <code>RoutineDbContext</code> ，继承于 <code>DbContext</code> ，构造函数需要包含参数。并且要调用父类的构造函数将其传入。<div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl> <span class=kd>public</span> <span class=n>RoutineDbContext</span><span class=p>(</span><span class=n>DbContextOptions</span><span class=p>&lt;</span><span class=n>RoutineDbContext</span><span class=p>&gt;</span> <span class=n>options</span><span class=p>):</span> <span class=k>base</span><span class=p>(</span><span class=n>options</span><span class=p>)</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div>添加 <code>DbSet</code> 属性<div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl> <span class=kd>public</span> <span class=n>DbSet</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;</span> <span class=n>Companies</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> <span class=kd>public</span> <span class=n>DbSet</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;</span> <span class=n>Employees</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div>对于实体一些属性的限制（比如是否必填等），通过重写 <code>OnModelCreating</code> 来操作<div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl> <span class=c1>// 对实体的限制</span>
+</span></span><span class=line><span class=cl> <span class=kd>protected</span> <span class=kd>override</span> <span class=k>void</span> <span class=n>OnModelCreating</span><span class=p>(</span><span class=n>ModelBuilder</span> <span class=n>modelBuilder</span><span class=p>)</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span>
+</span></span><span class=line><span class=cl>     <span class=c1>// 设置名称为必填</span>
+</span></span><span class=line><span class=cl>     <span class=n>modelBuilder</span><span class=p>.</span><span class=n>Entity</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;()</span>
+</span></span><span class=line><span class=cl>         <span class=p>.</span><span class=n>Property</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>Name</span><span class=p>).</span><span class=n>IsRequired</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>     <span class=c1>// 设置简介的长度限制</span>
+</span></span><span class=line><span class=cl>     <span class=n>modelBuilder</span><span class=p>.</span><span class=n>Entity</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;()</span>
+</span></span><span class=line><span class=cl>         <span class=p>.</span><span class=n>Property</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>Introduction</span><span class=p>).</span><span class=n>HasMaxLength</span><span class=p>(</span><span class=m>500</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=n>modelBuilder</span><span class=p>.</span><span class=n>Entity</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;()</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>Property</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>Id</span><span class=p>).</span><span class=n>IsRequired</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>     <span class=n>modelBuilder</span><span class=p>.</span><span class=n>Entity</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;()</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>Property</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>FirstName</span><span class=p>).</span><span class=n>IsRequired</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>     <span class=n>modelBuilder</span><span class=p>.</span><span class=n>Entity</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;()</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>Property</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>LastName</span><span class=p>).</span><span class=n>IsRequired</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=c1>// 设置实体的关系</span>
+</span></span><span class=line><span class=cl>     <span class=c1>// Employee 对应一个 Company，一个 Company 对应多个 Employee。外键为CompanyId</span>
+</span></span><span class=line><span class=cl>     <span class=c1>// OnDelete 是删除时如果 Company 有 Employee 则无法删除</span>
+</span></span><span class=line><span class=cl>     <span class=n>modelBuilder</span><span class=p>.</span><span class=n>Entity</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;()</span>
+</span></span><span class=line><span class=cl>         <span class=p>.</span><span class=n>HasOne</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>Company</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>.</span><span class=n>WithMany</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>Employees</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>.</span><span class=n>HasForeignKey</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>CompanyId</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>.</span><span class=n>OnDelete</span><span class=p>(</span><span class=n>DeleteBehavior</span><span class=p>.</span><span class=n>Restrict</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=c1>// 初始化添加一些成员</span>
+</span></span><span class=line><span class=cl>     <span class=n>modelBuilder</span><span class=p>.</span><span class=n>Entity</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;()</span>
+</span></span><span class=line><span class=cl>         <span class=p>.</span><span class=n>HasData</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>             <span class=k>new</span> <span class=n>Company</span>
+</span></span><span class=line><span class=cl>             <span class=p>{</span>
+</span></span><span class=line><span class=cl>                 <span class=n>Id</span> <span class=p>=</span> <span class=n>Guid</span><span class=p>.</span><span class=n>NewGuid</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>                 <span class=n>Name</span> <span class=p>=</span> <span class=s>&#34;Microsoft&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                 <span class=n>Introduction</span> <span class=p>=</span> <span class=s>&#34;巨硬公司&#34;</span>
+</span></span><span class=line><span class=cl>             <span class=p>}</span>
+</span></span><span class=line><span class=cl>         <span class=p>);</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div></li></ol><h5 id=创建服务>创建服务</h5><ol><li>创建文件夹 <code>Services</code></li><li>创建一个接口 <code>ICompanyRepository</code><br>写入<div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl> <span class=kd>public</span> <span class=k>interface</span> <span class=nc>ICompanyRepository</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span>
+</span></span><span class=line><span class=cl>     <span class=n>Task</span><span class=p>&lt;</span><span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;&gt;</span> <span class=n>GetCompaniesAsync</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>     <span class=n>Task</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;</span> <span class=n>GetCompanyAsync</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=n>Task</span><span class=p>&lt;</span><span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;&gt;</span> <span class=n>GetCompaniesAsync</span><span class=p>(</span><span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>Guid</span><span class=p>&gt;</span> <span class=n>companyIds</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=k>void</span> <span class=n>AddCompany</span><span class=p>(</span><span class=n>Company</span> <span class=n>company</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=k>void</span> <span class=n>UpdateCompany</span><span class=p>(</span><span class=n>Company</span> <span class=n>company</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=k>void</span> <span class=n>DeleteCompany</span><span class=p>(</span><span class=n>Company</span> <span class=n>company</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=n>Task</span><span class=p>&lt;</span><span class=kt>bool</span><span class=p>&gt;</span> <span class=n>CompanyExistsAsync</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=n>Task</span><span class=p>&lt;</span><span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;&gt;</span> <span class=n>GetEmployeesAsync</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=n>Task</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;</span> <span class=n>GetEmployeeAsync</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>,</span> <span class=n>Guid</span> <span class=n>employeeId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=k>void</span> <span class=n>AddEmployee</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>,</span> <span class=n>Employee</span> <span class=n>employee</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=k>void</span> <span class=n>UpdateEmployee</span><span class=p>(</span><span class=n>Employee</span> <span class=n>employee</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=k>void</span> <span class=n>DeleteEmployee</span><span class=p>(</span><span class=n>Employee</span> <span class=n>employee</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=n>Task</span><span class=p>&lt;</span><span class=kt>bool</span><span class=p>&gt;</span> <span class=n>SaveAsync</span><span class=p>();</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div></li><li>创建接口的实体类 <code>CompanyRepository</code> 写入<div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl> <span class=kd>public</span> <span class=k>class</span> <span class=nc>CompanyRepository</span> <span class=p>:</span> <span class=n>ICompanyRepository</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span>
+</span></span><span class=line><span class=cl>     <span class=kd>private</span> <span class=k>readonly</span> <span class=n>RoutineDbContext</span> <span class=n>_context</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=n>CompanyRepository</span><span class=p>(</span><span class=n>RoutineDbContext</span> <span class=n>context</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=n>_context</span> <span class=p>=</span> <span class=n>context</span> <span class=p>??</span> <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>context</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;&gt;</span> <span class=n>GetCompaniesAsync</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>return</span> <span class=k>await</span> <span class=n>_context</span><span class=p>.</span><span class=n>Companies</span><span class=p>.</span><span class=n>ToListAsync</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;</span> <span class=n>GetCompanyAsync</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>companyId</span> <span class=p>==</span> <span class=n>Guid</span><span class=p>.</span><span class=n>Empty</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>companyId</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=k>return</span> <span class=k>await</span> <span class=n>_context</span><span class=p>.</span><span class=n>Companies</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>FirstOrDefaultAsync</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>Id</span> <span class=p>==</span> <span class=n>companyId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>Company</span><span class=p>&gt;&gt;</span> <span class=n>GetCompaniesAsync</span><span class=p>(</span><span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>Guid</span><span class=p>&gt;</span> <span class=n>companyIds</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>companyIds</span> <span class=p>==</span> <span class=kc>null</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>companyIds</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=k>return</span> <span class=k>await</span> <span class=n>_context</span><span class=p>.</span><span class=n>Companies</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>Where</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>companyIds</span><span class=p>.</span><span class=n>Contains</span><span class=p>(</span><span class=n>it</span><span class=p>.</span><span class=n>Id</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>OrderBy</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>Name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>ToListAsync</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=k>void</span> <span class=n>AddCompany</span><span class=p>(</span><span class=n>Company</span> <span class=n>company</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>company</span> <span class=p>==</span> <span class=kc>null</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>company</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=n>company</span><span class=p>.</span><span class=n>Id</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Guid</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=k>foreach</span> <span class=p>(</span><span class=kt>var</span> <span class=n>employee</span> <span class=k>in</span> <span class=n>company</span><span class=p>.</span><span class=n>Employees</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=n>employee</span><span class=p>.</span><span class=n>Id</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Guid</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=n>_context</span><span class=p>.</span><span class=n>Companies</span><span class=p>.</span><span class=n>Add</span><span class=p>(</span><span class=n>company</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=k>void</span> <span class=n>UpdateCompany</span><span class=p>(</span><span class=n>Company</span> <span class=n>company</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=c1>// 实际上EF对实体都有追踪，不需要显式的更改它们</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>         if (company == null)
+</span></span></span><span class=line><span class=cl><span class=cm>         {
+</span></span></span><span class=line><span class=cl><span class=cm>             throw new ArgumentNullException(nameof(company));
+</span></span></span><span class=line><span class=cl><span class=cm>         }
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>         _context.Entry(company).State = EntityState.Modified;
+</span></span></span><span class=line><span class=cl><span class=cm>         */</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=k>void</span> <span class=n>DeleteCompany</span><span class=p>(</span><span class=n>Company</span> <span class=n>company</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>company</span> <span class=p>==</span> <span class=kc>null</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>company</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=n>_context</span><span class=p>.</span><span class=n>Companies</span><span class=p>.</span><span class=n>Remove</span><span class=p>(</span><span class=n>company</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=kt>bool</span><span class=p>&gt;</span> <span class=n>CompanyExistsAsync</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>companyId</span> <span class=p>==</span> <span class=n>Guid</span><span class=p>.</span><span class=n>Empty</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>companyId</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=k>return</span> <span class=k>await</span> <span class=n>_context</span><span class=p>.</span><span class=n>Companies</span><span class=p>.</span><span class=n>AnyAsync</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>Id</span> <span class=p>==</span> <span class=n>companyId</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>IEnumerable</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;&gt;</span> <span class=n>GetEmployeesAsync</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>companyId</span> <span class=p>==</span> <span class=n>Guid</span><span class=p>.</span><span class=n>Empty</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>companyId</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=k>return</span> <span class=k>await</span> <span class=n>_context</span><span class=p>.</span><span class=n>Employees</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>Where</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>CompanyId</span> <span class=p>==</span> <span class=n>companyId</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>OrderBy</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>EmployeeNo</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>ToListAsync</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>Employee</span><span class=p>&gt;</span> <span class=n>GetEmployeeAsync</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>,</span> <span class=n>Guid</span> <span class=n>employeeId</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>companyId</span> <span class=p>==</span> <span class=n>Guid</span><span class=p>.</span><span class=n>Empty</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>companyId</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>employeeId</span> <span class=p>==</span> <span class=n>Guid</span><span class=p>.</span><span class=n>Empty</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>employeeId</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=k>return</span> <span class=k>await</span> <span class=n>_context</span><span class=p>.</span><span class=n>Employees</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>Where</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>it</span><span class=p>.</span><span class=n>CompanyId</span> <span class=p>==</span> <span class=n>companyId</span> <span class=p>&amp;&amp;</span> <span class=n>it</span><span class=p>.</span><span class=n>Id</span> <span class=p>==</span> <span class=n>employeeId</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>             <span class=p>.</span><span class=n>FirstOrDefaultAsync</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=k>void</span> <span class=n>AddEmployee</span><span class=p>(</span><span class=n>Guid</span> <span class=n>companyId</span><span class=p>,</span> <span class=n>Employee</span> <span class=n>employee</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>companyId</span> <span class=p>==</span> <span class=n>Guid</span><span class=p>.</span><span class=n>Empty</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>companyId</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>employee</span> <span class=p>==</span> <span class=kc>null</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>employee</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=n>_context</span><span class=p>.</span><span class=n>Employees</span><span class=p>.</span><span class=n>Add</span><span class=p>(</span><span class=n>employee</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=k>void</span> <span class=n>UpdateEmployee</span><span class=p>(</span><span class=n>Employee</span> <span class=n>employee</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=c1>// 同样，EF 会追踪其中的对象，不用做更改。</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=k>void</span> <span class=n>DeleteEmployee</span><span class=p>(</span><span class=n>Employee</span> <span class=n>employee</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=k>if</span> <span class=p>(</span><span class=n>employee</span> <span class=p>==</span> <span class=kc>null</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>         <span class=p>{</span>
+</span></span><span class=line><span class=cl>             <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>employee</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>         <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>         <span class=n>_context</span><span class=p>.</span><span class=n>Remove</span><span class=p>(</span><span class=n>employee</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=kt>bool</span><span class=p>&gt;</span> <span class=n>SaveAsync</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>     <span class=p>{</span>
+</span></span><span class=line><span class=cl>         <span class=c1>// 通常保存不写在Repository里</span>
+</span></span><span class=line><span class=cl>         <span class=k>return</span> <span class=k>await</span> <span class=n>_context</span><span class=p>.</span><span class=n>SaveChangesAsync</span><span class=p>()</span> <span class=p>&gt;=</span> <span class=m>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div>我觉得可以把 <code>_context.Employees</code> 等 <strong>看作</strong> 一个 <code>List&lt;Employee></code> 类型的变量。</li><li>在 <code>StartUp</code> 中注册服务<div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl> <span class=c1>// 注册服务  Scoped: 每次HTTP请求实例化一次</span>
+</span></span><span class=line><span class=cl> <span class=n>services</span><span class=p>.</span><span class=n>AddScoped</span><span class=p>&lt;</span><span class=n>ICompanyRepository</span><span class=p>,</span> <span class=n>CompanyRepository</span><span class=p>&gt;();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> <span class=c1>// 连接字符串</span>
+</span></span><span class=line><span class=cl> <span class=kt>var</span> <span class=n>connectionStr</span> <span class=p>=</span> <span class=s>@&#34;Data Source=test.db;&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=c1>// 注册数据库上下文</span>
+</span></span><span class=line><span class=cl> <span class=n>services</span><span class=p>.</span><span class=n>AddDbContext</span><span class=p>&lt;</span><span class=n>RoutineDbContext</span><span class=p>&gt;(</span><span class=n>option</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>         <span class=n>option</span><span class=p>.</span><span class=n>UseSqlite</span><span class=p>(</span><span class=n>connectionStr</span><span class=p>)</span>
+</span></span><span class=line><span class=cl> <span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div></li></ol><h5 id=初始化数据库>初始化数据库</h5><p>在 NuGet 包管理器控制台中依次输入：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>Add-Migration InitialCreate
+</span></span></code></pre></td></tr></table></div></div><p>和</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>Update-Database
+</span></span></code></pre></td></tr></table></div></div><p>或者使用 dotnet cli：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>dotnet ef migrations add InitialCreate
+</span></span></code></pre></td></tr></table></div></div><p>和</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>dotnet ef database update
+</span></span></code></pre></td></tr></table></div></div><p>有关迁移这部分的概述可以看 <a class=link href=https://docs.microsoft.com/zh-cn/ef/core/managing-schemas/migrations/ target=_blank rel=noopener>迁移概述 - EF Core | Microsoft Docs</a></p><blockquote><p>!重要：杨旭老师在这里对 Program.cs 进行了一些修改，以便于后期讲解，我没有进行这些更改，弹幕说是个坑，先记住，如果出了什么奇怪问题就回来看看。</p></blockquote></section><footer class=article-footer><section class=article-tags><a href=/tags/csharp/>CSharp</a>
+<a href=/tags/webapi/>WebAPI</a>
+<a href=/tags/dotnet/>DotNET</a>
+<a href=/tags/aspnetcore/>AspNetCore</a>
+<a href=/tags/%E7%BC%96%E7%A8%8B/>编程</a>
+<a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a>
+<a href=/tags/%E5%90%8E%E7%AB%AF/>后端</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class=article-lastmod><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>最后更新于 2025 Jan 14 10:01</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/aspnetcore-webapi-note4-http_method/><div class=article-details><h2 class=article-title>GET、POST都是什么——常用的HTTP方法——ASP.NET Core Web API(4)</h2></div></a></article><article><a href=/passages/aspnetcore-webapi-note3-standard/><div class=article-details><h2 class=article-title>怎么设计优雅的API——普通API对外合约——ASP.NET Core Web API(3)</h2></div></a></article><article><a href=/passages/aspnetcore-webapi-note2-restful/><div class=article-details><h2 class=article-title>什么是 REST——RESTful API 简介——ASP.NET Core Web API(2)</h2></div></a></article><article><a href=/passages/aspnetcore-note5-signalr/><div class=article-details><h2 class=article-title>在 ASP.NET Core 中的实时通信——SignalR 实时通信——ASP.NET Core 入门(3)</h2></div></a></article><article><a href=/passages/aspnetcore-note3-config/><div class=article-details><h2 class=article-title>如何配置 ASP.NET Core 应用程序——配置文件——ASP.NET Core 入门(2)</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2025 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

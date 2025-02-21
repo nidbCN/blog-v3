@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>HTTP错误 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/http%E9%94%99%E8%AF%AF/</link><description>Recent content in HTTP错误 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 07 Jun 2019 18:40:33 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/http%E9%94%99%E8%AF%AF/index.xml" rel="self" type="application/rss+xml"/><item><title>nginX设置错误页面</title><link>https://blog.gaein.cn/passages/nginx-error-page/</link><pubDate>Fri, 07 Jun 2019 18:40:33 +0800</pubDate><guid>https://blog.gaein.cn/passages/nginx-error-page/</guid><description>&lt;p>最近几天完善了一下网站，尤其是nginx默认的丑的要死的错误页面（标题图那样的）。今天把nginx配置错误页面的方法写在这里&lt;/p>
+&lt;!-- more -->
+&lt;p>首先在网上搜教程，说必须要有
+&lt;code>fastcgi_intercept_errors on; &lt;/code>
+自定义的错误页面才会生效，但是我删除这句话仍然可以正常跳转。大家依据实际需求添加。
+接下来就是配置错误页面的具体代码了
+&lt;code> error_page 404 /404.html; error_page 502 /502.html; location = /404.html{ root /data/errpages; } location = /502.html{ root /data/errpages; } &lt;/code>
+error_page的意思是设置错误页，后面接状态码和页面文件，然后使用location来跳转。由于location的存在，这部分代码只能写在server区块里面。&lt;/p></description></item></channel></rss>

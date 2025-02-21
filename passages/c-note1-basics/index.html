@@ -1,0 +1,323 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="趁着假期呢看了一些中国大学MOOC中浙江大学翁恺教授的C语言程序设计，也算是预习大学课程吧。因为有一点编程基础因此前边一些听起来也不是很吃力，因此前边很多章节都没有记笔记，准备记在一起（其实是懒得记吧hhh）\n"><title>基础结构——C语言程序设计笔记（一）</title>
+<link rel=canonical href=https://blog.gaein.cn/passages/c-note1-basics/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="基础结构——C语言程序设计笔记（一）"><meta property='og:description' content="趁着假期呢看了一些中国大学MOOC中浙江大学翁恺教授的C语言程序设计，也算是预习大学课程吧。因为有一点编程基础因此前边一些听起来也不是很吃力，因此前边很多章节都没有记笔记，准备记在一起（其实是懒得记吧hhh）\n"><meta property='og:url' content='https://blog.gaein.cn/passages/c-note1-basics/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='语言'><meta property='article:tag' content='C语言'><meta property='article:tag' content='笔记'><meta property='article:published_time' content='2020-09-19T20:06:23+08:00'><meta property='article:modified_time' content='2020-09-19T20:06:23+08:00'><meta name=twitter:title content="基础结构——C语言程序设计笔记（一）"><meta name=twitter:description content="趁着假期呢看了一些中国大学MOOC中浙江大学翁恺教授的C语言程序设计，也算是预习大学课程吧。因为有一点编程基础因此前边一些听起来也不是很吃力，因此前边很多章节都没有记笔记，准备记在一起（其实是懒得记吧hhh）\n"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico><head><meta itemprop=name content="基础结构——C语言程序设计笔记（一）"><meta itemprop=image content="http://img.cdn.gaein.cn/website_used/avatars/avatar-256x.webp"><meta itemprop=description content="趁着假期呢看了一些中国大学MOOC中浙江大学翁恺教授的C语言程序设计，也算是预习大学课程吧。因为有一点编程基础因此前边一些听起来也不是很吃力，因此前边很多章节都没有记笔记，准备记在一起（其实是懒得记吧hhh）"></head></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu_d97b16840c038ea4.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#c语言笔记目录>C语言笔记目录</a></li><li><a href=#下一篇笔记>下一篇笔记</a></li><li><a href=#程序设计与c语言>程序设计与C语言</a><ol><li><a href=#helloworld>HelloWorld</a></li><li><a href=#输入输出>输入输出</a><ol><li><a href=#格式字符>格式字符</a></li><li><a href=#转义逃逸字符>转义（逃逸）字符</a></li></ol></li></ol></li><li><a href=#运算>运算</a></li><li><a href=#程序流控制>程序流控制</a><ol><li><a href=#判断>判断</a></li><li><a href=#循环>循环</a><ol><li><a href=#while>while</a></li><li><a href=#do-while>do while</a></li></ol></li></ol></li><li><a href=#数据类型>数据类型</a><ol><li><a href=#整型>整型</a><ol><li><a href=#整数的二进制表示>整数的二进制表示</a></li><li><a href=#整数的范围>整数的范围</a></li><li><a href=#字符类型char>字符类型char</a></li></ol></li><li><a href=#浮点数>浮点数</a></li><li><a href=#逻辑>逻辑</a><ol><li><a href=#bool>bool</a></li><li><a href=#逻辑运算>逻辑运算</a></li></ol></li><li><a href=#数组>数组</a><ol><li><a href=#数组的定义>数组的定义</a></li><li><a href=#数组的初始化>数组的初始化</a></li><li><a href=#数组的运算>数组的运算</a></li><li><a href=#二维数组>二维数组</a></li></ol></li><li><a href=#强制类型转换>强制类型转换</a></li></ol></li><li><a href=#函数>函数</a><ol><li><a href=#函数的定义>函数的定义</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/c-note1-basics/>基础结构——C语言程序设计笔记（一）</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2020 Sep 19</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 7 分钟</time></div></footer></div></header><section class=article-content><p>趁着假期呢看了一些中国大学MOOC中浙江大学翁恺教授的C语言程序设计，也算是预习大学课程吧。因为有一点编程基础因此前边一些听起来也不是很吃力，因此前边很多章节都没有记笔记，准备记在一起（其实是懒得记吧hhh）</p><blockquote><p>趁着假期呢看了一些中国大学MOOC中浙江大学翁恺教授的C语言程序设计，也算是预习大学课程吧。因为有一点编程基础因此前边一些听起来也不是很吃力，因此前边很多章节都没有记笔记，准备记在一起（其实是懒得记吧hhh）</p></blockquote><p><a class=link href=https://www.icourse163.org/learn/ZJU-9001 target=_blank rel=noopener>浙江大学-C语言程序设计</a></p><h2 id=c语言笔记目录>C语言笔记目录</h2><ol><li><a class=link href=https://blog.gaein.cn/passages/C-Note1-Basics/ target=_blank rel=noopener>基础结构——C语言程序设计笔记（一）</a></li><li><a class=link href=https://blog.gaein.cn/passages/C-Note2-Pointer/ target=_blank rel=noopener>指针——C语言程序设计笔记（二）</a></li><li><a class=link href=https://blog.gaein.cn/passages/C-Note3-String/ target=_blank rel=noopener>字符串——C语言程序设计笔记（三）</a></li><li><a class=link href=https://blog.gaein.cn/passages/C-Note4-Struct/ target=_blank rel=noopener>结构类型——C语言程序设计笔记（四）</a></li><li><a class=link href=https://blog.gaein.cn/passages/C-Note5-ProgramStructure/ target=_blank rel=noopener>程序结构——C语言程序设计笔记（五）</a></li><li><a class=link href=https://blog.gaein.cn/passages/C-Note6-File/ target=_blank rel=noopener>文件——C语言程序设计笔记（六）</a></li><li><a class=link href=https://blog.gaein.cn/passages/C-Note7-LinkedList/ target=_blank rel=noopener>链表——C语言程序设计笔记（七）</a></li></ol><h2 id=下一篇笔记>下一篇笔记</h2><p><a class=link href=https://blog.gaein.cn/passages/C-Note2-Pointer/ target=_blank rel=noopener>指针——C语言程序设计笔记（二）</a></p><h2 id=程序设计与c语言>程序设计与C语言</h2><p>C语言是一门古老的、低级的、底层的、面向过程的语言</p><h3 id=helloworld>HelloWorld</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;Hello World</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>程序从<code>main函数</code>开始，如上是最基础的Hello World</p><p>通常来说C语言是编译-运行的</p><h3 id=输入输出>输入输出</h3><p>在C语言中，使用<code>printf()</code>函数来输出内容，其中，传递给printf的参数是：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>64</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;字符串</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;格式字符，比如%d&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p>运行程序会输出：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>&gt;字符串
+</span></span><span class=line><span class=cl>&gt;格式字符，比如64
+</span></span></code></pre></td></tr></table></div></div><h4 id=格式字符>格式字符</h4><p>格式字符是%+一个或多个字符，用于控制输出的格式。比如说，后面传入的参数i是int类型的，那么使用%d来输出整数</p><p>常见的格式字符有：</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/C-Note1-Basics/01.webp loading=lazy alt=格式字符></p><p>更多的用法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>64</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=n>i</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>double</span> <span class=n>d</span> <span class=o>=</span> <span class=mf>32.64128</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>char</span> <span class=n>c</span> <span class=o>=</span> <span class=sc>&#39;c&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=s>&#34;HelloWorld&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %s:字符串
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%c</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>c</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %c:字符
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %d:整数（十进制）
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%5d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %5d:五位整数，不足五位前面补充空格
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%05d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %05d:五位整数，不足五位前面补充0
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%-5d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %-5d:五位整数，不足五位后面补充空格
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%u</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %u:打印无符号数
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%x</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %x:整数（十六进制）
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%o</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %o:整数（八进制）
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%f</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>d</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %f:浮点数
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%0.0f&#34;</span><span class=p>,</span> <span class=n>d</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %0.0f不保留小数
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%0.100f&#34;</span><span class=p>,</span> <span class=n>d</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %0.100保留三位小数
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%p&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// %p取指针的地址
+</span></span></span></code></pre></td></tr></table></div></div><p>输出大致如下（其中%p的例子仅做示范，“□”代表空格）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>HelloWorld
+</span></span><span class=line><span class=cl>c
+</span></span><span class=line><span class=cl>64
+</span></span><span class=line><span class=cl>□□□64
+</span></span><span class=line><span class=cl>00064
+</span></span><span class=line><span class=cl>64□□□
+</span></span><span class=line><span class=cl>64
+</span></span><span class=line><span class=cl>40
+</span></span><span class=line><span class=cl>100
+</span></span><span class=line><span class=cl>32.64128
+</span></span><span class=line><span class=cl>32
+</span></span><span class=line><span class=cl>32.641
+</span></span><span class=line><span class=cl>0x7fff5cc109d4
+</span></span></code></pre></td></tr></table></div></div><p>更多情况见<a class=link href>C语言格式字符（还没写先挖坑）</a></p><p>C语言使用<code>scanf()</code>函数来获取输入，其中的参数是格式字符，另外一个参数是<code>&变量名</code>（&是取地址）</p><h4 id=转义逃逸字符>转义（逃逸）字符</h4><p>常见转义字符有：</p><p><code>\n</code>:<code>换行</code></p><p><code>\t</code>:<code>制表符</code></p><p><code>\"</code>:<code>"</code></p><p><code>\'</code>:<code>'</code></p><p><code>\\</code>:<code>\</code></p><p><img src=https://img.cdn.gaein.cn/website_used/blog/C-Note1-Basics/02.webp loading=lazy alt=转义字符></p><h2 id=运算>运算</h2><p>在C语言中这样定义变量：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>变量类型 变量名;
+</span></span></code></pre></td></tr></table></div></div><p>可以在变量定义的时候给其赋值，否则不会初始化</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>myVar</span> <span class=o>=</span> <span class=mi>64</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>在这中等号代表赋值而不是相等</p><p>变量区分大小写，即MyVar和myVar完全是不同的两个变量</p><p>使用typeof()函数可以输出变量占据的字节，typeof是静态的，括号里面的运算不会被进行</p><p>在C语言中有多种运算符常见的有+、-、<em>、\、以及+=、-=、</em>=、+和++、&ndash;</p><h2 id=程序流控制>程序流控制</h2><h3 id=判断>判断</h3><p><code>if</code> 语句用于判断，其结构如下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=cm>/*条件*/</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span> <span class=k>if</span> <span class=p>(</span><span class=cm>/*条件*/</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>if</code> 是可以嵌套的</p><p>在条件中判断值是否相等使用“==”而不是“=”，单个的等号是赋值运算。括号内1表示是，0表示非。</p><p>比如说</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>result</span> <span class=o>=</span> <span class=mi>3</span> <span class=o>&lt;</span> <span class=mi>6</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>条件成立则3 &lt; 6 的结果为1即result的值为1</p><p><code>else if</code> 等同于：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=cm>/*条件1*/</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=cm>/*条件2*/</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>...</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>虽然单行的语句可以不使用{}，但是建议使用</p></blockquote><p><code>switch case语句</code>的结构如下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>switch</span> <span class=p>(</span><span class=cm>/*变量*/</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=sc>&#39;0&#39;</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=c1>// 语句1;
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=sc>&#39;1&#39;</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=c1>// 语句2;
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>default</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=c1>// 语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>switch的作用是根据变量的值将代码跳转到某个地方，如果case后面没有<code>break;</code>那么会接着走下一行</p><h3 id=循环>循环</h3><h4 id=while>while</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>while</span> <span class=p>(</span><span class=cm>/*条件*/</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 执行语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>while</code>循环的过程如下：</p><ol><li>判断是否满足条件</li><li>满足条件进入循环体，执行语句；不满足条件则跳出</li><li>返回1</li></ol><h4 id=do-while>do while</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>do</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 执行语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>while</span> <span class=p>(</span><span class=cm>/*条件*/</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>do while</code>循环的过程如下：</p><ol><li>执行语句</li><li>判断是否满足条件，满足条件返回1；不满足条件则跳出</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>for</span><span class=p>(</span><span class=cm>/*表达式1*/</span><span class=p>;</span><span class=cm>/*表达式2*/</span><span class=p>;</span><span class=cm>/*表达式3*/</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 执行语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>for</code> 循环是一种古老的循环（所以它看起来比较怪），它的执行过程如下：</p><ol><li>求解表达式1（通常是初始化计数变量）</li><li>求解表达式2（其实是条件），符合条件继续运行，不符合则跳出</li><li>执行语句</li><li>求解表达式3（通常是计数变量）</li><li>回到2步执行</li></ol><p>也就是 <code>for</code> 循环改写成 <code>while</code> 相当于：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// 表达式1;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>while</span> <span class=p>(</span><span class=cm>/*表达式2*/</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 执行语句;
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// ...
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=c1>// 表达式3;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>在很多时候使用 <code>for循环</code> 会很方便（虽然我没感觉但是代码短了）</p><p>比如需要计数时</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;=</span> <span class=mi>100</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%d&#34;</span><span class=p>,</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=c1>// 从1数到100
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=数据类型>数据类型</h2><h3 id=整型>整型</h3><p><code>char</code>
+<code>short</code>
+<code>int</code>
+<code>long</code>
+<code>long long</code></p><h4 id=整数的二进制表示>整数的二进制表示</h4><p>在计算机内部所有变量都是二进制的。</p><p>为了表示负数，使用了补码，比如：</p><p>-1为 <code>11111111</code></p><p>1 为 <code>00000001</code></p><p>进行二进制加法时，<code>11111111</code> + <code>00000001</code> = <code>100000000</code></p><p>然而，进位上去的1被舍弃了，从而实现 <code>-1</code> + <code>1</code> = <code>0</code></p><h4 id=整数的范围>整数的范围</h4><p>如果某个类型占据n个字节</p><p>那么它的范围是 -2^(n-1)~2^(n-1)-1</p><p><code>// 这里的"^"表示次幂而不是异或</code></p><h4 id=字符类型char>字符类型char</h4><p>char既是整型数字又是字符，将字符赋值给char时应该用单引号" &rsquo; &ldquo;包裹，比如</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>char</span> <span class=n>ch</span> <span class=o>=</span> <span class=sc>&#39;a&#39;</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>可以将字符作为整数输出、计算、输入，字符的整数值是它的ASCII码</p><blockquote><p><a class=link href=https://blog.gaein.cn/passages/ASCII-Code-Convertor/ target=_blank rel=noopener>ASCII码对照表和转换器</a></p></blockquote><h3 id=浮点数>浮点数</h3><p><code>float</code>
+<code>double</code>
+<code>long double</code></p><p><img src=https://img.cdn.gaein.cn/website_used/blog/C-Note1-Basics/03.webp loading=lazy alt=浮点类型的选择></p><blockquote><p>!注意：浮点数是有精度的，它们可能不是准确的，制作计算器程序应该使用BCD</p></blockquote><blockquote><p>其实个人觉得整型也是一个道理，通常来说只用int就行了</p></blockquote><h3 id=逻辑>逻辑</h3><h4 id=bool>bool</h4><p>bool类型只有true和false两个值，使用bool需要添加头文件<code>&lt;stdbool.h></code></p><p><img src=https://img.cdn.gaein.cn/website_used/blog/C-Note1-Basics/04.webp loading=lazy alt=bool></p><h4 id=逻辑运算>逻辑运算</h4><p><code>&&</code>逻辑且</p><p>当逻辑且左右的条件全成立时返回1，否则返回0</p><p><code>||</code>逻辑或</p><p>当逻辑或两侧任意的一个条件成立时返回1，全不成立则返回0</p><h3 id=数组>数组</h3><h4 id=数组的定义>数组的定义</h4><p>可以使用以下形式定义一个数组</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>arrayInt</span><span class=p>[</span><span class=mi>30</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><p>这个数组具有30个单元，通过<code>arrayInt[i]</code>来访问，索引从0开始，不能超过30 - 1，否则数组会越界</p><h4 id=数组的初始化>数组的初始化</h4><p>可以在定义时去初始化数组：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>arrayInt</span><span class=p>[</span><span class=mi>4</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>9</span><span class=p>,</span> <span class=mi>2</span><span class=p>,};</span>
+</span></span></code></pre></td></tr></table></div></div><p>这样初始化会使得数组被赋值为大括号中的数字，如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>arrayInt</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>arrayInt</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=mi>3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>arrayInt</span><span class=p>[</span><span class=mi>2</span><span class=p>]</span> <span class=o>=</span> <span class=mi>9</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>arrayInt</span><span class=p>[</span><span class=mi>3</span><span class=p>]</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>arrayInt</span><span class=p>[]</span> <span class=o>=</span> <span class=p>{</span> <span class=cm>/* ... */</span> <span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>来创建自动设置大小的数组</p><blockquote><p>!注意：这样的数组大小仍然是固定的，只是在初始化的时候根据大括号内容自动算了大小</p></blockquote><p>使用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>arrayInt</span><span class=p>[</span><span class=mi>5</span><span class=p>]</span> <span class=o>=</span> <span class=p>{[</span><span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=mi>3</span><span class=p>,};</span>
+</span></span></code></pre></td></tr></table></div></div><p>来创建指定单元被初始化为指定值的数组</p><p>使用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>arrayInt</span><span class=p>[</span><span class=mi>5</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>,};</span>
+</span></span></code></pre></td></tr></table></div></div><p>来让整个数组的每个单元初始化为0（实际上，当大括号内的数字数量比数组的大小小时，会默认填充每个单位为0）</p><h4 id=数组的运算>数组的运算</h4><p>数组不能由一个数组赋值给另外一个数组</p><p>数组的每个单元都可以进行运算</p><h4 id=二维数组>二维数组</h4><p>使用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=n>a</span><span class=p>[</span><span class=mi>5</span><span class=p>][</span><span class=mi>3</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><p>来定义一个二维数组，可以把它看成是一个5行3列表格（或者矩阵）</p><div class=table-wrapper><table><thead><tr><th>1</th><th>2</th><th>3</th></tr></thead><tbody><tr><td><code>a[0][0]</code></td><td><code>a[0][1]</code></td><td><code>a[0][2]</code></td></tr><tr><td><code>a[1][0]</code></td><td><code>a[1][1]</code></td><td><code>a[1][2]</code></td></tr><tr><td><code>a[2][0]</code></td><td><code>a[2][1]</code></td><td><code>a[2][2]</code></td></tr><tr><td><code>a[3][0]</code></td><td><code>a[3][1]</code></td><td><code>a[3][2]</code></td></tr><tr><td><code>a[4][0]</code></td><td><code>a[4][1]</code></td><td><code>a[4][2]</code></td></tr></tbody></table></div><p>如表所示</p><p>数组的遍历，使用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>Length</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;%d &#34;</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>来完成</p><h3 id=强制类型转换>强制类型转换</h3><p>C语言会将小范围->大范围的做自动类型转换，比如说5/7.0（<code>int\double</code>）结果是<code>double</code></p><p>在C语言中使用<code>(类型)变量</code>来做强制类型转换，比如说</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=p>(</span><span class=kt>int</span><span class=o>*</span><span class=p>)</span><span class=nf>malloc</span><span class=p>(</span><span class=k>sizeof</span><span class=p>(</span><span class=kt>int</span><span class=p>)</span><span class=o>*</span><span class=mi>4</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=函数>函数</h2><h3 id=函数的定义>函数的定义</h3><p>其实int main()就是函数</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=nf>myFunc</span><span class=p>(</span><span class=kt>int</span> <span class=n>foot</span><span class=p>,</span><span class=kt>int</span> <span class=n>inch</span> <span class=cm>/*参数表*/</span> <span class=p>)</span>        <span class=c1>// 函数头
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span> 
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>ret</span> <span class=o>=</span> <span class=p>(</span><span class=kt>int</span><span class=p>)((</span><span class=n>foot</span> <span class=o>+</span> <span class=n>inch</span><span class=o>/</span><span class=mf>12.0</span><span class=p>)</span><span class=o>*</span><span class=mf>0.3</span><span class=p>);</span>    <span class=c1>// 函数体
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=n>ret</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>函数由以下内容构成：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=o>&lt;</span><span class=err>数据类型</span><span class=o>&gt;</span> <span class=o>&lt;</span><span class=err>函数名</span><span class=o>&gt;</span><span class=p>(</span><span class=o>&lt;</span><span class=err>参数表</span><span class=o>&gt;</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 语句
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果把函数定义在main函数的后面则需要在main函数的前面声明函数原型（其实就是把函数头copy过去并改成分号结尾）以便于编译器“认出”函数</p><p>使用 <code>void</code> 定义一个不返回值的函数，不能用 <code>return</code> 语句</p><blockquote><p>注意：请使用 <code>int main</code> 来定义主函数，没有任何标准规定可以使用 <code>void main</code> 定义主函数。</p></blockquote><blockquote><p>!注意：使用函数时有多个可以return的时候建议遵循单一出口原则，即定义一个本地变量（通常叫做ret）来存储结果，然后最后返回这个本地变量</p></blockquote><p>调用函数时传递的参数是值而不是变量本身，在函数内修改传过去的变量不会对main中的变量造成影响（指针除外）</p><p>基础部分的笔记到此结束，剩下的我想每周一个文（其实我已经看完了啦啦啦）</p></section><footer class=article-footer><section class=article-tags><a href=/tags/%E8%AF%AD%E8%A8%80/>语言</a>
+<a href=/tags/c%E8%AF%AD%E8%A8%80/>C语言</a>
+<a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/c-note7-linkedlist/><div class=article-details><h2 class=article-title>链表——C语言程序设计笔记（七）</h2></div></a></article><article><a href=/passages/c-note6-file/><div class=article-details><h2 class=article-title>文件——C语言程序设计笔记（六）</h2></div></a></article><article><a href=/passages/c-note5-programstructure/><div class=article-details><h2 class=article-title>程序结构——C语言程序设计笔记（五）</h2></div></a></article><article><a href=/passages/c-note4-struct/><div class=article-details><h2 class=article-title>结构类型——C语言程序设计笔记（四）</h2></div></a></article><article><a href=/passages/c-note3-string/><div class=article-details><h2 class=article-title>字符串——C语言程序设计笔记（三）</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2025 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

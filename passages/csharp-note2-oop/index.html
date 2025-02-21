@@ -1,0 +1,328 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 CSharp 面向对象编程 系统学习CSharp笔记，本来也想写在基础部分来着，但是上一篇博客太长了，想想还是拆出来写吧。 包括CSharp的 对象和类、继承 两章\n"><title>C#面向对象——对象和类型与继承 - C#笔记</title>
+<link rel=canonical href=https://blog.gaein.cn/passages/csharp-note2-oop/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="C#面向对象——对象和类型与继承 - C#笔记"><meta property='og:description' content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 CSharp 面向对象编程 系统学习CSharp笔记，本来也想写在基础部分来着，但是上一篇博客太长了，想想还是拆出来写吧。 包括CSharp的 对象和类、继承 两章\n"><meta property='og:url' content='https://blog.gaein.cn/passages/csharp-note2-oop/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='笔记'><meta property='article:tag' content='编程'><meta property='article:tag' content='CSharp'><meta property='article:tag' content='dotNET'><meta property='article:published_time' content='2021-04-27T21:52:51+08:00'><meta property='article:modified_time' content='2021-04-27T21:52:51+08:00'><meta name=twitter:title content="C#面向对象——对象和类型与继承 - C#笔记"><meta name=twitter:description content="目录 C#基础 C#面向对象 C#泛型 C#运算符和强制类型转换 C#中数组的使用 C#的委托、lambda 表达式和事件 C#字符串和正则表达式 CSharp 面向对象编程 系统学习CSharp笔记，本来也想写在基础部分来着，但是上一篇博客太长了，想想还是拆出来写吧。 包括CSharp的 对象和类、继承 两章\n"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico><head><meta itemprop=name content="C#面向对象——对象和类型与继承 - C#笔记"><meta itemprop=image content="http://img.cdn.gaein.cn/website_used/avatars/avatar-256x.webp"><meta itemprop=description content="目录
+
+C#基础
+C#面向对象
+C#泛型
+C#运算符和强制类型转换
+C#中数组的使用
+C#的委托、lambda 表达式和事件
+C#字符串和正则表达式
+
+CSharp 面向对象编程
+
+系统学习CSharp笔记，本来也想写在基础部分来着，但是上一篇博客太长了，想想还是拆出来写吧。
+包括CSharp的 对象和类、继承 两章"></head></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu_d97b16840c038ea4.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#目录>目录</a></li><li><a href=#csharp-面向对象编程>CSharp 面向对象编程</a><ol><li><a href=#3---对象和类型>3 - 对象和类型</a><ol><li><a href=#31---创建和使用类>3.1 - 创建和使用类</a></li><li><a href=#32---类和结构>3.2 - 类和结构</a></li><li><a href=#33---类>3.3 - 类</a></li><li><a href=#34---结构>3.4 - 结构</a></li><li><a href=#35---按值和按引用传递参数>3.5 - 按值和按引用传递参数</a></li><li><a href=#36---可空类型>3.6 - 可空类型</a></li><li><a href=#37---枚举类型>3.7 - 枚举类型</a></li><li><a href=#38---部分类>3.8 - 部分类</a></li><li><a href=#39---扩展方法>3.9 - 扩展方法</a></li><li><a href=#310---object-类>3.10 - Object 类</a></li></ol></li><li><a href=#4---继承>4 - 继承</a><ol><li><a href=#41---面向对象>4.1 - 面向对象</a></li><li><a href=#42---继承的类型>4.2 - 继承的类型</a></li><li><a href=#43---实现继承>4.3 - 实现继承</a></li><li><a href=#44---修饰符>4.4 - 修饰符</a></li><li><a href=#45---接口>4.5 - 接口</a></li><li><a href=#46-is-和-as-运算符>4.6 is 和 as 运算符</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/csharp-note2-oop/>C#面向对象——对象和类型与继承 - C#笔记</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2021 Apr 27</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 12 分钟</time></div></footer></div></header><section class=article-content><h2 id=目录>目录</h2><ul><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note1-Basic/ target=_blank rel=noopener>C#基础</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note2-OOP/ target=_blank rel=noopener>C#面向对象</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note3-Generics-Type/ target=_blank rel=noopener>C#泛型</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note4-Operators-and-TypeCasts/ target=_blank rel=noopener>C#运算符和强制类型转换</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note5-Array/ target=_blank rel=noopener>C#中数组的使用</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note6-Delegates-lambda-Expressions-and-Events/ target=_blank rel=noopener>C#的委托、lambda 表达式和事件</a></li><li><a class=link href=https://blog.gaein.cn/passages/CSharp-Note7-String-and-Regular/ target=_blank rel=noopener>C#字符串和正则表达式</a></li></ul><h2 id=csharp-面向对象编程>CSharp 面向对象编程</h2><blockquote><p>系统学习CSharp笔记，本来也想写在基础部分来着，但是上一篇博客太长了，想想还是拆出来写吧。
+包括CSharp的 对象和类、继承 两章</p></blockquote><h3 id=3---对象和类型>3 - 对象和类型</h3><h4 id=31---创建和使用类>3.1 - 创建和使用类</h4><h4 id=32---类和结构>3.2 - 类和结构</h4><p>结构不同于类，结构是值类型而类是引用类型，结构不需要在堆上分配空间，它们通常存储在栈上，另外，结构不支持继承。</p><p>较小的数据类型使用结构可以提升性能。</p><h4 id=33---类>3.3 - 类</h4><p>类可以包含静态成员或者实例成员。静态成员属于类而实例成员属于对象。</p><h5 id=331---字段field>3.3.1 - 字段(Field)</h5><p>字段是与类相关的变量，前面说过，字段通常是私有的。最好不要把它设置为 <code>public</code> ，除非你有足够的理由，因为字段应该去由属性来设置，而不是直接暴露给外部。</p><h5 id=332---只读字段>3.3.2 - 只读字段</h5><p>带有 <code>readonly</code> 修饰符的字段只能在构造函数中分配它的值。它与 <code>const</code> 修饰符不同，它不需要在编译的时候就指定值。</p><h5 id=333---属性property>3.3.3 - 属性(property)</h5><p>属性的概念是：</p><blockquote><p>它是一个方法或一对方法，在客户端看来，它们是一个字段。</p></blockquote><p>也就是说，在类的内部，属性是设置私有字段的方法。而外部看来，它们是字段，比如：</p><h6 id=具有表达式体的树形访问器>具有表达式体的树形访问器</h6><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>private</span> <span class=kt>string</span> <span class=n>_name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kt>string</span> <span class=n>Name</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>get</span> <span class=p>=&gt;</span> <span class=n>_name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>set</span> <span class=p>=&gt;</span> <span class=n>_name</span> <span class=p>=</span> <span class=k>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=自动实现的属性>自动实现的属性</h6><p>当然，上面的代码可以使用自动实现的属性替换为，也可以用属性初始化器来初始化（第二行代码）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kt>string</span> <span class=n>Name</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=n>Guid</span> <span class=n>Uid</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Guid</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><p>注意看第一段代码的命名规范：本来 Microsoft 那边的规范是使用小写字母命名私有字段，但是 .NET Core 团队转向用下划线加小写字母来命名，这样显然更容易区分。</p><h6 id=属性的访问修饰符>属性的访问修饰符</h6><p>CSharp允许给属性的 <code>get</code> 和 <code>set</code> 访问器分别设置不同的修饰符。</p><blockquote><p>注意：在 <code>get</code> 和 <code>set</code> 访问器中必须有一个具备属性的访问级别。</p></blockquote><h6 id=只读属性>只读属性</h6><p>在属性定义中省略 <code>set</code> 访问器，就可以创建只读属性。</p><h6 id=表达式体属性>表达式体属性</h6><p>在CSharp6之后，用于创建只读属性，类似于表达式体方法。</p><p>比如说：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kt>string</span> <span class=n>FirstName</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kt>string</span> <span class=n>LastName</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kt>string</span> <span class=n>FullName</span> <span class=p>=&gt;</span> <span class=s>$&#34;{FirstName} {LastName}&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=不可变的类型>不可变的类型</h6><p>如果对象没有任何可以改变的成员，只有只读成员，它就是一个不可变的类型。</p><h5 id=334---匿名类>3.3.4 - 匿名类</h5><p><code>var</code> 与 <code>new</code> 关键字一起使用时，可以创建匿名类型。匿名类型只是一个继承自 <code>Object</code> 且没有名称的类。该类的定义从初始化器中推断，类似于隐式类型化的变量，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>var</span> <span class=n>result</span> <span class=p>=</span> <span class=k>new</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>code</span> <span class=p>=</span> <span class=m>200</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>message</span> <span class=p>=</span> <span class=s>&#34;OK&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>server</span> <span class=p>=</span> <span class=s>&#34;AspNetCore&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=p>=</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果创建另外一个匿名类，但是它们的所有属性都匹配则它们为同一个类型，可以赋值。</p><h5 id=335---方法>3.3.5 - 方法</h5><blockquote><p>注意：正式的CSharp术语区分函数和方法。“函数”成员不仅包含方法，也包含类或结构的一些非数据成员，比如索引器、运算符、构造函数和析构函数，甚至还有属性。字段、常量和事件才是数据成员。</p></blockquote><h6 id=方法的声明>方法的声明</h6><p>说过了</p><h6 id=表达式体方法>表达式体方法</h6><p>一行解决问题：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>bool</span> <span class=n>hasValue</span><span class=p>()</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=p>==</span> <span class=kc>null</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=调用方法>调用方法</h6><p>通过 <code>类名.方法名()</code> 来调用静态方法，静态方法属于类。</p><p>对于非静态来说，它们是属于某个对象（特定实例）的，因此需要先将其类实例化，再用 <code>对象.方法()</code> 来调用。</p><h6 id=方法的重载>方法的重载</h6><p>CSharp支持方法重载——方法的几个版本有不同的签名，即同名的方法可以接受不同的参数。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=c1>// method1</span>
+</span></span><span class=line><span class=cl><span class=kt>string</span> <span class=n>FindName</span><span class=p>(</span><span class=n>Guid</span> <span class=n>id</span><span class=p>)</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=n>members</span><span class=p>.</span><span class=n>FirstOrDefault</span><span class=p>().</span><span class=n>Where</span><span class=p>(</span><span class=n>it</span> <span class=p>=&gt;</span> <span class=n>id</span><span class=p>.</span><span class=n>Id</span> <span class=p>==</span> <span class=n>id</span><span class=p>)?.</span><span class=n>Name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// method2</span>
+</span></span><span class=line><span class=cl><span class=kt>string</span> <span class=n>FindName</span><span class=p>(</span><span class=kt>string</span> <span class=n>id</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>guid</span> <span class=p>=</span> <span class=n>Guid</span><span class=p>.</span><span class=n>Parse</span><span class=p>(</span><span class=n>id</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>FindName</span><span class=p>(</span><span class=n>guid</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>不仅参数类型可以不同，参数个数也可以不同。</p><h6 id=命名的参数>命名的参数</h6><p>任何方法都可以使用命名的参数，只需要写一个变量名在前面，然后就不管顺序传入指定的参数了。</p><p>比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=k>void</span> <span class=n>TestMethod</span><span class=p>(</span><span class=kt>int</span> <span class=n>n</span><span class=p>,</span> <span class=kt>int</span> <span class=n>opt1</span> <span class=p>=</span> <span class=m>0</span><span class=p>,</span> <span class=kt>int</span> <span class=n>opt2</span> <span class=p>=</span> <span class=m>16</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>TestMethod</span><span class=p>(</span><span class=m>0</span><span class=p>,</span> <span class=n>opt2</span><span class=p>:</span> <span class=m>4</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=个数可变的参数>个数可变的参数</h6><p>声明数组类型的参数（比如 <code>int</code> 类型），添加 <code>params</code> 关键字，就可以使用任意数量的 <code>int</code> 类型的参数调用该方法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=k>void</span> <span class=n>PrintEach</span><span class=p>(</span><span class=k>params</span> <span class=kt>int</span><span class=p>[]</span> <span class=n>inputs</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>foreach</span><span class=p>(</span><span class=kt>var</span> <span class=n>item</span> <span class=k>in</span> <span class=n>inputs</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=n>item</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>调用该方法的时候可以使用任意数量个 <code>int</code> 类型的参数哦，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>PrintEach</span><span class=p>(</span><span class=m>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>PrintEach</span><span class=p>(</span><span class=m>1</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>4</span><span class=p>,</span> <span class=m>5</span><span class=p>,</span> <span class=m>1</span><span class=p>,</span> <span class=m>4</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=336---构造函数constructorctor>3.3.6 - 构造函数(constructor/ctor)</h5><p>声明一个与类同名的方法，但是不需要写返回类型（连 <code>void</code> 都不写），比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>UsersServices</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=k>readonly</span> <span class=n>IOptions</span> <span class=n>_options</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=k>readonly</span> <span class=n>IUsersRepo</span> <span class=n>_userRepo</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// constructor</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>UsersServices</span><span class=p>(</span><span class=n>IOptions</span> <span class=n>options</span><span class=p>,</span> <span class=n>IUsersRepo</span> <span class=n>usersRepo</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>_options</span> <span class=p>=</span> <span class=n>options</span> <span class=p>??</span>
+</span></span><span class=line><span class=cl>            <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>options</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>        <span class=n>_usersRepo</span> <span class=p>=</span> <span class=n>usersRepo</span> <span class=p>??</span>
+</span></span><span class=line><span class=cl>            <span class=k>throw</span> <span class=k>new</span> <span class=n>ArgumentNullException</span><span class=p>(</span><span class=n>nameof</span><span class=p>(</span><span class=n>usersRepo</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果不写构造函数的话，编译器会默认生成一个啥也没有的构造函数。如果写了带参数的构造函数则不会默认生成默认的（没有参数什么也不做）构造函数。构造函数可以重载。</p><p>可以包含 <code>static</code> 修饰符的情况：</p><ul><li>类仅用于某些静态成员或属性的容器，因此永远不会实例化它。</li><li>希望类仅通过某个静态成员函数来实例化</li></ul><h6 id=表达式体和构造函数>表达式体和构造函数</h6><p>如果CTOR由一个表达式构成，就直接用表达式体实现：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=n>MyClass</span><span class=p>(</span><span class=n>IOptions</span> <span class=n>option</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=n>_option</span> <span class=p>=</span> <span class=n>option</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><h6 id=从构造函数中调用其他构造函数>从构造函数中调用其他构造函数</h6><p>可以调用其它的构造函数，复用代码。CSharp有一个特殊的语法，成为构造函数初始化器，可以实现此目的：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>class</span> <span class=nc>Car</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>Car</span><span class=p>(</span><span class=kt>string</span> <span class=n>description</span><span class=p>):</span> <span class=k>this</span><span class=p>(</span><span class=n>description</span><span class=p>,</span> <span class=m>5</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>Car</span><span class=p>(</span><span class=kt>string</span> <span class=n>description</span><span class=p>,</span> <span class=kt>int</span> <span class=n>num</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// codes...</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>也可以包含对基类的构造函数的调用（语法和上面大致相同，使用 <code>base</code> 代替 <code>this</code>）</p><h6 id=静态构造函数>静态构造函数</h6><p>给类编写无参数的静态构造函数。这种构造函数只执行一次。</p><h4 id=34---结构>3.4 - 结构</h4><p>有时仅需要一个小的数据结构。此时，类提供的功能多于我们需要的功能，由于性能原因，最好使用结构。</p><p>结构相比于类来说：</p><ul><li>不支持继承</li><li>如果没有默认的构造函数则所有值被初始化为默认值</li><li>可以指定字段如何在内存中布局</li></ul><p>因为结构实际上是把数据项组合在一起，所以有时候大多数或者全部字段都声明为 <code>public</code></p><h5 id=341---结构是值类型>3.4.1 - 结构是值类型</h5><p>对于结构来说，<code>new</code> 只是调用构造函数，初始化所有字段。</p><p>结构遵循其它数据类型都遵循的规则：在使用所有元素都必须进行初始化，调用 <code>new</code> 关键字就全部初始化了。</p><p>但当把结构作为参数传递给方法的时候应该把它作为 <code>ref</code> 参数，以免性能损失。</p><h5 id=342---只读结构>3.4.2 - 只读结构</h5><p>使用CSharp7.2时， <code>readonly</code> 修饰符可以应用于结构，因此编译器保证结构体的不变性。</p><h5 id=343---结构和继承>3.4.3 - 结构和继承</h5><p><strong>结构不是为继承设计的</strong></p><blockquote><p>要比较结构值，最好实现结构 <code>IEquatable&lt;T></code> 。</p></blockquote><h5 id=344---结构的构造函数>3.4.4 - 结构的构造函数</h5><p>默认构造函数把数值字段都初始化为 0，且总是隐式的给出。不能为结构创建定制的默认CTOR。</p><h5 id=345---ref-结构>3.4.5 - ref 结构</h5><p>使用 <code>ref</code> 关键字将结构体分配到堆上。</p><h4 id=35---按值和按引用传递参数>3.5 - 按值和按引用传递参数</h4><blockquote><p>为了避免在更改成员时类和结构之间的不同行为上出现这种混淆，最好将结构设置为不可变的。</p></blockquote><h5 id=351---ref-参数>3.5.1 - ref 参数</h5><p>在定义和调用方法的参数前加上 <code>ref</code> 修饰符，使用引用。</p><h5 id=352---out-参数>3.5.2 - out 参数</h5><p>处理类型错误的数据，可以使用 <code>TryParse</code> 方法。无论解析成功与否，都返回一个 <code>bool</code> 类型，解析成功的结果使用 <code>out</code> 返回到另外一个参数。</p><p>调用此方法时，变量不需要预先初始化，而是在方法中初始化变量，在调用方法的时候需要提供 <code>out</code> 修饰符，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=kt>int</span><span class=p>.</span><span class=n>TryParse</span><span class=p>(</span><span class=n>inputStr</span><span class=p>,</span> <span class=k>out</span> <span class=kt>var</span> <span class=n>result</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>&#34;SUCCESS&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=353--in-参数>3.5.3- in 参数</h5><p><code>in</code> 参数保证发送到方法中的数据不会更改，它将参数设置为只读变量。相比于只使用 <code>ref</code> 来说，显然使用 <code>in</code> 修饰符更安全一些。</p><p>使用值类型和 <code>in</code> 修饰符，不仅有助于确保不更改内存，编译器还可以创建更好的优化代码。</p><h4 id=36---可空类型>3.6 - 可空类型</h4><p>可空类型是可以为空( <code>null</code> )的值类型，用于解决从数据库映射到代码或者类似这种值类型的可能为空的情况。</p><p>可空类型只需要在类型的后面添加“?”。</p><p>值类型隐式转换为可空类型，可空类型需要强制转换为值类型，如果强制转换的过程中可空类型变量为 <code>null</code> 则会引发一个异常。更好的解决方案是使用可空类型的 <code>HasValue</code> 和 <code>Value</code> 属性。</p><p>可以使用：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span> <span class=n>idInt</span> <span class=p>=</span> <span class=n>id</span><span class=p>.</span><span class=n>HasValue</span> <span class=p>?</span> <span class=n>id</span><span class=p>.</span><span class=n>Value</span> <span class=p>:</span> <span class=p>-</span><span class=m>1</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>当然，使用合并运算符更好：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kt>int</span> <span class=n>idInt</span> <span class=p>=</span> <span class=n>id</span> <span class=p>??</span> <span class=p>-</span><span class=m>1</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=37---枚举类型>3.7 - 枚举类型</h4><p>枚举是一个值类型，包含一组命名的常量。</p><p>默认情况下，枚举的类型是 <code>int</code> ，也可以通过 <code>:[type]</code> 指定为其它整数类型，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>enum</span> <span class=n>Color</span> <span class=p>:</span> <span class=kt>short</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>还可以使用枚举类型把多个选项分配给一个变量，分配给常量的值必须是不同的位（使用位与来把多个枚举常量赋值给变量），并且加上 <code>Flags</code> 属性 ，比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=na>[Flags]</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>enum</span> <span class=n>DaysOfWeek</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Monday</span> <span class=p>=</span>    <span class=m>0</span><span class=n>b_0000_0000_0000_0001</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Tuesday</span> <span class=p>=</span>   <span class=m>0</span><span class=n>b_0000_0000_0000_0010</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Wednesday</span> <span class=p>=</span> <span class=m>0</span><span class=n>b_0000_0000_00000_0100</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Thursday</span> <span class=p>=</span>  <span class=m>0</span><span class=n>b_0000_0000_0000_1000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Friday</span> <span class=p>=</span>    <span class=m>0</span><span class=n>b_0000_0000_0001_0000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Saturday</span> <span class=p>=</span>  <span class=m>0</span><span class=n>b_0000_0000_0010_0000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Sunday</span> <span class=p>=</span>    <span class=m>0</span><span class=n>b_0000_0000_0100_0000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Weekend</span> <span class=p>=</span> <span class=n>Saturday</span> <span class=p>|</span> <span class=n>Sunday</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>Workday</span> <span class=p>=</span>   <span class=m>0</span><span class=n>b_0000_0000_0001_1111</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>AllWeek</span> <span class=p>=</span> <span class=n>Workday</span> <span class=p>|</span> <span class=n>Weekend</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>枚举还提供了方法来解析字符串：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>Enum</span><span class=p>.</span><span class=n>TryParse</span><span class=p>&lt;</span><span class=n>Color</span><span class=p>&gt;(</span><span class=s>&#34;Red&#34;</span><span class=p>,</span> <span class=k>out</span> <span class=kt>var</span> <span class=n>red</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>Enum.GetNames</code> 方法返回一个包含所有枚举名的字符串数组。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>foreach</span> <span class=p>(</span><span class=kt>var</span> <span class=n>day</span> <span class=k>in</span> <span class=n>Enum</span><span class=p>.</span><span class=n>GetNames</span><span class=p>(</span><span class=k>typeof</span><span class=p>(</span><span class=n>Color</span><span class=p>)))</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>为了获取枚举的值，可以使用 <code>Enum.GetValues</code>，返回枚举值的一个数组。</p><h4 id=38---部分类>3.8 - 部分类</h4><p><code>partial</code> 关键字允许把类、结构、方法或接口放在多个文件中。</p><blockquote><p>注意：尽管 <code>partial</code> 关键字很容易创建跨文件的庞大的类，但是它并不应该这么用，如果类过大还是应该拆分的。</p></blockquote><p>部分类中可以用 <code>partial</code> 关键字声明一个方法，然后在其它文件中实现（实现不需要加这个关键字），比如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>partial</span> <span class=k>void</span> <span class=n>PartMethod</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><p>在另一个文件中：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>void</span> <span class=n>PartMethod</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// DO SOME THING</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>部分方法必须是 <code>void</code> 类型，否则编译器在没有实现代码的情况下不能将其删除。</strong></p><h4 id=39---扩展方法>3.9 - 扩展方法</h4><p>扩展方法是给对象添加功能的另一个选项，在不能使用继承时，也可能使用这个选项（例如类是密封的）。</p><p>扩展方法的定义在参数表里是这样的： <code>(this [类型] [标识符])</code> 也就是普通方法的参数表类型前面加上 <code>this</code>。会作为第一个参数类型的扩展方法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=k>class</span> <span class=nc>StringExt</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>int</span> <span class=n>GetWordCount</span><span class=p>(</span><span class=k>this</span> <span class=kt>string</span> <span class=n>s</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=n>s</span><span class=p>.</span><span class=n>Split</span><span class=p>().</span><span class=n>Length</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=310---object-类>3.10 - Object 类</h4><p>所有的 <code>.NET</code> 类都继承于 <code>System.Object</code> 。<code>Object</code> 类提供了一些方法：</p><div class=table-wrapper><table><thead><tr><th>方法</th><th>作用</th></tr></thead><tbody><tr><td><code>ToString()</code></td><td>对象的字符串表示，可以重写</td></tr><tr><td><code>GetHashCode()</code></td><td>在散列中的对象可以使用这个方法</td></tr><tr><td><code>Equals()</code></td><td>比较对象的相等性，有重载可以重写</td></tr><tr><td><code>Finalize()</code></td><td>析构函数，引用被GC的时候调用</td></tr><tr><td><code>GetType()</code></td><td>返回一个实例提供对象所属类的信息</td></tr><tr><td><code>MemeberwiseClone</code></td><td>浅表复制对象并返回副本的引用</td></tr></tbody></table></div><h3 id=4---继承>4 - 继承</h3><h4 id=41---面向对象>4.1 - 面向对象</h4><p>面向对象的三个最重要的概念是继承、封装和多态（老生常谈了）</p><h4 id=42---继承的类型>4.2 - 继承的类型</h4><ul><li>单重继承： 一个类派可以生自一个基类，CSharp采用这种继承</li><li>多重继承： 一个类派生自多个基类，C++用，CSharp不允许这种继承，但是可以继承自多个接口</li><li>多层继承： 一个基类的派生类可以继续被继承，CSharp允许这种继承</li><li>接口继承： 定义了接口的继承，CSharp允许并且允许多重接口继承</li></ul><h5 id=421---多重继承>4.2.1 - 多重继承</h5><p>C++等支持多重继承，但是会增加代码复杂度以及额外开销，（并且我觉得不是很优雅）。所以CSharp不支持这种继承。但是同时，CSharp允许继承自多个接口。</p><h5 id=422---结构和类>4.2.2 - 结构和类</h5><p>前面说过，结构不是为继承而设计的，但是</p><ul><li>结构总是派生自 <code>System.ValueType</code> ，它们还可以派生自多个接口。</li><li>类总是派生自 <code>System.Object</code> 或者用户选择的另一个类，它们还可以派生自多个接口。</li></ul><h4 id=43---实现继承>4.3 - 实现继承</h4><p>声明类派生自另一个类（比如类 <code>A</code> 派生自 <code>B</code>），使用以下的语法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>class</span> <span class=nc>A</span> <span class=p>:</span> <span class=n>B</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果类也派生自接口，则用逗号分隔多个接口。</p><blockquote><p>注意：如果派生类同时派生自类和多个接口，类放在最前面。</p></blockquote><h5 id=431---虚方法>4.3.1 - 虚方法</h5><p>把一个基类方法声明为 <code>virtual</code> ，就可以在任何派生类中重写(override)该方法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>Shape</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>virtual</span> <span class=k>void</span> <span class=n>Draw</span><span class=p>()</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>$&#34;Shape with {Position} and {Size}&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>也可以把属性声明为 <code>virtual</code> 。对于虚属性或重写属性，语法和非虚属性相同，但要添加关键字 <code>virtual</code>。</p><p>CSharp中的虚函数概念与标准的 OOP 的概念相同：可以在派生类中重写虚函数。在调用方法的时候会调用该类对象的合适方法。不同于Jvav，在CSharp中函数在默认情况下不是虚拟的，但可以显示的声明为 virtual。</p><p>CSharp要求在派生类中重写另一个函数时，使用 <code>override</code>关键字显示声明：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>Rectangle</span> <span class=p>:</span> <span class=n>Shape</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kd>override</span> <span class=k>void</span> <span class=n>Draw</span><span class=p>()</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=n>Console</span><span class=p>.</span><span class=n>WriteLine</span><span class=p>(</span><span class=s>$&#34;Rectangle with {Position} and {Size}&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>可以重写 <code>Object</code> 类的某些方法，比如 <code>ToString</code> 和 <code>Equals</code>。</p><blockquote><p>注意：成员字段和静态函数都不能声明为 <code>virtual</code> ，因为这个概念只对类中的实例函数有效。</p></blockquote><h5 id=432---多态性>4.3.2 - 多态性</h5><p>拿上面的例子来说，尽管方法声明为接收一个 <code>Shape</code> 对象，但是任何派生自 <code>Shape</code> 的类型都可以传递给这个方法。因为派生自 <code>Shape</code> 的类拥有 <code>Shape</code> 的所有内容。</p><h5 id=433---隐藏方法>4.3.3 - 隐藏方法</h5><p>如果签名相同的方法在基类和派生类中都进行了声明，但该方法没有分别声明为 <code>virtual</code> 和 <code>override</code> ，派生类方法就会隐藏于基类方法。</p><blockquote><p>注意：new 方法修饰符 <strong>不应该用于</strong> 故意隐藏基类的成员。它的主要目的是处理版本冲突。</p></blockquote><h5 id=434---调用方法的基类版本>4.3.4 - 调用方法的基类版本</h5><p>为了添加派生类的功能，可以使用 <code>base</code> 关键字调用基类方法，语法为 <code>base.&lt;MethodName></code></p><h5 id=435---抽象类和抽象方法>4.3.5 - 抽象类和抽象方法</h5><p>CSharp允许把类声明为 <code>abstract</code> 。抽象类不能实例化，而抽象方法不能直接实现，必须在非抽象的派生类中重写。</p><h5 id=436---密封类和密封方法>4.3.6 - 密封类和密封方法</h5><p>如果不应创建派生自某个自定义类的类，该自定义类就该密封。给类添加 <code>sealed</code> 修饰符，就不允许创建该类的子类。</p><h5 id=437---派生类的构造函数>4.3.7 - 派生类的构造函数</h5><p>CTOR 总是按照层次结构的顺序调用：先调用 <code>System.Object</code> 类的构造函数，再按照层次结构由上向下运行，直到到达编译器要实例化的类为止。</p><p>把初始化代码放在 CTOR 代码块内太迟了，所以采用 <code>base</code> 关键字传参：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>Student</span> <span class=p>:</span> <span class=n>Human</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>Student</span><span class=p>(</span><span class=n>Sex</span> <span class=n>sex</span><span class=p>)</span> <span class=p>:</span> <span class=k>base</span><span class=p>(</span><span class=n>sex</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=44---修饰符>4.4 - 修饰符</h4><h5 id=441---访问修饰符>4.4.1 - 访问修饰符</h5><div class=table-wrapper><table><thead><tr><th>修饰符</th><th>应用于</th><th>说明</th></tr></thead><tbody><tr><td><code>public</code></td><td>所有的类或成员</td><td>任何代码都可访问</td></tr><tr><td><code>protected</code></td><td>类型和内嵌类型的所有成员</td><td>只有派生的类能够访问</td></tr><tr><td><code>internal</code></td><td>所有的类或成员</td><td>只有在包含它的程序集才能访问</td></tr><tr><td><code>private</code></td><td>类型和内嵌类型的所有成员</td><td>只能在它所属的类中访问</td></tr><tr><td><code>protected internal</code></td><td>同上</td><td><code>protected</code> OR <code>internal</code></td></tr><tr><td><code>private protected</code></td><td>同上</td><td><code>private</code> AND <code>protected</code></td></tr></tbody></table></div><blockquote><p>注意： <code>public</code>、<code>protected</code> 和 <code>private</code> 是逻辑访问修饰符，而 <code>internal</code> 是“物理”的，它表示程序集的边界。</p></blockquote><h5 id=442---其他修饰符>4.4.2 - 其他修饰符</h5><p>|修饰符|应用于| 说明 |
+| <code>new</code>|函数成员|隐藏继承的成员|
+|<code>static</code>|所有成员|静态|
+|<code>virtual</code>|仅成员函数|虚函数|
+|<code>abstract</code>|同上|定义签名，没有实现|
+|<code>override</code>|同上|重写|
+|<code>sealed</code>|类、方法和属性|封闭，不可被继承|</p><h4 id=45---接口>4.5 - 接口</h4><p>声明接口在语法上与声明类完全相同，只是 <code>class</code> 换成了 <code>interface</code>，但是接口中不允许提供任何成员的实现。</p><p>因为接口的成员总是抽象的，所以接口不需要 <code>abstract</code> 修饰符。</p><h5 id=451---定义和实现接口>4.5.1 - 定义和实现接口</h5><p>接口名称通常以 <code>I</code> 开头，以便知道这是一个接口。</p><p>让想实现接口的类继承于接口，然后去实现接口里面定义的成员即可。比如说 <code>AccountService</code> 派生于 <code>IAccountService</code> ，表示它获得了 <code>IAccountService</code> 中的所有成员，但接口实际上并不实现其方法，所以 <code>AccountService</code> 中必须提供其实现。如果缺少代码编译器将产生一个错误。</p><h5 id=451---派生的接口>4.5.1 - 派生的接口</h5><p>接口可以彼此继承，其方式与类的继承相同。</p><h4 id=46-is-和-as-运算符>4.6 is 和 as 运算符</h4><p>两个与继承有关的重要运算符：<code>is</code> 和 <code>as</code></p><p>在从基类的对象转为派生类的对象的时候不应该直接进行强制转换，而应该先检查，使用 <code>as</code> 运算符而不是强制转换 <code>(&lt;type>)</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=kd>public</span> <span class=k>void</span> <span class=n>Login</span><span class=p>(</span><span class=kt>object</span> <span class=n>service</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>IAccountService</span> <span class=p>=</span> <span class=n>service</span> <span class=k>as</span> <span class=n>IAccountService</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>as</code> 运算符会检查要进项转换的对象是否符合条件（实现了接口），然后再进行转换，如果不符合不会抛出异常而是返回一个 <code>null</code>。</p><p><code>is</code> 运算符根据条件是否满足，返回一个 <code>bool</code> 值，如果条件为 <code>true</code> ，则将所得的对象写入后面声明的变量中：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cs data-lang=cs><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>o</span> <span class=k>is</span> <span class=n>AccountService</span> <span class=n>service</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// service is AccountService.</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div></section><footer class=article-footer><section class=article-tags><a href=/tags/%E7%AC%94%E8%AE%B0/>笔记</a>
+<a href=/tags/%E7%BC%96%E7%A8%8B/>编程</a>
+<a href=/tags/csharp/>CSharp</a>
+<a href=/tags/dotnet/>DotNET</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/csharp-note6-delegates-lambda-expressions-and-events/><div class=article-details><h2 class=article-title>C#的委托、lambda 表达式和事件 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note5-array/><div class=article-details><h2 class=article-title>C#中数组的使用 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note7-string-and-regular/><div class=article-details><h2 class=article-title>C#字符串和正则表达式 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note3-generics-type/><div class=article-details><h2 class=article-title>C#中的泛型 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note1-basic/><div class=article-details><h2 class=article-title>C#编程基础 - C#笔记</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2025 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

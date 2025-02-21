@@ -1,0 +1,281 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="利用PHP实现简单的考勤打卡、人数统计功能。\n这什么屑玩意啊，黑历史黑历史。\n先讲个故事&mldr; 由于疫情原因，开学延迟，班主任为了监督我们学习，所以叫我们每天打卡。那么就要到群里点人，还要统计，谁打卡了谁没打卡谁迟到&mldr;我一想太麻烦了\n"><title>PHP考勤系统源码 利用PHP实现简单的打卡考勤 超详细教程+实例+代码（一）</title>
+<link rel=canonical href=https://blog.gaein.cn/passages/checker-webpage-1/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="PHP考勤系统源码 利用PHP实现简单的打卡考勤 超详细教程+实例+代码（一）"><meta property='og:description' content="利用PHP实现简单的考勤打卡、人数统计功能。\n这什么屑玩意啊，黑历史黑历史。\n先讲个故事&mldr; 由于疫情原因，开学延迟，班主任为了监督我们学习，所以叫我们每天打卡。那么就要到群里点人，还要统计，谁打卡了谁没打卡谁迟到&mldr;我一想太麻烦了\n"><meta property='og:url' content='https://blog.gaein.cn/passages/checker-webpage-1/'><meta property='og:site_name' content='Gaein nidb 的博客'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='网站建设'><meta property='article:tag' content='编程'><meta property='article:tag' content='PHP'><meta property='article:published_time' content='2020-02-08T22:36:25+08:00'><meta property='article:modified_time' content='2020-02-08T22:36:25+08:00'><meta name=twitter:title content="PHP考勤系统源码 利用PHP实现简单的打卡考勤 超详细教程+实例+代码（一）"><meta name=twitter:description content="利用PHP实现简单的考勤打卡、人数统计功能。\n这什么屑玩意啊，黑历史黑历史。\n先讲个故事&mldr; 由于疫情原因，开学延迟，班主任为了监督我们学习，所以叫我们每天打卡。那么就要到群里点人，还要统计，谁打卡了谁没打卡谁迟到&mldr;我一想太麻烦了\n"><link rel="shortcut icon" href=https://img.cdn.gaein.cn/favicon.ico><head><meta itemprop=name content="PHP考勤系统源码 利用PHP实现简单的打卡考勤 超详细教程+实例+代码（一）"><meta itemprop=image content="http://img.cdn.gaein.cn/website_used/avatars/avatar-256x.webp"><meta itemprop=description content="利用PHP实现简单的考勤打卡、人数统计功能。
+
+这什么屑玩意啊，黑历史黑历史。
+先讲个故事&mldr;
+由于疫情原因，开学延迟，班主任为了监督我们学习，所以叫我们每天打卡。那么就要到群里点人，还要统计，谁打卡了谁没打卡谁迟到&mldr;我一想太麻烦了"></head></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar-256x_hu_d97b16840c038ea4.webp width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🥰</span></figure><div class=site-meta><h1 class=site-name><a href=/>Gaein nidb 的博客</a></h1><h2 class=site-description>记录生活</h2></div></header><ol class=menu-social><li><a href=https://github.com/nidbCN target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=https://gaein.cn><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>首页</span></a></li><li><a href=/><svg class="icon icon-tabler icon-tabler-library" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 3m0 2.667A2.667 2.667.0 019.667 3h8.666A2.667 2.667.0 0121 5.667v8.666A2.667 2.667.0 0118.333 17H9.667A2.667 2.667.0 017 14.333z"/><path d="M4.012 7.26A2.005 2.005.0 003 8.997v10c0 1.1.9 2 2 2h10c.75.0 1.158-.385 1.5-1"/><path d="M11 7h5"/><path d="M11 10h6"/><path d="M11 13h3"/></svg>
+<span>博客</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>归档</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=https://www.gaein.cn/friends><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#先讲个故事>先讲个故事&mldr;</a></li><li><a href=#要求>要求</a></li><li><a href=#准备>准备</a></li><li><a href=#开工>开工</a><ol><li><a href=#表单页面>表单页面</a><ol><li><a href=#表单创建>表单创建</a></li><li><a href=#时间获取>时间获取</a></li><li><a href=#页面代码>页面代码</a></li></ol></li><li><a href=#php页面>PHP页面</a><ol><li><a href=#参数接收>参数接收</a></li><li><a href=#参数处理>参数处理</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E4%BB%A3%E7%A0%81%E5%A6%82%E8%AF%97/>代码如诗</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/passages/checker-webpage-1/>PHP考勤系统源码 利用PHP实现简单的打卡考勤 超详细教程+实例+代码（一）</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2020 Feb 08</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 7 分钟</time></div></footer></div></header><section class=article-content><p>利用PHP实现简单的考勤打卡、人数统计功能。</p><blockquote><p>这什么屑玩意啊，黑历史黑历史。</p></blockquote><h2 id=先讲个故事>先讲个故事&mldr;</h2><p>由于疫情原因，开学延迟，班主任为了监督我们学习，所以叫我们每天打卡。那么就要到群里点人，还要统计，谁打卡了谁没打卡谁迟到&mldr;我一想太麻烦了</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/01.webp loading=lazy alt=截屏1></p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/02.webp loading=lazy alt=截屏2></p><p>于是我在群里水了一句，要不然开发个考勤系统吧</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/03.webp loading=lazy alt=截屏3></p><p>当然我当时的开发指的是“面向百度”编程（就是随便找个什么源码改一下title。</p><p>结果我发现行不通&mldr;没有符合我要求的源码，只好试试了。</p><p>我虽然接触了点编程，不过PHP还真没碰过，想想编程语言也都是26个字母只好硬着头皮干了。</p><h2 id=要求>要求</h2><p>明确一下自己的期望吧：</p><ol><li>能记录打卡人（开始就这一个想法）</li></ol><p>好的没有了。</p><p>现在实现的功能（很多都是我晚上在被窝的新奇想法）</p><ol><li>记录打卡人，打卡时间，自动标注准时或者迟到；</li><li>打卡成功后返回页面，提示成功与否并且提示信息（非常智障的实现，我跳转了一个html并且get传参信息，当时自己不知道php echo能输出html）；（2021补:什么我为什么要用php echo来输出html？？？）</li><li>后台统计打卡人数、未打卡人数、迟到人数还有未打卡人名单；</li></ol><h2 id=准备>准备</h2><ol><li>语言：思考来思考去，服务器只装着PHP，空间倒是有 <code>.NET fw</code>，不过看看还是PHP的网站居多；</li><li>实现：操作数据库一想就头大了，MySQL这玩意真玩不了，上次导入旧博客数据就差点没玩死我，想想还是直接磁盘上写文件吧；</li><li>服务器：本来想用我一个虚拟主机来着，不过那玩意权限有问题，写不了文件，无奈搬到网站服务器上面；</li><li>IDE：没有专门去找PHP的IDE，直接用的vscode+网上随便找一个在线PHP作为调试；</li></ol><h2 id=开工>开工</h2><h3 id=表单页面>表单页面</h3><h4 id=表单创建>表单创建</h4><p>想来想去输入一个姓名就可以了，后来又想想需要一个时间，那么html如下:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=line><span class=cl><span class=cp>&lt;!DOCTYPE html&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>html</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nt>head</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>meta</span> <span class=na>charset</span><span class=o>=</span><span class=s>&#34;utf-8&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>title</span><span class=p>&gt;</span>考勤打卡<span class=p>&lt;/</span><span class=nt>title</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;/</span><span class=nt>head</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nt>body</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>	  <span class=p>&lt;</span><span class=nt>form</span> <span class=na>action</span><span class=o>=</span><span class=s>&#34;process.php&#34;</span> <span class=na>method</span><span class=o>=</span><span class=s>&#34;post&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      姓名：<span class=p>&lt;</span><span class=nt>input</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;text&#34;</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;name&#34;</span><span class=p>&gt;&lt;</span><span class=nt>br</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      时间：<span class=p>&lt;</span><span class=nt>input</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;text&#34;</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;time&#34;</span><span class=p>&gt;&lt;</span><span class=nt>br</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      日期：<span class=p>&lt;</span><span class=nt>input</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;text&#34;</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;filename&#34;</span><span class=p>&gt;&lt;</span><span class=nt>br</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>	    <span class=p>&lt;</span><span class=nt>input</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;submit&#34;</span> <span class=na>value</span><span class=o>=</span><span class=s>&#34;打卡 &#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>form</span><span class=p>&gt;</span> 
+</span></span><span class=line><span class=cl>  <span class=p>&lt;/</span><span class=nt>body</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;/</span><span class=nt>html</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><p>看起来是这样的：</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/04.webp loading=lazy alt=界面></p><p>（丑死了）</p><p><code>&lt;!DOCTYPE html></code> 和 <code>meta</code> 是必须的，否则有可能乱码。</p><p><code>form</code> 标签里面是表单，<code>action</code> 后面是提交到的地址，<code>method</code> 是方法（别问我为啥用 <code>post</code> ，因为它看起来好看）</p><p><code>input</code> 中的 <code>type</code> 是输入的类型，<code>text</code> 自然就是文本啦，<code>submit</code> 是提交表单，<code>name</code> 是参数的名字（我日期参数是 <code>filename</code> 是因为我想把存储打卡信息的文件用日期命名），<code>value</code> 是默认的值。</p><h4 id=时间获取>时间获取</h4><p>那么又一个问题来了，时间和日期怎么获取？这就要用的<code>javascript</code> 了，<code>js</code> 获取时间和日期后再去改动 <code>html</code>，为了找到他们我把他们用 <code>div</code> 框起来然后给他们 <code>id</code> 为 <code>0</code> 和 <code>1</code>（懒死了）</p><p><code>js</code> 的时间获取百度一下就有，不过获取的都是浏览网页的人电脑上的时间，我怕别人通过修改本地时间来掩盖自己迟到的事实，所以我要去获取网络时间。</p><p>我的方法是 <code>get</code> 请求自己的服务器，在返回的头里面有时间信息（服务器的）。当然，你也可以百度一下时间 <code>api</code>，调用起来也会很方便的。
+<code>js</code> 代码如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=o>&lt;</span><span class=nx>script</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl><span class=kd>function</span> <span class=nx>getTime</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl><span class=nx>ajax</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=kd>function</span> <span class=nx>ajax</span><span class=p>(</span><span class=nx>option</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=kd>var</span> <span class=nx>xhr</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span><span class=p>(</span><span class=nb>window</span><span class=p>.</span><span class=nx>XMLHttpRequest</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>xhr</span> <span class=o>=</span> <span class=k>new</span> <span class=nb>window</span><span class=p>.</span><span class=nx>XMLHttpRequest</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span> <span class=c1>// ie
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=nx>xhr</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>ActiveObject</span><span class=p>(</span><span class=s2>&#34;Microsoft&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 通过get的方式请求当前文件
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>xhr</span><span class=p>.</span><span class=nx>open</span><span class=p>(</span><span class=s2>&#34;get&#34;</span><span class=p>,</span><span class=s2>&#34;/&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nx>xhr</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 监听请求状态变化
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>xhr</span><span class=p>.</span><span class=nx>onreadystatechange</span> <span class=o>=</span> <span class=kd>function</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>      <span class=kd>var</span> <span class=nx>time</span> <span class=o>=</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nx>curDate</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=k>if</span><span class=p>(</span><span class=nx>xhr</span><span class=p>.</span><span class=nx>readyState</span><span class=o>===</span><span class=mi>2</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 获取响应头里的时间戳
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nx>time</span> <span class=o>=</span> <span class=nx>xhr</span><span class=p>.</span><span class=nx>getResponseHeader</span><span class=p>(</span><span class=s2>&#34;Date&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=nx>curDate</span> <span class=o>=</span> <span class=k>new</span> <span class=nb>Date</span><span class=p>(</span><span class=nx>time</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=c1>//下面修改HTML
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s2>&#34;0&#34;</span><span class=p>).</span><span class=nx>innerHTML</span> <span class=o>=</span> <span class=s2>&#34;时间：&lt;input type=&#39;text&#39; name=&#39;time&#39; value=&#39;&#34;</span><span class=o>+</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getHours</span><span class=p>()</span><span class=o>+</span><span class=s2>&#34;:&#34;</span><span class=o>+</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getMinutes</span><span class=p>()</span><span class=o>+</span><span class=s2>&#34;&#39; readonly&gt;&lt;br&gt;&#34;</span><span class=p>;</span><span class=c1>//拼接时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s2>&#34;0&#34;</span><span class=p>).</span><span class=nx>innerHTML</span> <span class=o>=</span> <span class=s2>&#34;日期：&lt;input type=&#39;text&#39; name=&#39;filename&#39; value=&#39;&#34;</span><span class=o>+</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getFullYear</span><span class=p>()</span><span class=o>+</span><span class=p>(</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getMonth</span><span class=p>()</span><span class=o>+</span><span class=mi>1</span><span class=p>)</span><span class=o>+</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getDate</span><span class=p>()</span><span class=o>+</span><span class=s2>&#34;&#39; readonly&gt;&lt;br&gt;&#34;</span><span class=p>;</span><span class=c1>//通过readonly阻止修改时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=o>&lt;</span><span class=err>/script&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=页面代码>页面代码</h4><p>因为HTML是顺序加载的，所以我希望 <code>HTML</code> 加载完全后再读取<code>js</code>（否则 <code>js</code> 会找不到 <code>id</code> 为 <code>0</code> 的 <code>div</code>），所以我们写个 <code>onload</code>，为了刷新时间我在 <code>getTime</code> 函数里面利用 <code>setTimeout</code> 调用它自己实现定时（一分钟）刷新。HTML全文如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=line><span class=cl><span class=cp>&lt;!DOCTYPE html&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>html</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nt>head</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>meta</span> <span class=na>charset</span><span class=o>=</span><span class=s>&#34;utf-8&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>title</span><span class=p>&gt;</span>考勤打卡<span class=p>&lt;/</span><span class=nt>title</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>script</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=kd>function</span> <span class=nx>getTime</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>ajax</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>      <span class=kd>function</span> <span class=nx>ajax</span><span class=p>(</span><span class=nx>option</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=kd>var</span> <span class=nx>xhr</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=nb>window</span><span class=p>.</span><span class=nx>XMLHttpRequest</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=nx>xhr</span> <span class=o>=</span> <span class=k>new</span> <span class=nb>window</span><span class=p>.</span><span class=nx>XMLHttpRequest</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span> <span class=c1>// ie
+</span></span></span><span class=line><span class=cl><span class=c1></span>          <span class=nx>xhr</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>ActiveObject</span><span class=p>(</span><span class=s2>&#34;Microsoft&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 通过get的方式请求当前文件
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nx>xhr</span><span class=p>.</span><span class=nx>open</span><span class=p>(</span><span class=s2>&#34;get&#34;</span><span class=p>,</span><span class=s2>&#34;/&#34;</span><span class=p>);</span><span class=c1>//可以把/改成https://www.baidu.com/
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nx>xhr</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// 监听请求状态变化
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nx>xhr</span><span class=p>.</span><span class=nx>onreadystatechange</span> <span class=o>=</span> <span class=kd>function</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=kd>var</span> <span class=nx>time</span> <span class=o>=</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=nx>curDate</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span><span class=p>(</span><span class=nx>xhr</span><span class=p>.</span><span class=nx>readyState</span><span class=o>===</span><span class=mi>2</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>              <span class=c1>// 获取响应头里的时间戳
+</span></span></span><span class=line><span class=cl><span class=c1></span>              <span class=nx>time</span> <span class=o>=</span> <span class=nx>xhr</span><span class=p>.</span><span class=nx>getResponseHeader</span><span class=p>(</span><span class=s2>&#34;Date&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>              <span class=nx>curDate</span> <span class=o>=</span> <span class=k>new</span> <span class=nb>Date</span><span class=p>(</span><span class=nx>time</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>              <span class=c1>//下面修改HTML
+</span></span></span><span class=line><span class=cl><span class=c1></span>              <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s2>&#34;0&#34;</span><span class=p>).</span><span class=nx>innerHTML</span> <span class=o>=</span> <span class=s2>&#34;时间：&lt;input type=&#39;text&#39; name=&#39;time&#39; value=&#39;&#34;</span><span class=o>+</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getHours</span><span class=p>()</span><span class=o>+</span><span class=s2>&#34;:&#34;</span><span class=o>+</span><span class=nx>cur</span><span class=p>.</span><span class=nx>DateGetMinutes</span><span class=p>()</span><span class=o>+</span><span class=s2>&#34;&#39; readonly&gt;&lt;br&gt;&#34;</span><span class=p>;</span><span class=c1>//拼接时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>              <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s2>&#34;1&#34;</span><span class=p>).</span><span class=nx>innerHTML</span> <span class=o>=</span> <span class=s2>&#34;日期：&lt;input type=&#39;text&#39; name=&#39;filename&#39; value=&#39;&#34;</span><span class=o>+</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getFullYear</span><span class=p>()</span><span class=o>+</span><span class=p>(</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getMonth</span><span class=p>()</span><span class=o>+</span><span class=mi>1</span><span class=p>)</span><span class=o>+</span><span class=nx>curDate</span><span class=p>.</span><span class=nx>getDate</span><span class=p>()</span><span class=o>+</span><span class=s2>&#34;&#39; readonly&gt;&lt;br&gt;&#34;</span><span class=p>;</span><span class=c1>//通过readonly阻止修改时间
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>	      <span class=nx>setTimeout</span><span class=p>(</span><span class=nx>getTime</span><span class=p>,</span> <span class=mi>60000</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>script</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;/</span><span class=nt>head</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nt>body</span> <span class=na>onload</span><span class=o>=</span><span class=s>&#34;getTime()&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>	  <span class=p>&lt;</span><span class=nt>form</span> <span class=na>action</span><span class=o>=</span><span class=s>&#34;process.php&#34;</span> <span class=na>method</span><span class=o>=</span><span class=s>&#34;post&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      姓名：<span class=p>&lt;</span><span class=nt>input</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;text&#34;</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;name&#34;</span><span class=p>&gt;&lt;</span><span class=nt>br</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>		  <span class=p>&lt;</span><span class=nt>div</span> <span class=na>id</span><span class=o>=</span><span class=s>&#34;0&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>div</span> <span class=na>id</span><span class=o>=</span><span class=s>&#34;1&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>	  <span class=p>&lt;</span><span class=nt>input</span> <span class=na>type</span><span class=o>=</span><span class=s>&#34;submit&#34;</span> <span class=na>value</span><span class=o>=</span><span class=s>&#34;打卡 &#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;/</span><span class=nt>form</span><span class=p>&gt;</span> 
+</span></span><span class=line><span class=cl>  <span class=p>&lt;/</span><span class=nt>body</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;/</span><span class=nt>html</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><p>很可惜在自己家电脑上面是无法完成测试的，</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/05.webp loading=lazy alt=CORS></p><p>把html上传到服务器之后效果是这样的:</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/06.webp loading=lazy alt=效果></p><p>虽然很丑，但是功能实现了，手动试一试确实无法修改时间、日期，而且时间也会每分钟刷新</p><h3 id=php页面>PHP页面</h3><blockquote><p>由于PHP较为奇特的语法，和跟没有一样的报错，坑了我很长时间。PHP中字符串用 <code>.</code> 拼接、变量无需声明前面加上 <code>$</code> 即可&mldr;建议先过一遍菜鸟教程或者w3school</p></blockquote><h4 id=参数接收>参数接收</h4><p>PHP中接收到的POST的参数的值在</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;参数名&#34;</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>GET的在</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=nv>$_GET</span><span class=p>[</span><span class=s2>&#34;参数名&#34;</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=参数处理>参数处理</h4><h5 id=文件名>文件名</h5><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=nv>$filename</span><span class=o>=</span><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;filename&#34;</span><span class=p>]</span><span class=o>.</span><span class=s2>&#34;txt&#34;</span><span class=p>;</span><span class=c1>//拼接文件名
+</span></span></span></code></pre></td></tr></table></div></div><h5 id=姓名>姓名</h5><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=nv>$name</span><span class=o>=</span><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;name&#34;</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=时间>时间</h5><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=nv>$time</span> <span class=o>=</span> <span class=nx>str_replace</span><span class=p>(</span><span class=s2>&#34;:&#34;</span><span class=p>,</span><span class=s2>&#34;&#34;</span><span class=p>,</span><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;time&#34;</span><span class=p>]);</span><span class=c1>//把时间里的“:”去除掉
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>if</span> <span class=p>((</span><span class=nx>int</span><span class=p>)</span><span class=nv>$time</span><span class=o>&gt;</span><span class=mi>730</span><span class=p>)</span><span class=c1>//7:30之后迟到
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>$name</span><span class=o>=</span><span class=nv>$name</span><span class=o>.</span><span class=s2>&#34;[迟到]&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>$name</span><span class=o>=</span><span class=nv>$name</span><span class=o>.</span><span class=s2>&#34;[准时]&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h5 id=写入文件>写入文件</h5><p>我使用的是函数</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=nx>file_put_contents</span><span class=p>(</span><span class=nx>文件</span><span class=p>,</span><span class=nx>内容</span><span class=p>,</span><span class=nx>模式可选</span><span class=p>);</span> 
+</span></span></code></pre></td></tr></table></div></div><p>文件是文件的路径（字符串），比如/root/test.txt；（没有则创建一个文件）</p><blockquote><p>注意：当无法创建且无法写入文件时，应该检查是否有权限。当能够创建但是无法写入文件时，应该检查首次写入的字符串是否为空，再检查后续代码是否有相关的操作覆盖了该文件，最后记得check一下你的磁盘空间（真的，我的硬盘满了，我检查了一天代码&mldr;）</p></blockquote><p>内容是需要写入文件的内容；
+模式是写入文件的模式，它包括：</p><ul><li>FILE_USE_INCLUDE_PATH //检查 <em>filename</em> 副本的内置路径?</li><li>FILE_APPEND //添加模式更改文件，向文件的末尾加入字符串</li><li>LOCK_EX //锁定文件</li></ul><p>//如果模式为空则采用覆盖原内容的方式写入</p><p>它相对于 <code>fopen</code> 再 <code>write</code> 再 <code>close</code>
+来说更简洁，功能上几乎是一样的。
+我们写入的文件要求内容格式大致如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>张三[准时] | 7:25
+</span></span><span class=line><span class=cl>李四[迟到] | 7:33
+</span></span></code></pre></td></tr></table></div></div><p>这样后续我们可以通过计算“|”的数量来得出打卡人数，通过“[迟到]”的数量来得出迟到人数（当然我并不是这么办的，刚想起来这么机智的办法）
+那么下面我们来写入文件：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=nv>$str</span><span class=o>=</span><span class=nv>$name</span><span class=o>.</span><span class=s2>&#34; | &#34;</span><span class=o>.</span><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;time&#34;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=nx>file_put_contents</span><span class=p>(</span><span class=nv>$filename</span><span class=p>,</span><span class=nv>$str</span><span class=p>,</span><span class=nx>FILE_APPEND</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>echo</span> <span class=s2>&#34;打卡成功&#34;</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>那么PHP的全文是：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span> 
+</span></span><span class=line><span class=cl><span class=nv>$filename</span><span class=o>=</span><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;filename&#34;</span><span class=p>]</span><span class=o>.</span><span class=s2>&#34;txt&#34;</span><span class=p>;</span><span class=c1>//拼接文件名
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nv>$name</span><span class=o>=</span><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;name&#34;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=nv>$time</span> <span class=o>=</span> <span class=nx>str_replace</span><span class=p>(</span><span class=s2>&#34;:&#34;</span><span class=p>,</span><span class=s2>&#34;&#34;</span><span class=p>,</span><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;time&#34;</span><span class=p>]);</span><span class=c1>//把时间里的“:”去除掉
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>if</span> <span class=p>((</span><span class=nx>int</span><span class=p>)</span><span class=nv>$time</span><span class=o>&gt;</span><span class=mi>730</span><span class=p>)</span><span class=c1>//7:30之后迟到
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	  <span class=nv>$name</span><span class=o>=</span><span class=nv>$name</span><span class=o>.</span><span class=s2>&#34;[迟到]&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	  <span class=nv>$name</span><span class=o>=</span><span class=nv>$name</span><span class=o>.</span><span class=s2>&#34;[准时]&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nv>$str</span><span class=o>=</span><span class=nv>$name</span><span class=o>.</span><span class=s2>&#34; | &#34;</span><span class=o>.</span><span class=nv>$_POST</span><span class=p>[</span><span class=s2>&#34;time&#34;</span><span class=p>]</span><span class=o>.</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2>&#34;</span><span class=p>;</span><span class=c1>// \n的目的是在文件里面换行
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>file_put_contents</span><span class=p>(</span><span class=nv>$filename</span><span class=p>,</span><span class=nv>$str</span><span class=p>,</span><span class=nx>FILE_APPEND</span><span class=p>)</span> <span class=k>or</span> <span class=k>die</span><span class=p>(</span><span class=s2>&#34;打卡失败&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>echo</span> <span class=s2>&#34;打卡成功&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err> 
+</span></span></span></code></pre></td></tr></table></div></div><p>让我们把前面的HTML代码保存到 <code>index.html</code>，上面的 <code>php</code> 保存到 <code>process.php</code>，上传到服务器试试吧！</p><p>输入姓名提交表单：</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/06.webp loading=lazy alt=表单></p><p>POST到PHP，输出成功</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/07.webp loading=lazy alt=结果></p><blockquote><p>如果PHP不输出任何内容，可以考虑在第一行加入一个 echo &ldquo;test&rdquo;; ，如果仍然不输出任何内容，那么可能是你的代码有问题</p></blockquote><p>打卡前文件列表：</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/08.webp loading=lazy alt=列表></p><p>打卡后文件列表：</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/09.webp loading=lazy alt=列表2></p><p>TXT内容：</p><p><img src=https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/10.webp loading=lazy alt=文件内容></p><p>（一）完结
+实在是太累了，其他功能在后续的（二）中说</p><p>代码自己copy，成品会在（二）p.s.也没准是（三）中放出来</p><p>如果你觉得有用或者有需要补充之处不妨评论一下</p></section><footer class=article-footer><section class=article-tags><a href=/tags/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE/>网站建设</a>
+<a href=/tags/%E7%BC%96%E7%A8%8B/>编程</a>
+<a href=/tags/php/>PHP</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/passages/javascipt-ceetime/><div class=article-details><h2 class=article-title>javascript 制作高考倒计时网页</h2></div></a></article><article><a href=/passages/lua-note1-basic/><div class=article-details><h2 class=article-title>lua语言编程基础 - lua笔记</h2></div></a></article><article><a href=/passages/command-line-parser/><div class=article-details><h2 class=article-title>C#解析命令行参数</h2></div></a></article><article><a href=/passages/csharp-note6-delegates-lambda-expressions-and-events/><div class=article-details><h2 class=article-title>C#的委托、lambda 表达式和事件 - C#笔记</h2></div></a></article><article><a href=/passages/csharp-note5-array/><div class=article-details><h2 class=article-title>C#中数组的使用 - C#笔记</h2></div></a></article></div></div></aside><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send{color:var(--twikoo-body-text-color-main)}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://api.gaein.cn/comments/",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2017 -
+2025 Gaein nidb 的博客</section><section class=powerby>冀ICP备17015375-1号<br>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

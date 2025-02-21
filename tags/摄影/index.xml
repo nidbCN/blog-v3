@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>摄影 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E6%91%84%E5%BD%B1/</link><description>Recent content in 摄影 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 21 Feb 2025 21:55:00 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E6%91%84%E5%BD%B1/index.xml" rel="self" type="application/rss+xml"/><item><title>正确设置摄影工作流程中 Adobe Camera Raw 和 Photoshop 的色彩空间</title><link>https://blog.gaein.cn/passages/configure-photography-workflow-colorspace/</link><pubDate>Wed, 04 Dec 2024 10:54:00 +0800</pubDate><guid>https://blog.gaein.cn/passages/configure-photography-workflow-colorspace/</guid><description>&lt;h1 id="前言">前言
+&lt;/h1>&lt;p>我发现身边很多朋友确实没有注意过色彩空间的设置，虽然默认的如果全是 sRGB 那&lt;strong>足够的稳妥&lt;/strong>，通常情况下也不会引起任何问题。去深究相机（传感器）、ACR 和 PS 以及屏幕这四个色彩空间也不会提升你的摄影和后期水平。&lt;/p>
+&lt;p>当前，不是说这些并不重要，去对显示设备校色和完善工作流程中的色彩空间设置，有助于确保自己所作的后期是有意义的——在另一块校色的屏幕上可以还原出来调色时候自己看到的画面。尽管色彩受到很多方面的影响，不同人有不同的风格，不同人看到的颜色也和其他人脑海中的不尽相同，但是我始终认为，至少应该还原出来调色时候所看到的画面，否则你的创造和成果还只是在你调色当时的那块屏幕上的画面，不具有广泛分发和复现的能力，那创造的成果也是不能分享且不稳定的存在。&lt;/p>
+&lt;p>当然，&lt;strong>如果你没有耐心也没有任何广色域的设备以及打印需求&lt;/strong>，请&lt;strong>全部选择 sRGB&lt;/strong>，这样至少不会犯错，总比没有正确设置的准确性要高。&lt;/p>
+&lt;p>但是，需要注意的是，&lt;strong>如果你没有一台颜色准确的显示器&lt;/strong>，在所有地方都选择 sRGB 似乎也无济于事，因为计算机不知道如何正确的把颜色转换到你显示器的色彩空间，只能转到 sRGB 然后听天由命吧。&lt;/p>
+&lt;p>如果你有这方面的追求、有一个广色域的屏幕或者有一个校色的屏幕，请继续看。&lt;/p>
+&lt;p>以下内容全是个人的研究和理解，有错误还请指正。&lt;/p>
+&lt;h2 id="举个例子说明下重要性">举个例子说明下重要性
+&lt;/h2>&lt;p>听说广色域 “更好”？&lt;/p>
+&lt;p>当你使用一个没有任何色彩管理的笨蛋软件，在 sRGB 的显示器上打开 Adobe RGB（比 sRGB 要广）的照片之后你发现——他的饱和度甚至还降低了！&lt;/p>
+&lt;p>于是，摄影师精心修正的图像，在一个笨蛋软件的手里，变得灰灰暗暗的。&lt;/p>
+&lt;p>如下图所示，左侧是支持色彩管理的软件显示的效果（即转换到 sRGB 显示），右侧是不使用色彩管理软件显示的结果（直接将 ProPhoto 当作 sRGB 来显示）。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Configure-Photography-Workflow-Colorspace/left_normal_right_wrong.webp"
+loading="lazy"
+alt="色彩空间出错对比图"
+>&lt;/p>
+&lt;p>更要命的是，如果你是一个没有正确设置色彩空间的摄影师，你看到的是灰灰的，就会把他试图拉回“正常”，而换到正常的软件的情况下，刚刚那张拉回“正常”的图，饱和度已经炸眼了！&lt;/p>
+&lt;p>例子中的原因是，软件没有读取 exif 中的色彩空间信息，将 Adobe RGB remap 到了 sRGB，对整张图的色彩范围都进行了一次“压缩”，自然在 Adobe RGB 上正常的在这里就变灰了。&lt;/p>
+&lt;p>所以说，全 sRGB 是一个稳妥的选择，至少不会发生以上的情况。&lt;/p>
+&lt;h2 id="背景知识">背景知识
+&lt;/h2>&lt;p>需要对 CIE xyz 以及 RGB 模型有了解，对色彩空间、色域（虽然大多数人都混为一谈了）也有所了解。发现要解释这些绕不开的。&lt;/p>
+&lt;h3 id="色域与色彩空间">色域与色彩空间
+&lt;/h3>&lt;p>色域这个词更多在卖显示器的那看见，比如 100% sRGB，不过注意，色域是 “100% sRGB” 而不是 “sRGB”。简单来说，&lt;strong>色域是一个设备可以表现的色彩覆盖了某种色彩空间的范围&lt;/strong>，因此色域也就表现了显示器显示颜色的能力，这里的色彩仅指色度，显示器亮/明度还有另一个指标，准度也是另一个指标，100% 覆盖但是准度不行也是白给。&lt;/p>
+&lt;p>而色彩空间，就是算上明度的一个完整空间了，CIE xyz 是最大的，涵盖了所有的颜色，&lt;/p>
+&lt;h1 id="景象如何从相机来到你的屏幕">景象如何从相机来到你的屏幕
+&lt;/h1>&lt;p>似乎在数码摄影中，这个问题不难回答，把拍摄的 RAW 文件拷贝到硬盘里，打开，就好了。对于你作品的观赏者来说，打开你分发的文件，就好了。&lt;/p>
+&lt;p>但是不同相机的传感器前的滤色片是不同的，传感器的摄取色彩的范围是不同的，不同的显示器更是。所以文件的存储、编辑、显示都需要涉及到色彩空间的转换，才能让你看到准确的颜色。&lt;/p>
+&lt;p>接下来，就让我们看看这一过程中色彩空间是如何转换的。&lt;/p>
+&lt;h2 id="拍摄">拍摄
+&lt;/h2>&lt;p>光线经过镜头到传感器，经过滤色镜、光电转换、放大后存储在相机内存的 RAW 文件中，通常来说，RAW 文件内是相机特有的色彩空间（由生厂商检测、校正）。同时，如果开启了机内直出，会根据预设调整色调等，然后转换为用户设置的（sRGB/Adobe RGB）色彩空间，并存储在 JPEG 文件。&lt;/p>
+&lt;p>将文件从相机拷贝到电脑的过程，由于是复制所以不会进行任何改变。&lt;/p>
+&lt;p>此时图片（RAW）的色彩空间是相机特有的色彩空间。JPEG 是用户设置的标准色彩空间。两者内都通过 exif 附加有 icc 校色文件，icc 校色文件可以提供一种色彩空间到另一种的转换，因此无论是否是标准色彩空间，都可以通过其附加的 icc 文件转换为 CIE xyz。&lt;/p>
+&lt;h2 id="查看机内直出-jpeg">查看机内直出 JPEG
+&lt;/h2>&lt;h3 id="相机内部存储及查看">相机内部存储及查看
+&lt;/h3>&lt;p>相机内部程序将色彩空间从传感器特定的色彩空间转换到 CIE xyz，再转换成你在相机内设置的 sRGB 或 Adobe RGB，存储在文件中。&lt;/p>
+&lt;p>查看时通过 icc 文件转换到标准的 CIE xyz，再通过屏幕的校色文件转换到屏幕色彩空间表现出来。&lt;/p>
+&lt;h3 id="支持色彩管理的软件">支持色彩管理的软件
+&lt;/h3>&lt;p>在支持色彩管理的软件中，读取 JPEG icc 并通过其将图片转换到 CIE xyz 空间，再将通过色彩管理中的配置文件（应该配置为屏幕校色文件，如果没有则会使用标准的 sRGB icc），将 CIE xyz 转换到屏幕的色彩空间。&lt;/p>
+&lt;p>在 Windows 这种没有全局色彩管理的系统，有可能有软件不使用屏幕校色文件，使用内置的 sRGB 配置进行转换。&lt;/p>
+&lt;h3 id="不支持色彩管理的软件">不支持色彩管理的软件
+&lt;/h3>&lt;p>不支持色彩管理的软件不会进行任何的色彩空间转换，直接将其显示，如果此时文件的色彩空间与系统设置的（通常是 sRGB 或屏幕校色文件）不匹配，则颜色饱和度会变低或变高。&lt;/p>
+&lt;h3 id="adobe-photoshop">Adobe Photoshop
+&lt;/h3>&lt;p>Adobe Photoshop 会读取配置文件，如果色彩空间与菜单“编辑-色彩设置”中的“工作空间”不一致，将询问你的处理方式（如下图）：&lt;/p>
+&lt;ol>
+&lt;li>使用嵌入的配置文件（代替工作空间）：不进行转换，使用文件中的色彩空间，并且暂时修改工作空间为文件中的色彩空间； &lt;strong>不会有任何损失&lt;/strong>&lt;/li>
+&lt;li>将文档的颜色转换到工作空间：通过配置文件将文件中的色彩空间转换到配置的工作空间；&lt;strong>如果工作空间比配置文件中的广，则一般不会有损失，但是如果差的过多而且色深没有增加的话会损失精度&lt;/strong>&lt;/li>
+&lt;li>扔掉嵌入的配置文件（不进行色彩管理）：&lt;strong>不推荐&lt;/strong>，行为与 “不支持色彩管理的软件” 的一致，容易引发颜色不匹配等问题。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Configure-Photography-Workflow-Colorspace/ps_alert.webp"
+loading="lazy"
+alt="PS 的处理方式询问框"
+>&lt;/p>
+&lt;h2 id="adobe-camera-raw-或相机厂商发布的-解-raw-软件">Adobe Camera Raw 或相机厂商发布的 “解 RAW” 软件
+&lt;/h2>&lt;p>这类软件所作的工作是解码存储在 RAW 中的数据，按照彩色阵列将亮度信息转换为色彩信息。&lt;/p>
+&lt;p>首先，将传感器色彩空间转换到 CIE xyz 再转换到到你设置的工作空间，供调色、编辑使用。&lt;/p>
+&lt;p>同时，通过校色文件转换工作空间到 CIE xyz 到屏幕色彩空间，供显示、校对使用。&lt;/p>
+&lt;h1 id="如何设置色彩空间">如何设置色彩空间
+&lt;/h1>&lt;p>在前面的章节中，我们已经提到了在 Adobe Photoshop 和 Adobe Camera Raw 中，色彩空间的转换过程，这涉及到如下四个色彩空间：&lt;/p>
+&lt;ul>
+&lt;li>原色彩空间：照片文件中存储的&lt;/li>
+&lt;li>工作空间：供调色、编辑使用的临时色彩空间&lt;/li>
+&lt;li>显示空间：供显示器显示所使用的&lt;/li>
+&lt;li>存储空间：导出文件中的色彩空间&lt;/li>
+&lt;/ul>
+&lt;p>原色彩空间通常在拍摄时候已经决定，没有必要进行修改。如果要编辑直出的 JPEG 的话，可以考虑设置为 Adobe RGB，这样可以存储更广泛的颜色范围供编辑使用。&lt;/p>
+&lt;p>工作空间用于处理图像，在调色过程中可能会存在本来在显示器色域范围外的颜色被调整到显示范围内的情况，因此&lt;strong>我更倾向于选择更广的 ProPhoto 色彩空间，位深选择 16bit&lt;/strong>。这样做的好处是可以完全囊括颜色，缺点是内容占用稍多。以及如果编辑的原图是 16bit，由于色彩空间更大但单色的存储空间不变会丧失精度。对于这种情况或许可以修改为空间更小的 Rec.2020 以减少损失，但我使用相机的 RAW 为 12bit，并且我不认为这会带来巨大影响。&lt;/p>
+&lt;p>显示空间即显示器的校色文件，未校色的使用标准 sRGB。校色的显示器可以在系统设置中指定校色文件，Adobe 中的 ACM 大概率会使用它（未经考证）。&lt;/p>
+&lt;p>存储空间即最终出片的文件中的空间，出于保证最广泛用户的准确考虑，一般使用 sRGB；大部分手机都支持 P3 ，但不能保证因为平台压缩等不会造成色彩的准确性丢失；印刷建议使用 Adobe RGB，&lt;strong>但是由于印刷所使用的 Adobe RGB 比 sRGB 要广，成品的颜色可能比 sRGB 显示器上看到的略鲜艳，如果需要严格确保所见即所得请购买 Adobe RGB 显示器。&lt;/strong>&lt;/p>
+&lt;h2 id="系统设置">系统设置
+&lt;/h2>&lt;p>这一部分主要是确保系统应用了显示器的校色文件来显示颜色。&lt;/p>
+&lt;h3 id="windows-10">Windows 10
+&lt;/h3>&lt;p>打开 “控制面板-色彩管理”，选择工作显示器后，选中 “显示器校色文件” 设置为默认，点击右下角的配置，点击 “将系统默认值重设为当前值”。&lt;/p>
+&lt;h3 id="windows-11">Windows 11
+&lt;/h3>&lt;p>打开 “设置-系统-显示”，在 “颜色配置文件” 处选择校色的配置文件。可以考虑点击配置文件后点击 “设置为系统默认”。如下图。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Configure-Photography-Workflow-Colorspace/windows11_settings.webp"
+loading="lazy"
+alt="Windows 11 设置"
+>&lt;/p>
+&lt;p>可以考虑 “启用自动颜色管理” ，该功能可以将完全不管颜色管理的软件输出的内容从 sRGB 转到屏幕色彩空间。&lt;/p>
+&lt;h2 id="adobe-camera-raw">Adobe Camera Raw
+&lt;/h2>&lt;p>打开 “首选项（右上角齿轮图标按钮）-工作流程”，色彩空间选择 “ProPhoto RGB” 或 “Rec.2020”，色彩深度选择 “16位/通道”（理由见前文关于工作空间所阐述的内容）。如下图。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Configure-Photography-Workflow-Colorspace/acr_settings.webp"
+loading="lazy"
+alt="ACR 设置"
+>&lt;/p>
+&lt;h2 id="adobe-photoshop-1">Adobe Photoshop
+&lt;/h2>&lt;p>打开 “编辑-颜色设置”。选择 “北美印前2” ，修改工作空间为你在 ACR 中设置的色彩空间，同时确保 “显示器 RGB” 在列表中并且是正确的（确保正常加载）。如下图。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Configure-Photography-Workflow-Colorspace/ps_settings.webp"
+loading="lazy"
+alt="PS 设置"
+>&lt;/p>
+&lt;h2 id="图片查看软件">图片查看软件
+&lt;/h2>&lt;p>以 ImageGlass 为例，我通常使用该软件来查看图片。&lt;/p>
+&lt;p>打开 “设置-图像” ，在 “色彩管理” 一节，“色彩配置文件” 中选择 “当前显示器配置”。&lt;/p>
+&lt;h1 id="参考">参考
+&lt;/h1>&lt;ul>
+&lt;li>&lt;a class="link" href="https://helpx.adobe.com/ca/camera-raw/using/camera-raw-settings.html" target="_blank" rel="noopener"
+>Manage Adobe Camera Raw settings&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.adobe.com/digitalimag/pdfs/color_managed_raw_workflow.pdf" target="_blank" rel="noopener"
+>A Color Managed Raw Workflow——From Camera to Final Print&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>尼康手动镜头发展历程及型号解析</title><link>https://blog.gaein.cn/passages/nikkor-manual-lens/</link><pubDate>Sat, 09 Nov 2024 15:17:00 +0800</pubDate><guid>https://blog.gaein.cn/passages/nikkor-manual-lens/</guid><description>&lt;h1 id="前言">前言
+&lt;/h1>&lt;p>在尼康大 F 单反所开创的时代中，尼康作为光学大厂同样也推出了非常多款优秀的尼克尔镜头，这些手动镜头全部使用 F 卡口，但由于其标识的变化，令人难以分清。因此本文详细讲解了 F 卡口手动镜头的各种不同型号，旨在帮助读者理清其发展顺序以及方便在购买中进行辨别。&lt;/p>
+&lt;h2 id="autoai-与-ai-s">AUTO/Ai 与 Ai-s
+&lt;/h2>&lt;p>实际上，这些镜头并非是不同的 “口” ，相反，他们同样属于 F 卡口，拥有着同样的尺寸、法兰距与接口结构。但是，由于所采用的光圈耦合技术不同，他们并非完全兼容。&lt;/p>
+&lt;p>不同于后期的 AF-D/G 等，此处的 AUTO/Ai/Ai-s 代表的与机器测光联动的方式。最早出现的是 AUTO，之后是 Ai 以及改进的 Ai-s。再之后变过渡到了自动对焦时代。但实际上 AF 系列镜头依旧属于 Ai/Ai-s。&lt;/p>
+&lt;h1 id="auto-自动测光">AUTO-自动测光
+&lt;/h1>&lt;p>AUTO，自动，现在听起来让人感觉像是能够自动对焦的东西。但是那个时候的自动指的可不是对焦，而是测光。&lt;/p>
+&lt;p>曝光的三要素：ISO、光圈与快门。ISO 由所装载的胶卷所决定，一卷胶卷为同样的 ISO，因此该值在机身上设置，而快门也由机身调节，但是光圈是由镜头所调节，这时候要测算曝光就存在一个问题——如何让机身知晓镜头上的光圈大小？&lt;/p>
+&lt;p>于是尼康在卡口外设置了一个小连杆，挂到镜头的光圈环，其下是一个滑动变阻器，与快门和 ISO 连接，通过模拟电路让合适的电流流经电流表，变指示出了曝光的程度。&lt;/p>
+&lt;p>这样当然也有一个问题，快门没有开启的时候镜头始终处于最大光圈（方便你的取景和拍摄），而相机并不知道最大光圈值是多少。于是，所有镜头的联动装置都设置在 F5.6 处，装上后需要先拧到最小光圈，再拧到最大光圈。&lt;/p>
+&lt;h2 id="型号标识以及发展">型号标识以及发展
+&lt;/h2>&lt;p>AUTO 的镜头普遍为银色+黑色配色，而且对焦移动的镜组外面是银色、非圆形，所以被称为“菠萝”。&lt;/p>
+&lt;p>最早期的镜头，使用的是 “日本光学(NIPPON KOGAKU JAPAN)” 的名字，并且使用厘米作为单位标记焦距，该产品系列的标识使用的是 “Nikkor-&amp;lt;结构&amp;gt;”，通过一个字母来表示当前镜头的结构，比如 &lt;code>Nikkor-H&lt;/code>、 &lt;code>Nikkor-S&lt;/code> 等。镜头上刻的型号类似于：&lt;/p>
+&lt;p>&lt;code>NIPPON KOGAKU JAPAN No.3xxxxx NIKKOR-S 1:1.4 f=5cm&lt;/code>&lt;/p>
+&lt;p>生成较少产品后，则使用毫米作为单位标注焦距，如：&lt;/p>
+&lt;p>&lt;code>NIPPON KOGAKU JAPAN No.6xxxxx NIKKOR-S 1:1.4 f=50mm&lt;/code>&lt;/p>
+&lt;p>而后，公司改用日本光学生产的第一款相机——“尼康”，镜头上刻的字也从 &amp;ldquo;NIPPON KOGAKU JAPAN&amp;rdquo; 改为 &amp;ldquo;Nikon&amp;rdquo;：&lt;/p>
+&lt;p>&lt;code>Nikon No.10xxxxx NIKKOR-S 1:1.4 f=50mm&lt;/code>&lt;/p>
+&lt;p>而后使用了多层镀膜技术后生成的镜头，则标记为 &lt;code>Nikkor-&amp;lt;结构&amp;gt;·C&lt;/code>，如：&lt;/p>
+&lt;p>&lt;code>Nikon No.12xxxxx NIKKOR-S·C 1:1.4 f=50mm&lt;/code>&lt;/p>
+&lt;p>AUTO 的最后一代为改进了镀膜后的镜头，被称为 “K版”，而官方的说法则是 &lt;code>New Nikkor(新型尼克尔)&lt;/code>。&lt;/p>
+&lt;p>这种镜头几乎和 Ai 的设计一致：整体呈黑色，只有光圈环为银色，但光圈耦合拨杆为 AUTO 的。上面的刻的型号也和 Ai 的一样，只有 Nikon 和 Nikkor 以及焦距、光圈等，如：&lt;/p>
+&lt;p>&lt;code>Nikon Nikkor 50mm 1:1.4 2xxxxxx&lt;/code>&lt;/p>
+&lt;p>当然，也有很多官方和民间从 AUTO 改为 Ai 耦合系统的。&lt;/p>
+&lt;h2 id="光学素质">光学素质
+&lt;/h2>&lt;p>出现多层镀膜技术后的普遍较好，C 版 和 K 版都相当不错。&lt;/p>
+&lt;h2 id="具体型号">具体型号
+&lt;/h2>&lt;h3 id="超广角">超广角
+&lt;/h3>&lt;h4 id="小于-14mm">小于 14mm
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 7.5mm F5.6 鱼眼&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 8mm F2.8 鱼眼&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor T10.5cm F4&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="14mm-20mm">14mm-20mm
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon UW-Nikkor 15mm F2.8 NEW （ファインダー付）&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 15mm F5.6 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 16mm F3.5 鱼眼&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 16mm F3.5 鱼眼&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 18mm F4&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="广角">广角
+&lt;/h3>&lt;h4 id="20mm">20mm
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 20mm F3.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 20mm F4&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="24mm">24mm
+&lt;/h4>&lt;ul>
+&lt;li>Nikon Auto Nikkor 24mm F2.8&lt;/li>
+&lt;li>Nikon Auto Nikkor 24mm F2.8 C&lt;/li>
+&lt;li>Nikon New Nikkor 24mm F2.8&lt;/li>
+&lt;/ul>
+&lt;h4 id="28mm">28mm
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 28mm F2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 28mm F2 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 28mm F2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 28mm F2.8&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 28mm F3.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 28mm F3.5 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 28mm F3.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 28-45mm F4.5&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="35mm">35mm
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 35mm F1.4&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 35mm F1.4 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 35mm F1.4&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 35mm F2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 35mm F2 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 35mm F2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 35mm F2.8&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 35mm F2.8 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 35mm F2.8&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="标准">标准
+&lt;/h3>&lt;h4 id="35-50mm不含">35-50mm(不含)
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 43-86mm F3.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 43-86mm F3.5 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 43-86mm F3.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 45mm F2.8 GN&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 45mm F2.8 GN C&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="50-70mm不含">50-70mm(不含)
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 50mm F1.4&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 50mm F1.4 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 50mm F1.4&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 50mm F2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 50mm F2 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 50mm F2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 55mm F1.2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 55mm F1.2 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 55mm F1.2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Micro Nikkor 55mm F3.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Micro Nikkor 55mm F3.5 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Micro Nikkor 55mm F3.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Nikkor-S Auto 5.8cm F1.4&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="长焦">长焦
+&lt;/h3>&lt;h4 id="70mm-105mm不含">70mm-105mm(不含)
+&lt;/h4>&lt;ul>
+&lt;li>Nikon Auto Nikkor 85mm F1.8&lt;/li>
+&lt;li>Nikon Auto Nikkor 85mm F1.8 C&lt;/li>
+&lt;li>Nikon New Nikkor 85mm F1.8&lt;/li>
+&lt;/ul>
+&lt;h4 id="105mm">105mm
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 105mm F2.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 105mm F2.5 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 105mm F2.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 105mm F4 Micro&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="135mm">135mm
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon New Nikkor 135mm F2&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 135mm F2.8&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 135mm F2.8 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 135mm F2.8&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 135mm F3.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 135mm F3.5 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 135mm F3.5&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="超长焦">超长焦
+&lt;/h3>&lt;h4 id="180mm">180mm
+&lt;/h4>&lt;ul>
+&lt;li>Nikon Auto Nikkor 180mm F2.8&lt;/li>
+&lt;/ul>
+&lt;h4 id="200mm-300mm不含-变焦最大值">200mm-300mm(不含) (变焦最大值)
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 200mm F4&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 200mm F4 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 200mm F4&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 80-200mm F4.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 80-200mm F4.5 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 80-200mm F4.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 85-250mm F4-4.5&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="300mm-400mm不含-变焦最大值">300mm-400mm(不含) (变焦最大值)
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 50-300mm F4.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 50-300mm F4.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 300mm F4.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 300mm F4.5&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 300mm F4.5 ED&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="400mm-600mm不含-变焦最大值">400mm-600mm(不含) (变焦最大值)
+&lt;/h4>&lt;ul>
+&lt;li>Nikon Auto Nikkor 400mm F4.5 フォーカシングユニット付&lt;/li>
+&lt;/ul>
+&lt;h4 id="600mm-800mm不含-变焦最大值">600mm-800mm(不含) (变焦最大值)
+&lt;/h4>&lt;ul>
+&lt;li>Nikon Auto Nikkor 200-600mm F9.5&lt;/li>
+&lt;li>Nikon Auto Nikkor 200-600mm F9.5-10.5&lt;/li>
+&lt;li>Nikon New Nikkor 200-600mm F9.5&lt;/li>
+&lt;/ul>
+&lt;h4 id="800mm-1200mm含-变焦最大值">800mm-1200mm(含) (变焦最大值)
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>Nikon Auto Nikkor 800mm F8 C&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Nikon New Nikkor 360-1200mm F11 ED&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>不行怎么尼玛尼康出了这么多镜头，那先咕咕了&lt;/p></description></item></channel></rss>

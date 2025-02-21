@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Windows on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/windows/</link><description>Recent content in Windows on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 09 Nov 2022 10:26:22 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/windows/index.xml" rel="self" type="application/rss+xml"/><item><title>在 Windows 下舒适的使用命令行</title><link>https://blog.gaein.cn/passages/use-cli-in-windows/</link><pubDate>Wed, 09 Nov 2022 10:26:22 +0800</pubDate><guid>https://blog.gaein.cn/passages/use-cli-in-windows/</guid><description>&lt;h2 id="前言">前言
+&lt;/h2>&lt;p>自从大一坐到 &lt;a class="link" href="https://aimerneige.com/" target="_blank" rel="noopener"
+>AimerNeige&lt;/a> 身边以来，就见到他的双系统 Linux。后来自己也装了一个 ubuntu server + i3wm 日常用（虽然后来因为臭打游戏的原因回 windows 了），不得不说 Linux 的命令行以及各种命令行工具用起来非常的爽啊，相比较而言，用 windows 几乎很少用到命令行，cmd 和 powershell 都很丑，而且默认字体对眼睛很不友好 :D。以及各种工具并不多导致我不怎么用。&lt;/p>
+&lt;h2 id="美化">美化
+&lt;/h2>&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/Windows-Terminal-Usage/" target="_blank" rel="noopener"
+>个性化你的Windows Terminal终端与PowerShell&lt;/a> 其实以前写过一篇文章来记录如何安装配置 Windows Terminal 和 Powershell 7（后改名 Powershell Core，现名 Powershell）（谢谢微软改名部）&lt;/p>
+&lt;p>至于字体方面选择了 Cascadia Code。&lt;/p>
+&lt;blockquote>
+&lt;p>注意，oh-my-posh 需要使用 &lt;a class="link" href="https://www.nerdfonts.com/" target="_blank" rel="noopener"
+>Nerd Font&lt;/a> 字体，否则不能正常显示各种图标。&lt;/p>&lt;/blockquote>
+&lt;h2 id="包管理">包管理
+&lt;/h2>&lt;p>Linux 各种发行版通常有着一个包管理，pacman 也好、apt 也好、傻逼 snap 也好，总之有一个。Windows 这边没有一个中心化的包管理器，不管是微软的 win-get 还是第三方的 choco 和 scoop，都是直接从软件发行商那边进行下载的。不过我比较喜欢 scoop 的 portable 的思想，所以使用了 scoop 作为我的包管理器，配置各种环境非常舒适。&lt;/p>
+&lt;p>至于 scoop 的安装，参考其&lt;a class="link" href="https://scoop.sh/" target="_blank" rel="noopener"
+>官网&lt;/a>即可。顺带一提，scoop 的“软件源”在 Github 上，你可能需要某些技术来解决连接性问题。&lt;/p>
+&lt;p>当然，对于某些 scoop 内没有的软件包，可以使用 win-get 来安装。&lt;/p>
+&lt;h3 id="scoop-常用指令">scoop 常用指令
+&lt;/h3>&lt;p>&lt;code>scoop help&lt;/code> 查看帮助
+&lt;code>scoop update&lt;/code> 更新软件源
+&lt;code>scoop update *&lt;/code> 安装所有包的更新
+&lt;code>scoop search &amp;lt;keyword&amp;gt;&lt;/code> 搜索包
+&lt;code>scoop info &amp;lt;package name&amp;gt;&lt;/code> 查看包的详细信息
+&lt;code>scoop cleanup *&lt;/code> 清理软件包&lt;/p>
+&lt;p>更多命令：自己看吧。&lt;/p>
+&lt;h3 id="使用-scoop-配置环境">使用 scoop 配置环境
+&lt;/h3>&lt;p>平时会用到各种语言的环境（虽然我是远程编译人但是本地还是有环境罢）&lt;/p>
+&lt;p>哦其实好像根本不用怎么配，你只需要：&lt;/p>
+&lt;p>&lt;code>scoop install gcc&lt;/code>
+&lt;code>scoop install nodejs&lt;/code>
+&lt;code>scoop install python&lt;/code>&lt;/p>
+&lt;p>&amp;hellip;&lt;/p>
+&lt;p>之类的。&lt;/p>
+&lt;p>怎么样，是不是非常爽？终于不用找到官网然后点 download 然后疯狂 next 了。&lt;/p>
+&lt;h2 id="cli-工具">CLI 工具
+&lt;/h2>&lt;h3 id="命令行美化">命令行美化
+&lt;/h3>&lt;p>&lt;code>oh-my-posh&lt;/code> —— prompt 美化
+&lt;code>lsd&lt;/code> —— 列出文件&lt;/p>
+&lt;h3 id="网络工具">网络工具
+&lt;/h3>&lt;p>&lt;code>nmap&lt;/code> —— 扫描
+&lt;code>tcping&lt;/code> —— 测试端口连接性
+&lt;code>clash&lt;/code> —— 代理分流
+&lt;code>wireshark&lt;/code> —— 抓包
+&lt;code>nexttrace&lt;/code> —— 路由追踪&lt;/p>
+&lt;h3 id="系统管理">系统管理
+&lt;/h3>&lt;p>&lt;code>btop&lt;/code> —— 资源任务管理
+&lt;code>neofetch&lt;/code> —— 让我看看（系统信息）&lt;/p>
+&lt;p>当然，还有很多例如 &lt;code>ffmpeg&lt;/code> 这种多媒体处理、&lt;code>7z&lt;/code>、 &lt;code>tar&lt;/code> 这种压缩解压以及各种其它工具。&lt;/p>
+&lt;h2 id="自定义脚本">自定义脚本
+&lt;/h2>&lt;p>bash 使用 &lt;code>.bashrc&lt;/code> 作为用户启动 shell 时执行的脚本，而 powershell 则会执行一个 &lt;code>.ps1&lt;/code> 脚本，这个脚本的位置可以保存在 Powershell 中名为 &lt;code>$PROFILE&lt;/code> 的变量。&lt;/p>
+&lt;p>可以使用 &lt;code>Write-Host $PROFILE&lt;/code> 来查看路径。&lt;/p>
+&lt;p>这个脚本在我那篇 Window Terminal 也提过。不过在那个玩意的基础上，我最近又添加了一些自己用的实用函数：&lt;/p>
+&lt;p>比如先对于“在 Windows Terminal 中打开” 的 “在文件资源管理器中打开”：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-pwsh" data-lang="pwsh">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Get-Exploere&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">param&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">string&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="nv">$Path&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nv">$PWD&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">explorer&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="nv">$Path&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-Alias&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="n">open&lt;/span> &lt;span class="n">-Value&lt;/span> &lt;span class="nb">Get-Exploere&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>用于测试命令是否存在：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-pwsh" data-lang="pwsh">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Test-Command&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">param&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">string&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="nv">$CommandName&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="vm">$null&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Get-Command&lt;/span> &lt;span class="nv">$CommandName&lt;/span> &lt;span class="n">-ErrorAction&lt;/span> &lt;span class="n">SilentlyContinue&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>当然还有很多别名，比如将 &lt;code>ls&lt;/code> 改为使用 &lt;code>lsd&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-pwsh" data-lang="pwsh">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Get-Item-Line&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lsd&lt;/span> &lt;span class="n">-lh&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Test-Command&lt;/span> &lt;span class="n">lsd&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">Set-Alias&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="nb">ls &lt;/span>&lt;span class="n">-Value&lt;/span> &lt;span class="n">lsd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">Set-Alias&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="n">ll&lt;/span> &lt;span class="n">-Value&lt;/span> &lt;span class="nb">Get-Item&lt;/span>&lt;span class="n">-Line&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>除此之外，为 ffmpeg 的常见操作也写了一些函数：&lt;/p>
+&lt;p>比如如下代码可以将图片转为 &lt;code>webp&lt;/code> 格式并且调整大小。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-pwsh" data-lang="pwsh">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">function&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Get-Webp&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">param&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">string&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="nv">$FileName&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">int&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="nv">$Width&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="mf">-1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="no">int&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="nv">$Height&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="mf">-1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$file&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nb">Get-Item&lt;/span> &lt;span class="nv">$FileName&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="nv">$Width&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="mf">-1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-and&lt;/span> &lt;span class="p">(&lt;/span> &lt;span class="nv">$Height&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="mf">-1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ffmpeg&lt;/span> &lt;span class="n">-i&lt;/span> &lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">FullName&lt;/span> &lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Extension&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;.webp&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ffmpeg&lt;/span> &lt;span class="n">-i&lt;/span> &lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">FullName&lt;/span> &lt;span class="n">-vf&lt;/span> &lt;span class="n">scale&lt;/span>&lt;span class="p">=${&lt;/span>&lt;span class="n">Width&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">${&lt;/span>&lt;span class="n">Height&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Name&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$file&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Extension&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;.webp&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>另外，powershell 中 &lt;code>mv&lt;/code>、&lt;code>ls&lt;/code> 等命令的用法和 Linux 下的 shell 极为相似，上手也很快。&lt;/p></description></item><item><title>以类Unix的方法管理Windows的Path环境变量</title><link>https://blog.gaein.cn/passages/manage-windows-path-in-unix-way/</link><pubDate>Tue, 01 Feb 2022 23:21:28 +0800</pubDate><guid>https://blog.gaein.cn/passages/manage-windows-path-in-unix-way/</guid><description>&lt;p>首先恭祝大家新春快乐！&lt;/p>
+&lt;h2 id="前言">前言
+&lt;/h2>&lt;p>事情的起因是这样的，我 surface 上装了一张 TF 卡作为存储盘，年头重装家里系统的时候莫名其妙格式化了 TF 卡（&lt;del>选错了盘的屑&lt;/del>）。想到很多环境都在 TF 卡里，surface 这个系统也用了一年半了，索性就重装然后再配环境。&lt;/p>
+&lt;p>有很多类似于 &lt;code>git&lt;/code> 这种命令行软件，需要在环境变量的 &lt;code>PATH&lt;/code> 中加入它的目录（比如 &lt;code>D:\Tools\Git\cmd\&lt;/code>）才能方便的执行。如果每个软件都这样的话，&lt;code>PATH&lt;/code> 中势必会有一大坨，很混乱也难于管理。&lt;/p>
+&lt;p>类 Unix 系统中部分软件的做法是，把这些文件软链接到 &lt;code>/usr/bin/&lt;/code> 目录下。那么我们是否可以在 Windows 系统中采取类似的方法，创建一个目录并添加到 &lt;code>PATH&lt;/code> 中，然后将原本需要加入 &lt;code>PATH&lt;/code> 的可执行文件软链接到该目录。&lt;/p>
+&lt;p>另外，这样做以后再加入别的文件时，只需要创建软链接，不需要更改环境变量也不需要重启 Terminal 了。&lt;/p>
+&lt;h2 id="cmd-不可行">.cmd 不可行
+&lt;/h2>&lt;p>一开始我尝试使用类似于 &lt;code>git.cmd&lt;/code> 然后里面写入 &lt;code>D:\Tools\Git\cmd\git.exe&lt;/code> 这种方法，但是显然，我无法传递未知数量的参数给真正的 &lt;code>git.exe&lt;/code> （我没有深入研究传递参数的相关知识，显然这不是一个优雅的方法）。&lt;/p>
+&lt;h2 id="mklink-创建软链接">mklink 创建软链接
+&lt;/h2>&lt;blockquote>
+&lt;p>Powershell 中没有提供 &lt;code>mklink&lt;/code> 对应的 Cmdlet 别名，也就是说当你无法在 Powershell 中使用 &lt;code>mklink&lt;/code> 命令。你需要使用 cmd.exe 来执行这个命令。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>关于 Powershell 创建软链接，请参考下文的 &lt;code>New-Item&lt;/code> 。&lt;/p>&lt;/blockquote>
+&lt;p>参阅 &lt;a class="link" href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/mklink" target="_blank" rel="noopener"
+>mklink | Microsoft Docs&lt;/a>&lt;/p>
+&lt;h3 id="创建文件的软链接">创建文件的软链接
+&lt;/h3>&lt;p>使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cmd" data-lang="cmd">&lt;span class="line">&lt;span class="cl">&lt;span class="k">mklink&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>link&lt;span class="p">&amp;gt;&lt;/span> &amp;lt;target&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>其中，&lt;code>link&lt;/code> 是创建的链接，&lt;code>target&lt;/code> 是被创建链接的文件，比如：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cmd" data-lang="cmd">&lt;span class="line">&lt;span class="cl">&lt;span class="k">mklink&lt;/span> git.exe D:\Tools\Git\cmd\git.exe
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在当前目录下创建了一个 &lt;code>git.exe&lt;/code> 指向了在 &lt;code>D&lt;/code> 盘的 &lt;code>git.exe&lt;/code> 文件。&lt;/p>
+&lt;h3 id="创建目录的软链接">创建目录的软链接
+&lt;/h3>&lt;p>不同于 Linux 操作系统，Windows 操作系统创建指向目录的软链接需要额外添加参数，使用&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-winbatch" data-lang="winbatch">&lt;span class="line">&lt;span class="cl">&lt;span class="k">mklink&lt;/span> /d &lt;span class="p">&amp;lt;&lt;/span>link&lt;span class="p">&amp;gt;&lt;/span> &amp;lt;target&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="new-tem-创建软链接">New-tem 创建软链接
+&lt;/h2>&lt;p>既然有新的，更加好用的 Powershell ，那么当然要用 Powershell 啦。&lt;/p>
+&lt;p>如上文所说，Powershell 并没有设置别名为 mklink 的命令，创建软链接这一行为被 Powershell 视为&lt;strong>创建一个类型为 &lt;code>SymbolicLink&lt;/code> 的值为 目标文件路径 的新文件&lt;/strong>&lt;/p>
+&lt;p>因此，我们只需要使用 &lt;code>New-Item&lt;/code> 即可，使用方法如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">New-Item&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">link&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">-ItemType&lt;/span> &lt;span class="n">SymbolicLink&lt;/span> &lt;span class="n">-Value&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">target&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用 &lt;code>New-Item&lt;/code> 创建目录无需添加额外的参数。&lt;/p>
+&lt;p>参阅 &lt;a class="link" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#example-7--create-a-symbolic-link-to-a-file-or-folder" target="_blank" rel="noopener"
+>New-Item (Microsoft.PowerShell.Management) - PowerShell | Microsoft Docs&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>注意：Windows 无法在 TF 卡上创建软链接文件，但是你可以将文件链接到 TF 卡上的文件。&lt;/p>&lt;/blockquote></description></item><item><title>常见公共DNS服务&amp;Linux和Windows下修改DNS的方法</title><link>https://blog.gaein.cn/passages/use-public-dns-and-configure-dns/</link><pubDate>Sat, 12 Jun 2021 14:57:12 +0800</pubDate><guid>https://blog.gaein.cn/passages/use-public-dns-and-configure-dns/</guid><description>&lt;p>因为校园网 DNS 污染，导致我无法连接 &lt;code>githubusercontent.com&lt;/code> ，所以准备更换一个公共 DNS。以下为常见的一些公共 DNS 服务。&lt;/p>
+&lt;p>DNS 全称是 Domain Name System ，可以理解为负责把域名变成 IP 的一个玩意。&lt;/p>
+&lt;blockquote>
+&lt;p>注：所有 IPv6 地址均无阿里云测试，因为我服务器没有 v6。目前只有这两三种网络测试，选择 DNS 时候还是自己 ping 一下看看。&lt;/p>&lt;/blockquote>
+&lt;h2 id="常见公共-dns-服务">常见公共 DNS 服务
+&lt;/h2>&lt;h3 id="阿里-dns">阿里 DNS
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://alidns.com/" target="_blank" rel="noopener"
+>https://alidns.com/&lt;/a>&lt;/p>
+&lt;h4 id="ipv6">IPv6
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>2400:3200::1&lt;/td>
+&lt;td>2400:3200:baba::1&lt;/td>
+&lt;td>10ms&lt;/td>
+&lt;td>19ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="ipv4">IPv4
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>223.5.5.5&lt;/td>
+&lt;td>223.6.6.6&lt;/td>
+&lt;td>15ms&lt;/td>
+&lt;td>20ms&lt;/td>
+&lt;td>4ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="百度-dns">百度 DNS
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://dudns.baidu.com/" target="_blank" rel="noopener"
+>https://dudns.baidu.com/&lt;/a>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>180.76.76.76&lt;/td>
+&lt;td>无&lt;/td>
+&lt;td>13ms&lt;/td>
+&lt;td>18ms&lt;/td>
+&lt;td>5ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="dnspod腾讯">DNSPOD（腾讯）
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://www.dnspod.cn/products/public.dns" target="_blank" rel="noopener"
+>https://www.dnspod.cn/products/public.dns&lt;/a>&lt;/p>
+&lt;h4 id="免费版">免费版
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>119.29.29.29&lt;/td>
+&lt;td>无&lt;/td>
+&lt;td>12ms&lt;/td>
+&lt;td>21ms&lt;/td>
+&lt;td>7ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="专业版">专业版
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>见控制台&lt;/td>
+&lt;td>见控制台&lt;/td>
+&lt;td>20ms&lt;/td>
+&lt;td>未测试&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="114dns">114DNS
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://www.114dns.com/" target="_blank" rel="noopener"
+>https://www.114dns.com/&lt;/a>&lt;/p>
+&lt;h4 id="无劫持">无劫持
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>114.114.114.114&lt;/td>
+&lt;td>114.114.115.115&lt;/td>
+&lt;td>33ms&lt;/td>
+&lt;td>34ms&lt;/td>
+&lt;td>29ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="拦截-钓鱼病毒木马网站">拦截 钓鱼病毒木马网站
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>114.114.114.119&lt;/td>
+&lt;td>114.114.115.119&lt;/td>
+&lt;td>34ms&lt;/td>
+&lt;td>34ms&lt;/td>
+&lt;td>29ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="拦截-色情网站">拦截 色情网站
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>114.114.114.110&lt;/td>
+&lt;td>114.114.115.110&lt;/td>
+&lt;td>47ms&lt;/td>
+&lt;td>36ms&lt;/td>
+&lt;td>31ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="google-public-dns">Google Public DNS
+&lt;/h3>&lt;p>网址: &lt;a class="link" href="https://dns.google.com/" target="_blank" rel="noopener"
+>https://dns.google.com/&lt;/a>&lt;/p>
+&lt;h4 id="ipv6-1">IPv6
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>2001:4860:4860::8888&lt;/td>
+&lt;td>2001:4860:4860::8844&lt;/td>
+&lt;td>43ms&lt;/td>
+&lt;td>253ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="ipv4-1">IPv4
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>8.8.8.8&lt;/td>
+&lt;td>8.8.4.4&lt;/td>
+&lt;td>58ms&lt;/td>
+&lt;td>49ms&lt;/td>
+&lt;td>54ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="1111">1.1.1.1
+&lt;/h3>&lt;p>网址: https://1.1.1.1/dns/&lt;/p>
+&lt;h4 id="ipv6-2">IPv6
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>2606:4700:4700::1111&lt;/td>
+&lt;td>2606:4700:4700::1001&lt;/td>
+&lt;td>79ms&lt;/td>
+&lt;td>202ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="ipv4-2">IPv4
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>主 DNS&lt;/th>
+&lt;th>辅 DNS&lt;/th>
+&lt;th>太原电信&lt;/th>
+&lt;th>唐山电信&lt;/th>
+&lt;th>北京阿里云&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>1.1.1.1&lt;/td>
+&lt;td>1.0.0.1&lt;/td>
+&lt;td>188ms（辅）&lt;/td>
+&lt;td>165ms&lt;/td>
+&lt;td>165ms&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="配置-dns">配置 DNS
+&lt;/h2>&lt;h3 id="windows-10">Windows 10
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>点击右下角网络图标，然后点击&amp;quot;Network &amp;amp; Internat settings&amp;quot;；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/01.webp"
+loading="lazy"
+alt="图标"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击正在使用的网络（比如我的是&amp;quot;Ethernet&amp;quot;，如果你在使用 WiFi 这里应该会显示&amp;quot;Wi-Fi&amp;quot;），点击&amp;quot;Properties&amp;quot;；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/02.webp"
+loading="lazy"
+alt="设置页面"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在 &amp;ldquo;IP Settings&amp;rdquo; 处点击 &amp;ldquo;Edit&amp;rdquo;，依次输入 &amp;ldquo;Preferred DNS&amp;rdquo; 和 &amp;ldquo;Alternate DNS&amp;rdquo;，如果有 IPv6 那么在下面的 &amp;ldquo;IPv6&amp;rdquo; 栏的对应位置输入 IPv6 DNS。
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/03.webp"
+loading="lazy"
+alt="输入DNS"
+>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="ubuntu">Ubuntu
+&lt;/h3>&lt;p>我手里只有 Ubuntu，其它 Linux 如何配置未知。貌似更改 &lt;code>/etc/resolv.conf&lt;/code> 是通用方法。&lt;/p>
+&lt;p>由于我们使用的是 Ubuntu，Ubuntu 的 DNS 是由 systemd-resolve 来管理的，因此我们不需要手动更新 &lt;code>/etc/resolv.conf&lt;/code> （事实上更新了也会被覆盖）。&lt;/p>
+&lt;p>更好的方法还可以考虑使用 Netplan 来管理 DNS ， 详见 &lt;a class="link" href="https://netplan.io/examples/#using-dhcp-and-static-addressing" target="_blank" rel="noopener"
+>Using DHCP and static addressing&lt;/a> 中 &lt;code>nameservers&lt;/code> 一章的配置。&lt;/p>
+&lt;p>关于错误示范请见我在 18 年干的傻事：&lt;/p>
+&lt;p>&lt;a class="link" href="https://blog.gaein.cn/passages/Fix-Ubuntu-DNS-Error/" target="_blank" rel="noopener"
+>Ubuntu 下 apt“无法解析域名”解决方案&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>确定使用的是 systemd 管理的解析服务：使用命令 &lt;code>systemd-resolve --status&lt;/code> 查看服务状态；&lt;/li>
+&lt;li>编辑 DNS 文件：&lt;code>/etc/systemd/resolved.conf&lt;/code>&lt;br>
+&lt;code>DNS&lt;/code> 为 DNS 地址，可以配置多个 DNS，用空格隔开。&lt;br>
+&lt;code>FallbackDNS&lt;/code> 为备用 DNS，同理。
+比如：
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[Resolve]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">DNS=223.5.5.5 119.29.29.29 180.76.76.76
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">FallbackDNS=223.6.6.6
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;p>另请参阅：&lt;a class="link" href="https://fedoramagazine.org/use-dns-over-tls/" target="_blank" rel="noopener"
+>Use DNS over TLS - Fedora Magazine&lt;/a>&lt;/p></description></item></channel></rss>

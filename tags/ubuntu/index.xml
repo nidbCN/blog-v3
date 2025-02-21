@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ubuntu on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/ubuntu/</link><description>Recent content in Ubuntu on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 12 Feb 2019 21:04:35 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/ubuntu/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu更改IP后重新配置网卡</title><link>https://blog.gaein.cn/passages/config-ubuntueth/</link><pubDate>Tue, 12 Feb 2019 21:04:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/config-ubuntueth/</guid><description>&lt;p>编辑/etc/network/interfaces：&lt;/p>
+&lt;p>&lt;code>vim /etc/network/interfaces&lt;/code>&lt;/p>
+&lt;p>内容如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">auto lo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iface lo inet loopback
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">auto eth0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">iface eth0 inet static //指定为静态
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">address 43.226.***.** //服务器IP
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">netmask 255.255.240.0 //网关
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gateway 43.226.156.1 //子网掩码
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>不同的服务器或者不同的IDC配置文件有可能不同，请自行修改
+修改完成后使用：&lt;/p>
+&lt;p>&lt;code>sudo /etc/init.d/networking restart&lt;/code>&lt;/p>
+&lt;p>重启网络设备&lt;/p></description></item><item><title>在Ubuntu上搭建现代化的论坛Nodebb|NodeBB安装记录（Linux-Ubuntu篇）</title><link>https://blog.gaein.cn/passages/install-nodebb-on-ubuntu/</link><pubDate>Fri, 22 Jun 2018 23:47:33 +0800</pubDate><guid>https://blog.gaein.cn/passages/install-nodebb-on-ubuntu/</guid><description>&lt;p>
+继上次&amp;nbsp;&lt;a href="https://blog-old.gaein.cn/post/nodeBB-windows-4.html" _src="https://blog-old.gaein.cn/post/nodeBB-windows-4.html">https://blog-old.gaein.cn/post/nodeBB-windows-4.html&lt;/a>&amp;nbsp;失败后，我仍然不思悔改，NodeBB就是好看！在老家闲来无事的时候租用了一个服务器，于是，故事开始了
+&lt;/p>
+&lt;p>
+NodeBB是基于nodejs的现代化论坛程序
+&lt;/p>
+&lt;p>
+系统我选择了Ubuntu，再多次干到凌晨四五点后，终于让网站成功运行了！
+&lt;/p>
+&lt;p>
+&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pphves.md.png"/>
+&lt;/p>
+&lt;p>
+因为服务器是使用SSH链接的，所以即使有桌面，我也选择用终端（在安装NodeBB这方面桌面好像没用...）
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/PphqSS.png"/>
+&lt;/p>
+&lt;p>
+&lt;br/>
+&lt;/p>
+&lt;p>
+相关安装文档查看：
+&lt;/p>
+&lt;p>
+&lt;a href="https://www.kancloud.cn/a632079/nodebb-cn/" _src="https://www.kancloud.cn/a632079/nodebb-cn/">https://www.kancloud.cn/a632079/nodebb-cn/&lt;/a>
+&lt;/p>
+&lt;div>
+&lt;p>
+&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;br/>
+&lt;/p>
+&lt;hr/>
+&lt;p>
+&lt;span style="font-size: 24px; color: ##FFC000;">前奏&lt;/span>
+&lt;/p>
+&lt;p>
+第一步我选择切换到管理员账户（root）&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp49YV.png"/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/PphHW8.png"/>
+&lt;/p>
+&lt;p>
+貌似没有vim（一个强大的文本编辑软件）
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/PphOyQ.png"/>
+&lt;/p>
+&lt;p>
+使用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">apt-get install vim&lt;/pre>
+&lt;p>
+按y同意安装
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pphzoq.png"/>
+&lt;/p>
+&lt;p>
+这网速真是伤感
+&lt;/p>
+&lt;p>
+如果安装失败了，尝试用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">apt-get update&lt;/pre>
+&lt;p>
+更新，然后再尝试
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pphxwn.png"/>
+&lt;/p>
+&lt;p>
+在执行第一条命令（快速安装nodejs用）的时候，又报错了&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4pF0.png"/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4CWT.png"/>
+&lt;/p>
+&lt;p>
+这系统真是纯洁，啥都没有...
+&lt;/p>
+&lt;p>
+使用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">apt install curl&lt;/pre>
+&lt;p>
+安装curl
+&lt;/p>
+&lt;hr/>
+&lt;p>
+&lt;span style="font-size: 24px; color: ##FFC000;">安装Node.js LTS&lt;/span>&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4AOJ.png"/>
+&lt;/p>
+&lt;p>
+使用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -&lt;/pre>
+&lt;p>
+来快速安装Node.js
+&lt;/p>
+&lt;p>
+如果服务器在大陆的话&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4ky4.png"/>
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">vim /etc/apt/sources.list.d/nodesource.list&lt;/pre>
+&lt;p>
+将链接全部换成
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">https://mirrors.ustc.edu.cn/nodesource/deb/node_{版本号，例如: 8}.x&lt;/pre>
+&lt;p>
+&lt;br/>
+&lt;/p>
+&lt;p>
+按“i”进入编辑模式，完成后按ESC退出编辑模式，再输入:wq 保存退出
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4iSU.png"/>&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4ZwR.png"/>
+&lt;/p>
+&lt;p>
+再次更新APT源
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">sudo apt-get update&lt;/pre>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4Vm9.png"/>
+&lt;/p>
+&lt;p>
+然后通过APT安装Node.js&lt;br/>
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">sudo apt-get install -y nodejs&lt;/pre>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4eT1.png"/>
+&lt;/p>
+&lt;p>
+使用&lt;br/>
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">node -v&lt;/pre>
+&lt;p>
+检查版本，确实已经安装完成
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4uY6.png"/>
+&lt;/p>
+&lt;hr/>
+&lt;p>
+&lt;span style="font-size: 24px; color: ##FFC000;">数据库：Redis&lt;/span>&lt;br/>
+&lt;/p>
+&lt;p>
+鉴于Redis体积较小等优点，数据库我选择了redis
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4KfK.png"/>
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">sudo add-apt-repository ppa:chris-lea/redis-server
+sudo apt-get update
+sudo apt-get install -y redis-server ##安装redis&lt;/pre>
+&lt;p>
+使用这三行来安装redis（当然是从上到下一行一行来）
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4nFx.png"/>
+&lt;/p>
+&lt;p>
+按回车键继续
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4xje.png"/>
+&lt;/p>
+&lt;p>
+最后一步，慢慢等待
+&lt;/p>
+&lt;p>
+&lt;span style="color: ##8064A2;">Redis安全设置（强烈推荐进行这一步）&lt;/span>&lt;br/>
+&lt;/p>
+&lt;p>
+使用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">vim /etc/redis/redis.conf&lt;/pre>
+&lt;p>
+编辑配置文件&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4vcD.png"/>
+&lt;/p>
+&lt;p>
+按“i”进入编辑模式，在前面插入如下三行
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">requirepass yourpassword
+bind 127.0.0.1
+rename-command FLUSHALL &amp;quot;&amp;quot;&lt;/pre>
+&lt;p>
+其中，“yourpassword”是你自己设置的密码，记住它，后面要用到的
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4X9K.png"/>
+&lt;/p>
+&lt;p>
+我设置为2018password
+&lt;/p>
+&lt;p>
+按ESC再输入:wq保存
+&lt;/p>
+&lt;p>
+使用：
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">service redis-server restart&lt;/pre>
+&lt;p>
+重启redis
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4Lh6.png"/>
+&lt;/p>
+&lt;p>
+如果没有任何报错信息就是没问题了，否则检查你的配置文件
+&lt;/p>
+&lt;hr/>
+&lt;p>
+&lt;span style="font-size: 24px; color: ##FFC000;">NodeBB的安装&lt;/span>&lt;br/>
+&lt;/p>
+&lt;p>
+一切无误，进入最后步骤了（这当然不是全部的全部）
+&lt;/p>
+&lt;p>
+如果没有git，使用：
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">sudo apt-get install -y git build-essential&lt;/pre>
+&lt;p>
+安装它&lt;br/>
+&lt;/p>
+&lt;p>
+不知道有没有，使用
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">git&lt;/pre>
+&lt;p>
+如果返回了一大串东西则是安装了，返回“Command &amp;##39;git&amp;##39; not found, but can be installed with:......”则是没有安装
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4qtx.png"/>
+&lt;/p>
+&lt;p>
+安装完毕后进入一个你喜欢的目录&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp5pBd.png"/>
+&lt;/p>
+&lt;p>
+在新版本的Ubuntu，你需要先
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">mkdir /www ##你喜欢的名字，带不带/有很大区别的&lt;/pre>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4j1O.png"/>
+&lt;/p>
+&lt;p>
+然后再
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">cd /www&lt;/pre>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp59HA.png"/>
+&lt;/p>
+&lt;p>
+使用命令，从git克隆nodebb
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">sudo git clone -b v1.9.x https://github.com/NodeBB/NodeBB.git nodebb ##这将在 /home 下面 新建一个名叫nodebb的文件夹并且会把程序从Github克隆到里面&lt;/pre>
+&lt;p>
+在大陆，尤其是网络环境不好的情况下，这个过程可能会非常漫长（解决方案见&lt;a href="https://blog-old.gaein.cn/post/NodeBB-Linux-CentOS.html）">https://blog-old.gaein.cn/post/NodeBB-Linux-CentOS.html）&lt;/a>&lt;br/>
+&lt;/p>
+&lt;p>
+目前NodeBB已经更新v1.10.x，请将“v1.9.x”替换成“v1.10.x”在发送命令，以获取最新版
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp5SnH.png"/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp5PAI.png"/>
+&lt;/p>
+&lt;p>
+在50kib/s的速度下，需要将近16分钟！
+&lt;/p>
+&lt;p>
+妈呀，终于完成了，合个影&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp5GgU.png"/>
+&lt;/p>
+&lt;p>
+输入：&lt;br/>
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">cd nodebb&lt;/pre>
+&lt;p>
+进入目录
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp583T.png"/>
+&lt;/p>
+&lt;p>
+使用：&lt;br/>
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">./nodebb setup ##尽管我使用的是./nodebb start &amp;lt;=习惯的锅，由于没有运行过，仍然会进行安装&lt;/pre>
+&lt;p>
+进行安装
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp53CV.png"/>
+&lt;/p>
+&lt;p>
+可能还需要一些时间，顺便一提，在新版的NodeBB（1.7以后，也不算新啦！）中，可以使用：
+&lt;/p>
+&lt;pre class="fy-prettyprint linenums">./nodebb install&lt;/pre>
+&lt;p>
+进行可视化安装，也就是在服务器上面进入
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9Gyrj.png" alt="" style="" width="1078" height="827"/>
+&lt;/p>
+&lt;p>
+&lt;a href="http://127.0.0.1:4567">http://127.0.0.1:4567&lt;/a>
+&lt;/p>
+&lt;p>
+进行安装，和普通的PHP博客论坛什么的差不多，很简单！
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/PpIS2T.png"/>
+&lt;/p>
+&lt;p>
+GOOGLE字体库全责！
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/23/PpICMF.png"/>
+&lt;/p>
+&lt;p>
+再次成功翻车！
+&lt;/p>
+&lt;p>
+无奈挂VPN
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GDxg.png" alt="" style="" width="903" height="617"/>
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9G2aq.png" alt="" style="" width="1359" height="441"/>
+&lt;/p>
+&lt;p>
+这个就是安装完成了，需要你输入一些信息
+&lt;/p>
+&lt;p>
+第一个URL used... 如果有相要对外开放，请输入实际使用的域名:端口（4567），如果使用的不是这里设置的域名，会出现 无法连接的现象
+&lt;/p>
+&lt;p>
+第二个是直接回车
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9G0G8.png" alt="" width="390" height="50"/>
+&lt;/p>
+&lt;p>
+第三个我们安装的数据库是redis，熟入redis即可
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GBRS.png" alt="" width="514" height="94"/>
+&lt;/p>
+&lt;p>
+然后是前面设置的数据库密码（LINUX输入密码不会显示任何东西！）
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GsMQ.png" alt="" width="320" height="132"/>
+&lt;/p>
+&lt;p>
+管理员用户名和密码
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GgZn.png" alt="" width="428" height="139"/>
+&lt;/p>
+&lt;p>
+完成设置
+&lt;/p>
+&lt;p>
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GRI0.png" alt="" style="" width="1371" height="807"/>
+&lt;/p>
+&lt;p>
+NODEBB基础搭建完成！&lt;br/>
+&lt;/p>
+&lt;p>
+&lt;br/>
+&lt;/p>
+&lt;/div></description></item></channel></rss>

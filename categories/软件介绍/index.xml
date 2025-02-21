@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>软件介绍 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/categories/%E8%BD%AF%E4%BB%B6%E4%BB%8B%E7%BB%8D/</link><description>Recent content in 软件介绍 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 28 Feb 2020 09:29:34 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/categories/%E8%BD%AF%E4%BB%B6%E4%BB%8B%E7%BB%8D/index.xml" rel="self" type="application/rss+xml"/><item><title>Office 2019安装（附激活）</title><link>https://blog.gaein.cn/passages/how-to-install-office19/</link><pubDate>Fri, 28 Feb 2020 09:29:34 +0800</pubDate><guid>https://blog.gaein.cn/passages/how-to-install-office19/</guid><description>&lt;p>闲来无事安装了Office2019，激活软件是从 HWIDGen 作者的 Github 上面拉下来的（顺手汉化了一下），KMS激活，180天&lt;/p>
+&lt;blockquote>
+&lt;p>2021.5.27 作者 GitHub 已经没了&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>其实网上貌似有很多类似的，但是大多数都不怎么“讲究”，再者下载的激活软件很多不能用或者有病毒，虽然我不能保证我提供的激活100%安全，但是我还是选择相信HWIDGen的开发者。&lt;/p>&lt;/blockquote>
+&lt;h2 id="下载office2019">下载Office2019
+&lt;/h2>&lt;p>&lt;strong>注意，office2019仅支持Windows10系统，如果想要知道您的操作系统是什么，可以在属性中查看，或者直接看左下角开始菜单的标志，如果是“开始”，则为Windows XP系统，原型的Windows标志是Windows7系统，四方格标志是Windows10系统（不一定准确，但是大多没问题！）&lt;/strong>&lt;/p>
+&lt;p>如果您使用的是Windows7操作系统可以安装Office2016，不可以安装Office2019&lt;/p>
+&lt;p>如果您使用的是WindowsXP操作系统那么放弃吧，转WPS吧&lt;/p>
+&lt;p>下面是Office2019和Office2016的下载链接，来自 &lt;a class="link" href="https://msdn.itellyou.cn" target="_blank" rel="noopener"
+>MSDN，我告诉你&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>Office2019 :
+&lt;code>ed2k://|file|cn_office_professional_plus_2019_x86_x64_dvd_5e5be643.iso|3775004672|1E4FFA5240F21F60DC027F73F1C62FF4|/ &lt;/code>&lt;/li>
+&lt;li>Office2016 :
+&lt;code>ed2k://|file|cn_office_professional_plus_2016_x86_x64_dvd_6969182.iso|2588266496|27EEA4FE4BB13CD0ECCDFC24167F9E01|/ &lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>可以使用迅雷等工具进行下载，复制“ed2k:&amp;hellip;..|/”并粘贴即可&lt;/p>
+&lt;h2 id="解压安装">解压安装
+&lt;/h2>&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3BG4oD.png"
+loading="lazy"
+alt="3BG4oD.png"
+>&lt;/p>
+&lt;p>我将文件下载到了D:\安装包&lt;/p>
+&lt;p>右键下载来的文件（它通常在D:\迅雷下载里面 根据你设置的路径而定（在复制完链接下载之前有个对话框，里面有选择的）如果找不到可以打开迅雷，通常在已完成&amp;gt;你下载的文件边上有个文件夹的标志，点击它可以打开文件夹）&lt;/p>
+&lt;p>右键之后选择“解压到&amp;hellip;”，如果没有这个选项可以选择“解压到当前文件夹”，如果都没有可以去安装压缩软件（推荐Bandizip，详见 &lt;a class="link" href="https://blog.gaein.cn/passages/Open-File-in-right-way/" target="_blank" rel="noopener"
+>这一篇博客&lt;/a>），或者右键&amp;gt;挂载（仅限于Windows10操作系统）&lt;/p>
+&lt;p>打开解压出来的文件夹（或者挂载的盘，他们通常是最后一个盘符）&lt;/p>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3BGhdO.png"
+loading="lazy"
+alt="3BGhdO.png"
+>&lt;/p>
+&lt;p>如果你希望自动安装，可以双击setup.exe（Office2019是默认安装64位，2016默认安装32位；希望手动安装可以进入office目录，安装相应版本，推荐64位）&lt;/p>
+&lt;p>&lt;strong>如果你听不懂小括号里面是啥就直接双击即可&lt;/strong>&lt;/p>
+&lt;p>&lt;strong>如果你准备安装Office2016，而且觉得自己电脑配置还行的话就进入Office目录，双击“setup-64.exe”（或者类似的名字）如果无法安装再双击“setup.exe”&lt;/strong>&lt;/p>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3BGfeK.png"
+loading="lazy"
+alt="3BGfeK.png"
+>&lt;/p>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3BGIFe.png"
+loading="lazy"
+alt="3BGIFe.png"
+>&lt;/p>
+&lt;p>安装过程是全自动，你可以坐下来歇会，大概5分钟左右（Microsoft surface pro3），好一点的电脑应该会更快，&lt;del>不过也不排除我电脑有微软本家加成&lt;/del>（如果你听不懂我在说什么等着就好）&lt;/p>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3BGTWd.png"
+loading="lazy"
+alt="3BGTWd.png"
+>&lt;/p>
+&lt;p>如图即为安装成功&lt;/p>
+&lt;h2 id="更改安全设置">更改安全设置
+&lt;/h2>&lt;p>如果您希望白嫖这款软件，后面的步骤是必须的。如果您希望支持微软可以去官方购买Office2019激活密钥或者淘宝购买&lt;/p>
+&lt;p>在开始下面的操作之前可以新建一个文件夹，比如G:\工具。稍后我们的激活操作将在这里面进行，请确保您能够找到此文件夹&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>打开安全中心（如果您使用其它软件可以尝试直接进行下一步操作，再杀毒软件报告含有病毒时选择允许就可以了）
+&lt;strong>激活软件由于涉及到敏感操作，会被判定为病毒&lt;/strong>&lt;/p>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3BGHSA.png"
+loading="lazy"
+alt="3BGHSA.png"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击管理设置
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BGbQI.png"
+loading="lazy"
+alt="3BGbQI.png"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>添加或删除排除项
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BGqyt.png"
+loading="lazy"
+alt="3BGqyt.png"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>添加排除项&amp;gt;文件夹。选择我们刚才新建的文件夹G:\工具&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="激活office">激活Office
+&lt;/h2>&lt;p>首先下载激活软件&lt;/p>
+&lt;p>该软件和知名的系统数字权利激活软件HWIDGen为同一人开发，我选择相信软件开发者&lt;/p>
+&lt;p>注意，在网上找到的激活软件仍然有含有病毒的可能性。我提供的软件是从作者的Github（源码仓库）获取的&lt;/p>
+&lt;p>暂时不可用 &lt;del>点击此处下载: &lt;a class="link" href="https://static.cdn.gaein.cn/files/tools/ActivateTools/" target="_blank" rel="noopener"
+>https://static.cdn.gaein.cn/files/tools/ActivateTools/&lt;/a>激活office.zip&lt;/del>&lt;/p>
+&lt;p>（我已经将它翻译为了中文，当然还是混有部分英文的。不过以下的图片是全英文的）&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>解压到文件夹
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BGLOP.png"
+loading="lazy"
+alt="3BGLOP.png"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>进入“v36”
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BGjw8.png"
+loading="lazy"
+alt="3BGjw8.png"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>右键，以管理员身份运行
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BGzFg.png"
+loading="lazy"
+alt="3BGzFg.png"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>出现此窗口，然后稍等片刻（大概有一两分钟吧）
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BJSYQ.png"
+loading="lazy"
+alt="3BJSYQ.png"
+>&lt;/p>
+&lt;p>程序会自动检查未激活的Windows系统和Office并激活他们。此时如果杀毒软件弹出任何禁止的东西，请选择允许运行&lt;/p>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3BJpWj.png"
+loading="lazy"
+alt="3BJpWj.png"
+>&lt;/p>
+&lt;p>出现到此即为成功（汉化之后的会有激活成功字样）&lt;/p>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/28/3BriZj.png"
+loading="lazy"
+alt="3BriZj.png"
+>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>（附汉化版图片）
+5. 打开Office（word excel都行），弹窗，点击接受
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BJCSs.png"
+loading="lazy"
+alt="3BJCSs.png"
+>
+6. 至此Office激活完成!
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BJPln.png"
+loading="lazy"
+alt="3BJPln.png"
+>&lt;/p>
+&lt;p>&lt;strong>安装的是初始版本，可以点击更新进行更新&lt;/strong>
+&lt;img src="https://s2.ax1x.com/2020/02/28/3BJiyq.png"
+loading="lazy"
+alt="3BJiyq.png"
+>&lt;/p></description></item></channel></rss>

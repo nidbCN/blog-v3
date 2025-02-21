@@ -1,0 +1,1237 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>电脑软件 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/categories/%E7%94%B5%E8%84%91%E8%BD%AF%E4%BB%B6/</link><description>Recent content in 电脑软件 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 07 Oct 2021 17:07:35 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/categories/%E7%94%B5%E8%84%91%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml"/><item><title>配置 ZeroTier 私人节点</title><link>https://blog.gaein.cn/passages/configure-zerotier-moon/</link><pubDate>Thu, 07 Oct 2021 17:07:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/configure-zerotier-moon/</guid><description>&lt;h2 id="准备工作">准备工作
+&lt;/h2>&lt;p>一台有 &lt;strong>静态公网 IP&lt;/strong> 的服务器，装有 Ubuntu 20.04 LTS 以及 ZeroTier-one 。&lt;/p>
+&lt;blockquote>
+&lt;p>Ubuntu 安装 ZeroTier-one 详见 &lt;a class="link" href="https://www.zerotier.com/download/#downloadLinux" target="_blank" rel="noopener"
+>Download - ZeroTier&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h2 id="创建网络">创建网络
+&lt;/h2>&lt;p>在 &lt;a class="link" href="https://my.zerotier.com/network" target="_blank" rel="noopener"
+>ZeroTier Central&lt;/a> 中创建一个网路并设置为 private。&lt;/p>
+&lt;h2 id="配置服务器">配置服务器
+&lt;/h2>&lt;blockquote>
+&lt;p>参考 &lt;a class="link" href="https://docs.zerotier.com/zerotier/moons" target="_blank" rel="noopener"
+>Private Root Servers | ZeroTier Documentation&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h3 id="创建-world-定义">创建 world 定义
+&lt;/h3>&lt;p>转到目录 &lt;code>/var/lib/zerotier-one&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> /var/lib/zerotier-one
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>生成 &lt;code>moon.json&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">zerotier-idtool initmoon identity.public &amp;gt;&amp;gt;moon.json
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>此文件包含机密信息，请妥善保管&lt;/strong>&lt;/p>
+&lt;p>修改 &lt;code>moon.json&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">vim moon.json
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在 &lt;code>roots&lt;/code> 中的第一个子节点的 &lt;code>stableEndpoints&lt;/code> 节点中填入 &lt;code>&amp;lt;你的服务器IP&amp;gt;/&amp;lt;ZeroTier端口&amp;gt;&lt;/code> 如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">&lt;span class="s2">&amp;#34;stableEndpoints&amp;#34;&lt;/span>: &lt;span class="o">[&lt;/span> &lt;span class="s2">&amp;#34;1.2.3.4/9993&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="签发-moon">签发 moon
+&lt;/h3>&lt;p>签发 &lt;code>000000deadbeef00.moon&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">zerotier-idtool genmoon moon.json
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>此文件不包含机密信息，但是它从包含有机密信息的 &lt;code>moon.json&lt;/code> 签发而来。&lt;/p>&lt;/blockquote>
+&lt;h3 id="启用端口">启用端口
+&lt;/h3>&lt;p>开启 Ubuntu 防火墙的 &lt;code>9993&lt;/code> 端口：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">ufw allow &lt;span class="m">9993&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>服务商控制面板如有防火墙请放行 &lt;code>9993&lt;/code> 端口。&lt;/p>
+&lt;h2 id="配置客户端">配置客户端
+&lt;/h2>&lt;p>转到 &lt;code>ZeroTier&lt;/code> 目录&lt;/p>
+&lt;ul>
+&lt;li>Windows: &lt;code>C:\ProgramData\ZeroTier\One&lt;/code>&lt;/li>
+&lt;li>Macintosh: &lt;code>/Library/Application Support/ZeroTier/One&lt;/code>&lt;/li>
+&lt;li>Linux: &lt;code>/var/lib/zerotier-one&lt;/code>&lt;/li>
+&lt;li>FreeBSD/OpenBSD: &lt;code>/var/db/zerotier-one&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>在 &lt;code>ZeroTier&lt;/code> 目录下创建文件夹 &lt;code>moons.d&lt;/code>&lt;/p>
+&lt;p>将服务端生成的 &lt;code>.moon&lt;/code> 文件复制到 &lt;code>moons.d&lt;/code> 文件夹中并重启 ZeroTier&lt;/p></description></item><item><title>个性化你的 Windows Terminal 终端与 PowerShell</title><link>https://blog.gaein.cn/passages/windows-terminal-usage/</link><pubDate>Mon, 09 Nov 2020 01:43:18 +0800</pubDate><guid>https://blog.gaein.cn/passages/windows-terminal-usage/</guid><description>&lt;h2 id="前言">前言
+&lt;/h2>&lt;blockquote>
+&lt;p>总感觉 cmd、PowerShell 太丑。以前折腾过一阵子的 cmder 感觉也就一般。听学姐们吹了挺长时间的 Windows Terminal。今天试一下，确实效果非常好，美观好用。不得不说&lt;del>巨硬&lt;/del>Micro$oft 正经去做某个东西还是非常好的。&lt;/p>&lt;/blockquote>
+&lt;p>2022年11月9日更新如下：&lt;/p>
+&lt;blockquote>
+&lt;ul>
+&lt;li>修改名称 “Powershell 7” 为 “Powershell”，“Powershell 5” 为 “Windows Powershell”；&lt;/li>
+&lt;li>修改部分失效的配置&lt;/li>
+&lt;li>修改安装方式等&lt;/li>
+&lt;/ul>&lt;/blockquote>
+&lt;p>（其实还改了很多，毕竟已经两年过去了）&lt;/p>
+&lt;h2 id="安装">安装
+&lt;/h2>&lt;p>这次主要有以下几个目的：&lt;/p>
+&lt;ol>
+&lt;li>使用 PowerShell 代替系统自带的 Windows PowerShell；&lt;/li>
+&lt;li>优化 PowerShell 字体、配色等；&lt;/li>
+&lt;li>在 Windows Terminal 里面添加 python 控制台；&lt;/li>
+&lt;li>合并 PowerShell、Git Bash、cmd 和 python 到 Windows Terminal 中，并取消其它的右键菜单，为 Windows Terminal 添加右键菜单。&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>可参阅： &lt;a class="link" href="https://docs.microsoft.com/en-us/windows/terminal/customize-settings/startup" target="_blank" rel="noopener"
+>Windows Terminal Startup Settings | Microsoft Docs&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h3 id="windows-terminal">Windows Terminal
+&lt;/h3>&lt;h4 id="windows-terminal-简介">Windows Terminal 简介
+&lt;/h4>&lt;p>是一款新式、快速、高效且强大的终端应用程序。通过它可以使用命令提示符、PowerShell、WSL 等诸多 shell。Windows Terminal 支持多选项卡、窗格、Unicode 和 GPU 加速文本渲染引擎，同时也支持丰富多彩的用户自定义主题。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/01.webp"
+loading="lazy"
+alt="wt宣传片"
+>&lt;/p>
+&lt;h4 id="安装-windows-terminal">安装 Windows Terminal
+&lt;/h4>&lt;p>可以使用多种方式安装：&lt;/p>
+&lt;p>包管理器 &lt;code>winget&lt;/code> 和 &lt;code>scoop&lt;/code> 等均有 windows terminal 的包，Windows 11 自带 Windows Terminal（中文版显示为“终端”）。&lt;/p>
+&lt;p>应用商店：&lt;/p>
+&lt;ol>
+&lt;li>打开系统的 Microsoft Store；&lt;/li>
+&lt;li>搜索&amp;quot;Windows Terminal&amp;quot;；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/02.webp"
+loading="lazy"
+alt="商店界面"
+>&lt;/li>
+&lt;li>点击&amp;quot;安装&amp;quot;。&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>由于网络环境不同等待时间也可能不一样
+&lt;del>在未来某个版本的Windows会默认安装Windows Terminal，但是是几百年后就不知道了（x&lt;/del> Windows 11 已经预装。&lt;/p>&lt;/blockquote>
+&lt;p>菜单里出现 Windows Terminal，打开后如图所示即为安装完成。&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/03.webp"
+loading="lazy"
+alt="WT打开"
+>&lt;/p>
+&lt;h4 id="powershell">PowerShell
+&lt;/h4>&lt;p>所以 Powershell 和 Windows Powershell 有啥不同？&lt;/p>
+&lt;h5 id="powershell-简介">Powershell 简介
+&lt;/h5>&lt;p>最初，Windows PowerShell 是在 .NET Framework 基础之上构建而成，仅适用于 Windows 系统。 在最新版本中，PowerShell 使用 .NET Core 3.1 作为运行时。 PowerShell 在 Windows、macOS 和 Linux 平台上运行。
+新的 PowerShell 拥有更高的效率和诸多优点。
+PowerShell Core 是 &lt;a class="link" href="https://github.com/PowerShell/PowerShell" target="_blank" rel="noopener"
+>GitHub&lt;/a> 上面的开源项目，使用 MIT 许可证。&lt;/p>
+&lt;h5 id="安装-powershell">安装 Powershell
+&lt;/h5>&lt;blockquote>
+&lt;p>官方有详细的安装文档，见 &lt;a class="link" href="https://docs.microsoft.com/zh-cn/powershell/scripting/install/installing-powershell" target="_blank" rel="noopener"
+>Microsoft DOCS&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>建议参考官方文档选择适合自己的方式安装，我目前系统中的WT是作为dotnet CLI 全局工具安装的&lt;/p>&lt;/blockquote>
+&lt;p>我使用下载-安装的方式而没有使用包管理器。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>从&lt;a class="link" href="https://github.com/PowerShell/PowerShell/releases/" target="_blank" rel="noopener"
+>GitHub 的 Release&lt;/a>中下载&lt;code>PowerShell-7.1.0-win-x64.msi&lt;/code>；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/04.webp"
+loading="lazy"
+alt="Release页面"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>下载完成后找到下载的文件夹，双击运行；&lt;/p>
+&lt;blockquote>
+&lt;p>如果提示 “不是有效的 WIN32 应用程序” 请返回刚才的 Release 页面下载&lt;code>PowerShell-7.1.0-win-x86.msi&lt;/code>&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;li>
+&lt;p>一直点击&amp;quot;Next&amp;quot;，直到安装完成，点击&amp;quot;Finish&amp;quot;。
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/05.webp"
+loading="lazy"
+alt="安装PSCore"
+>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="配置-powershell-core">配置 PowerShell Core
+&lt;/h4>&lt;h5 id="准备">准备
+&lt;/h5>&lt;h6 id="安装模块">安装模块
+&lt;/h6>&lt;p>打开 PowerShell 7，输入以下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ps" data-lang="ps">&lt;span class="line">&lt;span class="cl">&lt;span class="nf">Install-Module&lt;/span> &lt;span class="nf">posh-git&lt;/span> &lt;span class="nf">-Scope&lt;/span> &lt;span class="nf">CurrentUser&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ps" data-lang="ps">&lt;span class="line">&lt;span class="cl">&lt;span class="nf">Install-Module&lt;/span> &lt;span class="nf">oh-my-posh&lt;/span> &lt;span class="nf">-Scope&lt;/span> &lt;span class="nf">CurrentUser&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>先输入一个命令，光标会移动到下一行的最左侧。这时候不要着急输入另一个，稍等一会如果出现提示那么就按&lt;code>Y&lt;/code>。安装完成（左侧有显示&amp;quot;PS xxx&amp;quot;字样）再安装另外一个。两个不分先后。&lt;/p>&lt;/blockquote>
+&lt;h6 id="安装-powerline-字体">安装 PowerLine 字体
+&lt;/h6>&lt;p>这一部分微软官方文档有写，详见 &lt;a class="link" href="https://docs.microsoft.com/zh-cn/windows/terminal/tutorials/powerline-setup" target="_blank" rel="noopener"
+>Microsoft Docs&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>打开 Cascadia Code &lt;a class="link" href="https://github.com/microsoft/cascadia-code/releases" target="_blank" rel="noopener"
+>GitHub 发布页&lt;/a>，下载最新的 Release &lt;code>CascadiaCode-2009.22.zip&lt;/code>；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>下载完成后解压文件，进入&lt;code>解压后的文件夹-&amp;gt;ttf&lt;/code>，双击里面&lt;code>.ttf&lt;/code>结尾的文件，安装。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h6 id="配置">配置
+&lt;/h6>&lt;ol>
+&lt;li>
+&lt;p>从菜单栏打开安装好的 PowerShell 7。如果电脑安装有 Visual Studio Code 的话在里面输入以下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ps" data-lang="ps">&lt;span class="line">&lt;span class="cl">&lt;span class="nf">code&lt;/span> &lt;span class="nf">$profile&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/06.webp"
+loading="lazy"
+alt="code效果"
+>
+如果你没有安装或者不知道什么是 Visual Studio Code 的话输入以下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ps" data-lang="ps">&lt;span class="line">&lt;span class="cl">&lt;span class="nf">notepad&lt;/span> &lt;span class="nf">$profile&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/07.webp"
+loading="lazy"
+alt="notepad效果"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>输入完成后按下回车，VSCode（或记事本）将会打开一个文件（可能是空的），在里面输入以下内容后保存&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ps" data-lang="ps">&lt;span class="line">&lt;span class="cl">&lt;span class="nf">#&lt;/span> &lt;span class="nf">by&lt;/span> &lt;span class="nf">Gaein&lt;/span> &lt;span class="nf">nidb&lt;/span> &lt;span class="nf">,&lt;/span> &lt;span class="nf">https:&lt;/span>&lt;span class="err">/&lt;/span>&lt;span class="nv">/www.Gaein.cn&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">Clear-Host&lt;/span> &lt;span class="nf">#&lt;/span> &lt;span class="nf">清除屏幕&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">$time&lt;/span> &lt;span class="nf">=&lt;/span> &lt;span class="nf">Get-date&lt;/span> &lt;span class="nf">-Format&lt;/span> &lt;span class="nf">&amp;#34;现在是yyyy年MM月dd日&lt;/span> &lt;span class="nf">HH时mm分&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">$path&lt;/span> &lt;span class="nf">=&lt;/span> &lt;span class="nf">$pwd.path&lt;/span> &lt;span class="nf">#&lt;/span> &lt;span class="nf">获取路径&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">if&lt;/span> &lt;span class="s">( $path.split(&amp;#34;&lt;/span>&lt;span class="se">\&lt;/span>&lt;span class="s">&amp;#34;)[-1] -eq &amp;#34;Windows&amp;#34; -xor $path.split(&amp;#34;&lt;/span>&lt;span class="se">\&lt;/span>&lt;span class="s">&amp;#34;)[-1] -eq &amp;#34;System32&amp;#34;)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">##&lt;/span> &lt;span class="nf">默认路径为桌面&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">$desktop&lt;/span> &lt;span class="nf">=&lt;/span> &lt;span class="nf">&amp;#34;C:\Users\&amp;#34;&lt;/span> &lt;span class="nf">+&lt;/span> &lt;span class="nf">$env:UserName&lt;/span> &lt;span class="nf">+&lt;/span> &lt;span class="nf">&amp;#34;\Desktop\&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">##&lt;/span> &lt;span class="nf">切换到桌面&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">Set-Location&lt;/span> &lt;span class="nf">$desktop&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">Write-Output&lt;/span> &lt;span class="nf">$time&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">$motdPath&lt;/span> &lt;span class="nf">=&lt;/span> &lt;span class="nf">&amp;#34;C:\Users\&amp;#34;&lt;/span> &lt;span class="nf">+&lt;/span> &lt;span class="nf">$env:UserName&lt;/span> &lt;span class="nf">+&lt;/span> &lt;span class="nf">&amp;#34;\Documents\PowerShell\motd.txt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">Get-Content&lt;/span> &lt;span class="nf">$motdPath&lt;/span> &lt;span class="nf">#&lt;/span> &lt;span class="nf">欢迎消息&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">#&lt;/span> &lt;span class="nf">导入模块&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">Import-Module&lt;/span> &lt;span class="nf">posh-git&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">Import-Module&lt;/span> &lt;span class="nf">oh-my-posh&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">#&lt;/span> &lt;span class="nf">设置主题&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">Set-Theme&lt;/span> &lt;span class="nf">PowerLine&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>如果你想自定义的话建议先备份后修改。&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;li>
+&lt;p>在&lt;code>此电脑-&amp;gt;文档-&amp;gt;PowerShell&lt;/code>文件夹，点击&lt;code>新建文本文档&lt;/code>，文件名为&amp;quot;motd.txt&amp;quot;，写入以下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-txt" data-lang="txt">&lt;span class="line">&lt;span class="cl">PowerShell 7.1.0 (Windows10专业版 x64 20H2)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* 终端: https://docs.microsoft.com/zh-cn/powershell/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* 系统: https://support.microsoft.com/zh-cn/windows/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* 指令: https://docs.microsoft.com/zh-cn/dotnet/api/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">欢迎使用PowerShell Core
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>这里的内容是完全自定义的，算是欢迎消息，即打开 PowerShell 输出的一段话。你可以随便写。&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="配置-windows-terminal">配置 Windows Terminal
+&lt;/h4>&lt;h5 id="自定义设置">自定义设置
+&lt;/h5>&lt;ol>
+&lt;li>
+&lt;p>打开 Windows Terminal，点击 &lt;code>下箭头-&amp;gt;设置&lt;/code> 或按下 &lt;code>Win+,&lt;/code> 打开设置文件
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/08.webp"
+loading="lazy"
+alt="打开的setting.json"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>向设置文件写入以下内容：&lt;/p>
+&lt;blockquote>
+&lt;p>注意，现在打开默认是图形化设置，需要进入图形设置再点击左侧栏目下方的设置图标。&lt;/p>&lt;/blockquote>
+&lt;p>首先修改全局设置（即 &lt;code>profiles.defaults&lt;/code> 节点）：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="s2">&amp;#34;defaults&amp;#34;&lt;/span>&lt;span class="err">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 默认设置
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;acrylicOpacity&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">0.75&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 不透明度
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;closeOnExit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 退出时关闭
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;colorScheme&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Campbell&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 配色方案
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;cursorColor&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;#FFFFFF&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 颜色
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;cursorShape&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;bar&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// bar
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;fontFace&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Cascadia Code PL&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 字体
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;fontSize&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 字号
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;historySize&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">9001&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 历史记录
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;padding&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;0, 0, 0, 0&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 内部显示位置
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;snapOnInput&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// ?
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;startingDirectory&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;./&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 打开目录
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;useAcrylic&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span> &lt;span class="c1">// 使用亚克力效果
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="err">,&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后添加Python控制台，并将不想看到的自动生成的三个的 &lt;code>hidden&lt;/code> 属性设置为 &lt;code>true&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Python Console
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;guid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;{de7c0f31-aa6b-c0f6-44a8-fe162d8f31fc}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 随机生成一个guid即可
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;hidden&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Python 3.9&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;icon&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;C:\\Users\\Gaein\\Documents\\WindowsTerminal\\python-logo.png&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 自定义python图标
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;commandline&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;C:\\Program Files\\Python39\\python.exe&amp;#34;&lt;/span> &lt;span class="c1">// python路径
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="err">,&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>整个配置文件如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;span class="lnt">106
+&lt;/span>&lt;span class="lnt">107
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 文档: https://aka.ms/terminal-documentation
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 默认设置在点击设置按钮时按住&amp;#34;Alt&amp;#34;键
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// by Gaein nidb, https://www.gaein.cn
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// rev 1.0.0
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 全局设置
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;$schema&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;https://aka.ms/terminal-profiles-schema&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;defaultProfile&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;{574e775e-4f2a-5b96-ac1e-a2962a402336}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 默认打开的
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;copyOnSelect&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 自动复制选中的内容到剪切板
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;copyFormatting&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 复制格式，将选中文字的颜色、背景等也复制
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;initialCols&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">120&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 初始化大小（栏）
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;initialRows&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">38&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 初始化大小（行）
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 打开的选项的设置，文档: https://aka.ms/terminal-profile-settings
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;profiles&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;defaults&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 默认设置
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;acrylicOpacity&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mf">0.75&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 不透明度
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;closeOnExit&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 退出时关闭
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;colorScheme&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Campbell&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 配色方案
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;cursorColor&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;#FFFFFF&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 颜色
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;cursorShape&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;bar&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// bar
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;fontFace&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Cascadia Code PL&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 字体
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;fontSize&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 字号
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;historySize&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">9001&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 历史记录
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;padding&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;0, 0, 0, 0&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 内部显示位置
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;snapOnInput&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// ?
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;startingDirectory&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;./&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 打开目录
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;useAcrylic&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span> &lt;span class="c1">// 使用亚克力效果
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;list&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// PowerShell Core
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;guid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;{574e775e-4f2a-5b96-ac1e-a2962a402336}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;hidden&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;PowerShell Core&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;commandline&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;pwsh.exe -NoLogo&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Python Console
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;guid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;{de7c0f31-aa6b-c0f6-44a8-fe162d8f31fc}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 随机生成一个guid即可
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;hidden&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Python 3.9&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;icon&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;C:\\Users\\Gaein\\Documents\\WindowsTerminal\\python-logo.png&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 自定义python图标
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;commandline&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;C:\\Program Files\\Python39\\python.exe&amp;#34;&lt;/span> &lt;span class="c1">// python路径
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 自带的旧版PowerShell
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;guid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;{61c54bbd-c2c6-5271-96e7-009a87ff44bf}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;hidden&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;PowerShell(旧版)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;commandline&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;powershell.exe -NoLogo&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 命令提示符
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;guid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;{0caa0dad-35be-5f56-a8ff-afceeeaa6101}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;hidden&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;命令提示符(cmd)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;commandline&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;cmd.exe&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 默认生成的Azure Cloud Shell
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;guid&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;{b453ae62-4e3d-5e58-b989-0a998ec441b8}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;hidden&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Azure Cloud Shell&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;source&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Windows.Terminal.Azure&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Add custom color schemes to this array.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// To learn more about color schemes, visit https://aka.ms/terminal-color-schemes
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;schemes&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Add custom actions and keybindings to this array.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// To unbind a key combination from your defaults.json, set the command to &amp;#34;unbound&amp;#34;.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// To learn more about actions and keybindings, visit https://aka.ms/terminal-keybindings
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nt">&amp;#34;actions&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Copy and paste are bound to Ctrl+Shift+C and Ctrl+Shift+V in your defaults.json.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// These two lines additionally bind them to Ctrl+C and Ctrl+V.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// To learn more about selection, visit https://aka.ms/terminal-selection
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;command&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nt">&amp;#34;action&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;copy&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nt">&amp;#34;singleLine&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;keys&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;ctrl+c&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span> &lt;span class="nt">&amp;#34;command&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;paste&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nt">&amp;#34;keys&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;ctrl+v&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Press Ctrl+Shift+F to open the search box
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nt">&amp;#34;command&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;find&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nt">&amp;#34;keys&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;ctrl+shift+f&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// Press Alt+Shift+D to open a new pane.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// - &amp;#34;split&amp;#34;: &amp;#34;auto&amp;#34; makes this pane open in the direction that provides the most surface area.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// - &amp;#34;splitMode&amp;#34;: &amp;#34;duplicate&amp;#34; makes the new pane use the focused pane&amp;#39;s profile.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// To learn more about panes, visit https://aka.ms/terminal-panes
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;command&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;action&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;splitPane&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;split&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;auto&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;splitMode&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;duplicate&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;keys&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;alt+shift+d&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>可以按需进行修改&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;/ol>
+&lt;h5 id="添加到右键菜单">添加到右键菜单
+&lt;/h5>&lt;blockquote>
+&lt;p>注意：这部分可能不再需要。貌似现在的wt装完之后自动添加了右键菜单。&lt;/p>&lt;/blockquote>
+&lt;ol>
+&lt;li>&lt;code>Win + R&lt;/code> 输入 &lt;code>regedit&lt;/code> 打开注册表编辑器；&lt;/li>
+&lt;li>转到&lt;code>计算机\HKEY_CLASSES_ROOT\Directory\Background\shell&lt;/code>；&lt;/li>
+&lt;li>新建项&lt;code>Terminal&lt;/code>，将默认值修改为&lt;code>在此处打开 Windows Terminal&lt;/code>；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/09.webp"
+loading="lazy"
+alt="修改值"
+>&lt;/li>
+&lt;li>&lt;a class="link" href="https://static.cdn.gaein.cn/website_used/files/WT-Icon/wt.ico" target="_blank" rel="noopener"
+>下载图标(从Gaein.cn)&lt;/a>，保存到某个路径；&lt;/li>
+&lt;li>在&lt;code>Terminal&lt;/code>里新建字符串，名字为&lt;code>icon&lt;/code>，右键-&amp;gt;修改，值为图标的路径；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/10.webp"
+loading="lazy"
+alt="设置图标"
+>
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/11.webp"
+loading="lazy"
+alt="设置图标路径"
+>&lt;/li>
+&lt;li>在&lt;code>Terminal&lt;/code>新建项，名字为&lt;code>command&lt;/code>，值为&lt;code>wt.exe&lt;/code>
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Windows-Terminal-Usage/12.webp"
+loading="lazy"
+alt="命令"
+>&lt;/li>
+&lt;/ol>
+&lt;h2 id="参考">参考
+&lt;/h2>&lt;ol>
+&lt;li>&lt;a class="link" href="https://docs.microsoft.com/zh-cn/windows/terminal/" target="_blank" rel="noopener"
+>Microsoft Docs:Windows Terminal&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://docs.microsoft.com/zh-cn/powershell/scripting/install/migrating-from-windows-powershell-51-to-powershell-7?view=powershell-7.1" target="_blank" rel="noopener"
+>Microsoft Docs:从 PowerShell5 迁移到 7&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://zhuanlan.zhihu.com/p/144612614" target="_blank" rel="noopener"
+>知乎 @tnnmigga:Windows Terminal 终端入门&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.jianshu.com/p/95c5194857b7" target="_blank" rel="noopener"
+>简书 @码农小胖哥:Windows 命令行终端 PowerShell 美化计划&lt;/a>&lt;/li>
+&lt;/ol></description></item><item><title>VSCode 一键配置 C/C++环境程序</title><link>https://blog.gaein.cn/passages/vscode-c-installer/</link><pubDate>Fri, 18 Sep 2020 15:17:26 +0800</pubDate><guid>https://blog.gaein.cn/passages/vscode-c-installer/</guid><description>&lt;p>VSCode 是轻量级的、跨平台的编辑器。相对于使用 DEVC++来说，使用 VSCode 开发 C/C++有很大的优势（至少它好看）。鉴于环境配置对新人不是很友好，我就写了一个一键安装程序。&lt;/p>
+&lt;!-- more -->
+&lt;h2 id="发行说明">发行说明
+&lt;/h2>&lt;h4 id="平台">平台
+&lt;/h4>&lt;p>适用于 Windows7/8/8.1/10 64 位操作系统&lt;/p>
+&lt;blockquote>
+&lt;p>注意：其中 Windows7 版本需要安装.NET Framework 4.5.2 及以上版本&lt;/p>&lt;/blockquote>
+&lt;h4 id="开发">开发
+&lt;/h4>&lt;p>使用 CSharp .NET Core 编写（其中 Windows7 版本使用.NET Framework）&lt;/p>
+&lt;h4 id="版本">版本
+&lt;/h4>&lt;p>当前版本为 1.12.0&lt;/p>
+&lt;h4 id="安装">安装
+&lt;/h4>&lt;ol>
+&lt;li>Visual Studio Code 1.48.2&lt;/li>
+&lt;li>LLVM v10.0.0&lt;/li>
+&lt;li>mingw64-w64 8.1.0-release-posix-seh-rt_v6-rev0&lt;/li>
+&lt;/ol>
+&lt;h4 id="插件">插件
+&lt;/h4>&lt;ol>
+&lt;li>vscode-icons-team.vscode-icons&lt;/li>
+&lt;li>ms-vscode.cpptools&lt;/li>
+&lt;li>MS-CEINTL.vscode-language-pack-zh-hans&lt;/li>
+&lt;li>formulahendry.code-runner&lt;/li>
+&lt;li>HookyQR.beautify&lt;/li>
+&lt;li>zhuangtongfa.Material-theme&lt;/li>
+&lt;li>christian-kohler.path-intellisense&lt;/li>
+&lt;li>VisualStudioExptTeam.vscodeintellicode&lt;/li>
+&lt;li>esbenp.prettier-vscode&lt;/li>
+&lt;/ol>
+&lt;h4 id="下载">下载
+&lt;/h4>&lt;p>&lt;a class="link" href="https://gitee.com/nidb/vscode--c/releases" target="_blank" rel="noopener"
+>码云-gitee.com&lt;/a>&lt;/p>
+&lt;h4 id="项目">项目
+&lt;/h4>&lt;p>项目地址：&lt;a class="link" href="https://gitee.com/nidb/vscode--c" target="_blank" rel="noopener"
+>码云-gitee.com&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>VSCode 配置文件来自 中北大学·AI+移动互联创新实验室&lt;/p>&lt;/blockquote>
+&lt;h2 id="使用方法">使用方法
+&lt;/h2>&lt;ol>
+&lt;li>下载文件&lt;/li>
+&lt;li>双击运行后点击“开始”&lt;/li>
+&lt;li>等待进度条满后进入文件夹“VSCode+C”&lt;/li>
+&lt;li>双击文件“VSCode+C Installer.exe”，系统弹窗提示后点击是&lt;/li>
+&lt;li>点击“开始安装”&lt;/li>
+&lt;li>安装完成后会自动打开 VSCode，关闭安装程序。&lt;/li>
+&lt;li>在 C:\VSCode+C\UserCode\C-Project 文件夹下创建 c 语言源代码文件；在 C:\VSCode+C\UserCode\C++-Project 文件夹下创建 c++源代码文件&lt;/li>
+&lt;li>在文件夹内右键&amp;gt;在 code 中打开，或者在 VSCode 中点击文件&amp;gt;打开文件夹，然后浏览选择 C:\VSCode+C\UserCode\C-Project 或 C++的&lt;/li>
+&lt;/ol>
+&lt;h2 id="开发过程">开发过程
+&lt;/h2>&lt;p>本来想打包 msi，后来无论怎么尝试都不行，干脆就使用 CSharp写一个安装器&lt;/p>
+&lt;h4 id="安装实现">安装实现
+&lt;/h4>&lt;h6 id="vscode">VSCode
+&lt;/h6>&lt;p>从官网下载安装包
+VSCode 使用 Inno Setup，通过 Process 类中的方法调用其安装程序并传递参数，查阅 Inno Setup 的文档后，我使用的安装的命令行参数如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">/SP- ## 不显示“是否安装”
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/VERYSILENT ## 超级静默安装（不弹窗）
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/NOCANCEL ## 禁止取消安装
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/NORESTART ## 不重启电脑
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/CLOSEAPPLICATIONS ## 关闭影响安装的程序
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/ALLUSERS ## 为所有用户安装
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/DIR=&amp;#34;C:\VSCode+C\Microsoft Visual Studio Code\&amp;#34; ##设置安装目录
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/MERGETASKS=&amp;#34;!runcode,desktopicon,quicklaunchicon,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">## 安装的任务：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">## !runcode 安装完成后不启动vscode
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">## desktopicon 桌面图标
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">## quicklaunchicon 开始菜单
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">## addcontextmenufiles 文件右键菜单
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">## addcontextmenufolders 文件夹右键菜单
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">## associatewithfiles 关联文件
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">## addtopath 添加到环境变量
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>附：&lt;a class="link" href="https://jrsoftware.org/ishelp/topic_setupcmdline.htm" target="_blank" rel="noopener"
+>Inno Setup 官方文档&lt;/a>&lt;/p>
+&lt;p>MERGETASKS 的内容我一直不知道该怎么写（毕竟这个是编译 Inno Setup 前 VSCode 的开发者写的），但是我突然想到 VSCode 是开源的！于是我查阅了&lt;a class="link" href="https://github.com/microsoft/vscode" target="_blank" rel="noopener"
+>GitHub 仓库&lt;/a>。在分支 &lt;a class="link" href="https://github.com/microsoft/vscode/tree/joao/innosetup6" target="_blank" rel="noopener"
+>joao/innosetup6&lt;/a>中的 &lt;a class="link" href="https://github.com/microsoft/vscode/blob/joao/innosetup6/build/win32/code.iss" target="_blank" rel="noopener"
+>build/win32/code.iss&lt;/a>中找到了如下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">[Tasks]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Name: &amp;#34;desktopicon&amp;#34;; Description: &amp;#34;{cm:CreateDesktopIcon}&amp;#34;; GroupDescription: &amp;#34;{cm:AdditionalIcons}&amp;#34;; Flags: unchecked
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Name: &amp;#34;quicklaunchicon&amp;#34;; Description: &amp;#34;{cm:CreateQuickLaunchIcon}&amp;#34;; GroupDescription: &amp;#34;{cm:AdditionalIcons}&amp;#34;; Flags: unchecked; OnlyBelowVersion: 0,6.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Name: &amp;#34;addcontextmenufiles&amp;#34;; Description: &amp;#34;{cm:AddContextMenuFiles,{##NameShort}}&amp;#34;; GroupDescription: &amp;#34;{cm:Other}&amp;#34;; Flags: unchecked
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Name: &amp;#34;addcontextmenufolders&amp;#34;; Description: &amp;#34;{cm:AddContextMenuFolders,{##NameShort}}&amp;#34;; GroupDescription: &amp;#34;{cm:Other}&amp;#34;; Flags: unchecked
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Name: &amp;#34;associatewithfiles&amp;#34;; Description: &amp;#34;{cm:AssociateWithFiles,{##NameShort}}&amp;#34;; GroupDescription: &amp;#34;{cm:Other}&amp;#34;; Flags: unchecked
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Name: &amp;#34;addtopath&amp;#34;; Description: &amp;#34;{cm:AddToPath}&amp;#34;; GroupDescription: &amp;#34;{cm:Other}&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Name: &amp;#34;runcode&amp;#34;; Description: &amp;#34;{cm:RunAfter,{##NameShort}}&amp;#34;; GroupDescription: &amp;#34;{cm:Other}&amp;#34;; Check: WizardSilent
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>顺利解决问题&lt;/p>
+&lt;h6 id="llvm">LLVM
+&lt;/h6>&lt;p>从&lt;a class="link" href="https://releases.llvm.org/" target="_blank" rel="noopener"
+>官网&lt;/a>下载安装包，访问速度可能有些慢，可以考虑使用代理
+LLVM 使用 NSIS（问了中北的学姐），通过 Process 类中的方法调用其安装程序并传递参数，查阅 NSIS 的文档后，我使用的安装的命令行参数如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">/S ## 静默安装
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/D=&amp;#34;C:\VSCode+C\LLVM&amp;#34; ## 设置安装目录
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>附：&lt;a class="link" href="https://nsis.sourceforge.io/Docs/Chapter3.html##installerusage" target="_blank" rel="noopener"
+>NSIS 官方文档&lt;/a>&lt;/p>
+&lt;h6 id="mingw64-w64">mingw64-w64
+&lt;/h6>&lt;p>mingw64-w64 下载下来是一个压缩包，因此我们直接去解压文件就好
+从&lt;a class="link" href="https://sourceforge.net/projects/mingw-w64/files/" target="_blank" rel="noopener"
+>sourceforge&lt;/a>下载 mingw64-w64
+&lt;img src="https://s1.ax1x.com/2020/09/18/whTJL8.png"
+loading="lazy"
+alt="sourceforge文件列表"
+>
+在这么多文件里面下载 Toolchains targetting Win64&amp;gt;Personal Builds&amp;gt;mingw-builds&amp;gt;8.1.0&amp;gt;threads-posix&amp;gt;seh&amp;gt;x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
+（找对版本可真不容易）&lt;/p>
+&lt;h6 id="代码文件夹和vscode-配置">代码文件夹和.vscode 配置
+&lt;/h6>&lt;p>我使用的是中北大学 AI+移动互联创新实验室的配置文件
+&lt;a class="link" href="https://github.com/android-nuc/VSCode-C-Environment" target="_blank" rel="noopener"
+>GitHub 项目地址&lt;/a>
+下载、解压、提取需要的即可&lt;/p>
+&lt;h6 id="安装方案">安装方案
+&lt;/h6>&lt;p>我的方案是：VSCode、LLVM 使用安装包安装，mingw64-w64 和代码文件夹配置等直接打包成 data.zip 然后解压缩。VSCode 插件调用命令行使用
+`C:\VSCode+C\Microsoft Visual Studio Code\bin\code.cmd &amp;ndash;install-extension 插件
+由于国内网络原因某些插件安装的很慢或者根本无法安装&lt;/p></description></item><item><title>打开文档公式乱码的解决办法——使用正确的软件</title><link>https://blog.gaein.cn/passages/openfile-in-rightway/</link><pubDate>Thu, 20 Feb 2020 08:29:59 +0800</pubDate><guid>https://blog.gaein.cn/passages/openfile-in-rightway/</guid><description>&lt;p>由于疫情原因，不能上学，学校只好把学习资料、试题发到同学们手中，于是我开始遇到各种提问，为什么打不开、打开是空白、公式乱码、缺页&amp;hellip;其中大多数是软件的问题，很多人都用了QQ浏览器。我就好奇腾讯你不好好开发浏览器搞什么飞机。&lt;/p>
+&lt;!-- more -->
+&lt;p>** 既然您点进来了，一定是遇到了相应的问题，请阅读本文。感谢您的合作！ **&lt;/p>
+&lt;h2 id="文件的类型">文件的类型
+&lt;/h2>&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/20/3Zd3P1.png"
+loading="lazy"
+alt="3Zd3P1.png"
+>
+首先来说一下经常遇到的文件类型，主要是看文件的后缀名，就是&amp;quot;.&amp;ldquo;后面的字符，比如VSCode.exe，那么后缀名就是.exe，由此判断是可执行程序&lt;/p>
+&lt;blockquote>
+&lt;p>.doc或.docx 最常见的文档类型，是word文档；.doc是旧版本的类型（word97-2003）文档
+.xls或.xlsx是excel文档（表格文件）
+.ppt或.pptx是PowerPoint文档（就是我们常说的PPT）
+以上这些属于一个类型，我们暂且叫他文档。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>.pdf,是“便携式文档格式”，PDF文件，无论在哪种打印机上都可保证精确的颜色和准确的打印效果，即PDF会忠实地再现原稿的每一个字符、颜色以及图象。PDF不会受软件不同而影响，使用非常广泛。而且一般软件不能编辑PDF内容，有利于保护内容不受篡改。通常我们就称之为PDF。
+** 强烈建议学校将文件排版好后输出为PDF文件，这样不会因为使用错误的word软件而造成公式乱码 **&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>.txt文本。纯文本文件几乎可以使用任何文本查看软件打开，如果出现乱码电脑版可以下载notepad++，更改编码查看。不再赘述。&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>. rar .7z 或.zip文件。是压缩文件，通常包含一个或多个文件。&lt;/p>&lt;/blockquote>
+&lt;h2 id="文档的打开方式">文档的打开方式
+&lt;/h2>&lt;p>推荐两家的软件：&lt;/p>
+&lt;ol>
+&lt;li>Microsoft Office&lt;/li>
+&lt;li>金山WPS&lt;/li>
+&lt;/ol>
+&lt;h4 id="1使用microsoft-office">1，使用Microsoft Office
+&lt;/h4>&lt;h6 id="简介">简介
+&lt;/h6>&lt;p>使用Microsoft Office办公套件打开，Office办公套件包含word、excel、ppt等。我们在学习或者办公室常见的word2003就属于office（当然是老版本了）。
+&lt;img src="https://s2.ax1x.com/2020/02/20/3Z1X9g.jpg"
+loading="lazy"
+alt="3Z1X9g.jpg"
+>
+鉴于下发的文件有部分为docx、xlsx、pptx，无法使用老版本打开（或者打开后出现错误），推荐安装最新版Microsft Office 2019或者Office365。当然，这些软件都是收费的。&lt;/p>
+&lt;ul>
+&lt;li>注：Microsoft是微软，Office是微软的一个产品，微软目前是全球最大的电脑软件提供商，其创始人是比尔盖茨 *
+** 注意，尽管office软件的名字是英文，但他们是全中文界面的 **
+** 注意，手机版的office是可以免费下载安装的，并且可以查看文档。但是想要编辑、保存文档需要付费 **&lt;/li>
+&lt;/ul>
+&lt;h6 id="安装电脑版office">安装电脑版Office
+&lt;/h6>&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/20/3ZdOZ4.png"
+loading="lazy"
+alt="3ZdOZ4.png"
+>
+如图是我使用的Office Word 2019专业增强版&lt;/p>
+&lt;blockquote>
+&lt;p>如果你想要免费的永久安装使用Microsoft Office 2019，请看我的另外一篇博客：&lt;a class="link" href="https://blog.gaein.cn/passages/install-office19/" target="_blank" rel="noopener"
+>Microsoft Office 2019 安装与激活（点击跳转）&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h6 id="安装手机版office">安装手机版Office
+&lt;/h6>&lt;p>如果想要使用手机版Microsfot Office办公套件，可以在软件商城里面搜索Word、Excel或者Powerpoint。结果通常会是金山WPS或者Microsoft Office Word或Microsoft Excel或Microsoft Office Powerpoint。注意下载安装您想要的（金山WPS或者Microsoft Office）
+如图是Word的详情页面
+&lt;img src="https://s2.ax1x.com/2020/02/20/3ZlCMn.png"
+loading="lazy"
+alt="3ZlCMn.png"
+>
+请注意核实开发者或开发商为Microsoft Corporation或微软
+&lt;img src="https://s2.ax1x.com/2020/02/20/3Z39H0.jpg"
+loading="lazy"
+alt="3Z39H0.jpg"
+>
+如图便不是我们需要的Word，不要下载这种软件
+** 请确保下载的是正儿八经的Office Word（或Excel、Powerpoint），不推荐其他软件！ **
+如果你不能确保在软件商城里面找到的是真正的Office，请到官网（下面链接）下载
+&lt;a class="link" href="https://products.office.com/zh-cn/mobile/office-mobile-apps-for-android" target="_blank" rel="noopener"
+>https://products.office.com/zh-cn/mobile/office-mobile-apps-for-android&lt;/a>&lt;/p>
+&lt;h4 id="2使用金山wps">2，使用金山WPS
+&lt;/h4>&lt;h6 id="简介-1">简介
+&lt;/h6>&lt;p>另外一个类似于Microsoft Office的软件是金山WPS，包含WPS文字（功能对应Office Word）、WPS表格等等。金山WPS是免费的国产软件，相比于Office来说它的缺点是含有广告。如果你不是特别介意的话，可以使用金山WPS查看、编辑文件，如果你介意请参考上面那篇博客，免费安装Office 2019（略费事），或者花钱购买。* 为了保护版权，有能力最好要购买正版。 *
+下载金山WPS直接在手机应用商城里面搜索WPS即可，有的应用商城搜索word等也会显示出金山WPS（为了保证结果准确，推荐搜索WPS）&lt;/p>
+&lt;h6 id="安装电脑版wps">安装电脑版WPS
+&lt;/h6>&lt;p>电脑版的金山WPS直接访问官网下载即可，金山官网链接：https://www.wps.cn/&lt;/p>
+&lt;h6 id="安装手机版wps">安装手机版WPS
+&lt;/h6>&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/20/3Zliq0.png"
+loading="lazy"
+alt="3Zliq0.png"
+>
+如图，是苹果AppStore的搜索结果。第一个结果是Microsoft Office Word，属于我们介绍的Office办公套件；第二个结果就是金山WPS
+&lt;img src="https://s2.ax1x.com/2020/02/20/3ZlPrq.png"
+loading="lazy"
+alt="3ZlPrq.png"
+>
+金山WPS的详情页面
+** 为了防止下载错误的软件而带来不便或损失，请务必核实一下软件开发商/开发者为金山办公软件或金山办公软件有限公司或者Kingsoft **&lt;/p>
+&lt;p>########## ** 再次强调，除了Office和WPS，不推荐任何其他的软件。这两家在处理文档方面是巨头，其他品牌的产品基本没有能与之媲美的 **&lt;/p>
+&lt;h2 id="pdf的打开方式">PDF的打开方式
+&lt;/h2>&lt;p>通常，任意浏览器都能打开PDF。但是我观察到有的同学在用QQ浏览器打开WPF文件时出现了缺页现象。
+&lt;a class="link" href="https://imgchr.com/i/3ZGk6J" target="_blank" rel="noopener"
+>&lt;img src="https://s2.ax1x.com/2020/02/20/3ZGk6J.png"
+loading="lazy"
+alt="3ZGk6J.png"
+>&lt;/a>
+如果你感到自己的PDF文件缺页的话，请下载以下软件：&lt;/p>
+&lt;ol>
+&lt;li>Adobe Acrobat Reader&lt;/li>
+&lt;li>福昕PDF阅读器安卓版（或IOS版）&lt;/li>
+&lt;/ol>
+&lt;h4 id="1使用adobe-acrobat-reader">1，使用Adobe Acrobat Reader
+&lt;/h4>&lt;p>PDF是由Adobe公司出品的，同样Adobe Acrobat Reader也是该公司的产品之一（大名鼎鼎的PhotoShop也是改公司的产品，“PS”、“P图”则是由这个产品衍生出的词汇），Adobe Acrobat Reader有着良好的兼容性。缺点是体积较大。
+&lt;a class="link" href="https://imgchr.com/i/3ZdqLF" target="_blank" rel="noopener"
+>&lt;img src="https://s2.ax1x.com/2020/02/20/3ZdqLF.png"
+loading="lazy"
+alt="3ZdqLF.png"
+>&lt;/a>
+图片是我使用的收费版Adobe Acroat Pro
+Adobe Acrobat Reader是免费软件。拥有编辑功能的Adobe Acrobat Pro是收费的。
+&lt;img src="https://s2.ax1x.com/2020/02/20/3ZGou9.png"
+loading="lazy"
+alt="3ZGou9.png"
+>
+如图是Adobe官方的介绍&lt;/p>
+&lt;h6 id="安装电脑版acrobat-reader">安装电脑版Acrobat Reader
+&lt;/h6>&lt;p>到官网下载：
+&lt;a class="link" href="https://get.adobe.com/cn/reader/?promoid=KSWLH" target="_blank" rel="noopener"
+>https://get.adobe.com/cn/reader/?promoid=KSWLH&lt;/a>
+注意不要勾选“可选程序”中的可选程序：“是，请安装免费的 McAfee Security Scan Plus 工具以检测我的电脑安全。该工具不会更改现有防病毒程序或电脑设置。”；当然，如果您希望安装杀毒软件也可以勾选，McAfee Security Scan Plus是全球知名的杀毒软件。
+&lt;img src="https://s2.ax1x.com/2020/02/20/3ZJr8O.png"
+loading="lazy"
+alt="3ZJr8O.png"
+>
+下载界面&lt;/p>
+&lt;h6 id="安装手机版acrobat-reader">安装手机版Acrobat Reader
+&lt;/h6>&lt;p>在应用商城中搜索Acrobat Reader，安装即可。注意核实软件开发商/开发者为Adobe Inc.&lt;/p>
+&lt;h4 id="2使用福昕pdffoxit-pdf">2，使用福昕PDF（Foxit PDF）
+&lt;/h4>&lt;p>福昕软件开发有限公司（Foxit Corporation）是全球领先的PDF软件方案与服务提供商，也是国内为数不多的具有全球影响力和竞争力的中国的软件品牌和基础软件开发商之一。福昕PDF阅读器弥补了Adobe Acrobat Reader的缺点，启动更加迅速，体积小巧。但是免费版会在编辑后留下水印。&lt;/p>
+&lt;h6 id="安装电脑版福昕pdf">安装电脑版福昕PDF
+&lt;/h6>&lt;p>到官网下载：
+&lt;a class="link" href="https://www.foxitsoftware.cn/pdf-reader/" target="_blank" rel="noopener"
+>https://www.foxitsoftware.cn/pdf-reader/&lt;/a>
+福昕的版本较多，可以下载其他版本尝试。注意，很多版本都是收费的。考虑到平常只涉及基础的PDF阅读查看，下载如上链接的PDF阅读器即可。&lt;/p>
+&lt;h6 id="安装手机版福昕pdf">安装手机版福昕PDF
+&lt;/h6>&lt;p>在软件商城中搜索福昕PDF
+注意核实开发者/开发商为‪Foxit Software Inc.或福昕软件
+&lt;img src="https://s2.ax1x.com/2020/02/20/3eFaon.png"
+loading="lazy"
+alt="3eFaon.png"
+>
+如果不能确定可以到官网下载
+&lt;a class="link" href="https://www.foxitsoftware.cn/pdf-reader-mobile/" target="_blank" rel="noopener"
+>https://www.foxitsoftware.cn/pdf-reader-mobile/&lt;/a>&lt;/p>
+&lt;h2 id="压缩文件的打开方式">压缩文件的打开方式
+&lt;/h2>&lt;h6 id="手机">手机
+&lt;/h6>&lt;p>.7z .zip文件可以使用手机自带的解压缩功能（限于Android系统），如果希望查看.rar文件，或者手机系统自带的解压出来的文件有问题，可以下载ES文件浏览器，或者应用商城内搜索解压软件，随意下载即可。&lt;/p>
+&lt;h6 id="电脑">电脑
+&lt;/h6>&lt;p>Windows10系统自带解压能够解压.7z .zip .rar文件，双击文件打开，点击上方提取即可。
+如果不希望使用自带的解压功能可以考虑Bandizip或者winRAR&lt;/p>
+&lt;h6 id="bandizip">Bandizip
+&lt;/h6>&lt;p>界面美观简洁的压缩解压软件，无任何广告且个人/家用100%免费
+支持所有常见类型的压缩文件。官网下载链接：
+&lt;a class="link" href="http://www.bandisoft.com/bandizip/" target="_blank" rel="noopener"
+>http://www.bandisoft.com/bandizip/&lt;/a>
+界面如图
+&lt;img src="https://s2.ax1x.com/2020/02/20/3Z0R4s.png"
+loading="lazy"
+alt="3Z0R4s.png"
+>
+** 我在测试版本中发现它加入了广告，但是目前的最新版是没有广告的，而且测试版只是下角有一个小框，写着购买专业版 **&lt;/p>
+&lt;h6 id="winrar">WinRAR
+&lt;/h6>&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/20/3Z0pkj.png"
+loading="lazy"
+alt="3Z0pkj.png"
+>
+如图是加持广告的WinRAR
+老牌压缩解压软件，缺点是个人免费版含有广告
+实测压缩解压速度比bandizip稍快
+&lt;a class="link" href="http://www.winrar.com.cn/download.htm" target="_blank" rel="noopener"
+>http://www.winrar.com.cn/download.htm&lt;/a>
+下载选择免费个人版下载即可，如果您不知道自己的操作系统是32位还是64位下载32位即可。如果您有兴趣可以右键我的电脑（或计算机或此电脑）&amp;gt;属性
+如果系统是Winows XP，那么很大可能是32位系统，如果在Windows XP后面注明了x64版则是64位版本
+如果系统是Windows 7 则系统类型：那行会写出64位操作系统或32位操作系统
+如果系统是Windows10，那么很大可能是64位系统，系统类型：那行会有64位操作系统或32位操作系统
+&lt;img src="https://s2.ax1x.com/2020/02/20/3ZdmKU.png"
+loading="lazy"
+alt="3ZdmKU.png"
+>
+全文终，感谢您的认真阅读
+对应的文件格式一定要用相应的专业软件打开，像QQ浏览器这样的软件不知道害了多少人&lt;/p></description></item><item><title>在surface pro上使用WindowsToGo - surface pro启动win to go</title><link>https://blog.gaein.cn/passages/wtg-on-surface/</link><pubDate>Sun, 02 Feb 2020 08:25:08 +0800</pubDate><guid>https://blog.gaein.cn/passages/wtg-on-surface/</guid><description>&lt;p>在上一篇博客中我介绍了WindowsToGo，那么如何在surface上面使用WTG呢？我重复设置了很多次也参考了网上设置surface Book的教程，终于找到了完美的解决方案。&lt;/p>
+&lt;!-- more -->
+&lt;blockquote>
+&lt;p>传送门：世界那么大，旅行时别忘了带上Windows——windows to go 入坑 &lt;a class="link" href="https://blog.gaein.cn/passages/windows-to-go/" target="_blank" rel="noopener"
+>https://blog.gaein.cn/passages/windows-to-go/&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h2 id="进入uefi固件设置bios设置">进入UEFI固件设置（BIOS设置）
+&lt;/h2>&lt;p>方法一：在关机时候进入UEFI固件设置&lt;/p>
+&lt;ol>
+&lt;li>关闭 Surface，然后等待大约 10 秒钟以确保其处于关闭状态。&lt;/li>
+&lt;li>按住 Surface 上的调高音量按钮，同时按下并释放电源按钮。&lt;/li>
+&lt;li>屏幕上会显示 Microsoft 或 Surface 徽标。继续按住调高音量按钮。显示 UEFI 屏幕后，释放此按钮。&lt;/li>
+&lt;/ol>
+&lt;p>方法二：通过 Windows 加载 UEFI 固件设置菜单&lt;/p>
+&lt;ol>
+&lt;li>选择“开始”菜单&amp;gt;“设置”&amp;gt;“更新和安全”&amp;gt;“恢复”。&lt;/li>
+&lt;li>在“高级启动”下，选择“立即重启”。
+&lt;img src="https://s2.ax1x.com/2020/02/05/1ruAnx.png"
+loading="lazy"
+alt="设置菜单"
+>&lt;/li>
+&lt;li>在“选择一个选项”下，选择“疑难解答”&amp;gt;“高级选项”&amp;gt;“UEFI固件设置”，然后选择“重启”&lt;/li>
+&lt;/ol>
+&lt;h2 id="操作系统设置">操作系统设置
+&lt;/h2>&lt;ol>
+&lt;li>打开“此电脑”观察系统盘图标上面是否有一个小锁的标准如果有，继续，没有则重启进入BIOS。&lt;/li>
+&lt;li>右键系统盘&amp;gt;“取消或关闭BitLocker”&lt;/li>
+&lt;/ol>
+&lt;h2 id="uefi固件设置">UEFI固件设置
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>关闭TPM&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>更改启动顺序，将usb调到ssd之前
+如图所示（别问我怎么拍照的，我扫描仪扫的）&lt;/p>
+&lt;blockquote>
+&lt;p>注意：我使用的是surface pro3，固件设置和后续的pro4、5、6、7图形界面有很大区别，但是选项是相通的嘛&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://s2.ax1x.com/2020/02/05/1ruaCQ.jpg"
+loading="lazy"
+alt="UEFI固件设置"
+>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="插入u盘重新启动即可进入wtg系统">插入U盘，重新启动即可进入WTG系统
+&lt;/h2></description></item><item><title>简析当前主流浏览器与内核</title><link>https://blog.gaein.cn/passages/introductions-of-browser/</link><pubDate>Sat, 16 Mar 2019 22:33:45 +0800</pubDate><guid>https://blog.gaein.cn/passages/introductions-of-browser/</guid><description>&lt;p>任何上过网的用户对浏览器是再熟悉不过了。只是用户看到仅仅只是浏览器本身，却很少能看到浏览器最核心的部分?浏览器内核。从第一款libwww（Library WorldWideWeb）浏览器发展至今已经经历了无数竞争与淘汰了。&lt;/p>
+&lt;!-- more -->
+&lt;h2 id="前言">前言
+&lt;/h2>&lt;blockquote>
+&lt;p>任何上过网的用户对浏览器是再熟悉不过了。只是用户看到仅仅只是浏览器本身，却很少能看到浏览器最核心的部分—浏览器内核。从第一款libwww（Library WorldWideWeb）浏览器发展至今已经经历了无数竞争与淘汰了。现在国内常见的浏览器有：IE、Firefox、QQ浏览器、Safari、Opera、Google Chrome、百度浏览器、搜狗浏览器、猎豹浏览器、360浏览器、UC浏览器、遨游浏览器、世界之窗浏览器等。但目前最为主流浏览器有五大款，分别是IE、Firefox、Google Chrome、Safari、Opera。
+浏览器最重要的部分是浏览器的内核。浏览器内核是浏览器的核心，也称“渲染引擎”，用来解释网页语法并渲染到网页上。浏览器内核决定了浏览器该如何显示网页内容以及页面的格式信息。不同的浏览器内核对网页的语法解释也不同，因此网页开发者需要在不同内核的浏览器中测试网页的渲染效果。
+简单介绍一下五大主流浏览器。（按时间顺序）&lt;/p>&lt;/blockquote>
+&lt;h2 id="主流浏览器top5">主流浏览器(TOP5)
+&lt;/h2>&lt;h4 id="1-ie浏览器">1. IE浏览器
+&lt;/h4>&lt;p>IE是微软公司旗下浏览器，是目国内用户量最多的浏览器。IE诞生于1994年，当时微软为了对抗市场份额占据将近百分之九十的网景Netscape Navigator，于是在Windows中开发了自己的浏览器Internet Explorer，自此也引发了第一次浏览器大战。结果可想而知，微软大获全胜，网景不得不将自己卖给AOL公司。但实际上事情并没有结束，网景后来开发了风靡一时的Firefox火狐，至今Firefox也成为世界五大浏览器之一。
+1996年，微软从Spyglass手里拿到Spyglass Mosaic的源代码和授权，开始开发自己的浏览器IE。后来，微软以IE和Windows捆绑的模式不断向市场扩展份额，使IE成为市场的绝对主流。现在装了Windows系统的电脑基本无法卸载IE。&lt;/p>
+&lt;h4 id="2-opera浏览器">2. Opera浏览器
+&lt;/h4>&lt;p>Opera是挪威Opera Software ASA公司旗下的浏览器。1995年，opera公司发布第一版Opera浏览器，使用自己研发的Presto内核。当时opera公司的开发团队不断完善Presto内核，使Opera浏览器一度成为顶级浏览器。直到2016年奇虎360和昆仑万维收购了Oprea浏览器，从此也丢弃了强大的Presto内核，改用当时Google开源的webkit内核。后来Opera浏览器跟随Google将浏览器内核改为Blink内核。自此Presto内核也淡出了互联网市场。&lt;/p>
+&lt;h4 id="3safari浏览器">3.Safari浏览器：
+&lt;/h4>&lt;p>第二次浏览器大战是从苹果公司发布Safari浏览器开始的。2003年，苹果公司在苹果手机上开发Safari浏览器，利用自己得天独厚的手机市场份额使Safari浏览器迅速成为世界主流浏览器。Safari是最早使用webkit内核的浏览器也是现在苹果默认的浏览器。&lt;/p>
+&lt;h4 id="4firefox浏览器">4.Firefox浏览器：
+&lt;/h4>&lt;p>Firefox浏览器使Mozilla公司旗下浏览器，也是刚才提到的网景公司后来的浏览器。网景被收购后，网景人员创办了Mozilla基金会，这是一个非盈利组织，他们在2004年推出自己的浏览器Firefox。Firefox采用Gecko作为内核。Gecko是一个开源的项目，代码完全公开，因此受到很多人的青睐。Firefox的问世加快了第二次浏览器大战的开始。第二次浏览器大战与第一次二元鼎力的局面不同，这一次的特点就是百家争鸣，也自此打破了IE浏览器从98年网景被收购后独步浏览器市场的局面。&lt;/p>
+&lt;h4 id="5chrome浏览器">5.Chrome浏览器：
+&lt;/h4>&lt;p>Chrome浏览器是google旗下的浏览器。Chrome浏览器至发布以来一直讲究简洁、快速、安全，所以Chrome浏览器到现在一直受人追捧。最开始Chrome采用webkit作为浏览器内核，直到2013年，google宣布不再使用苹果的webkit内核，开始使用webkit的分支内核Blink。&lt;/p>
+&lt;h2 id="内核简介top4">内核简介(TOP4)
+&lt;/h2>&lt;p>以上是五大浏览器的简介，接下来是四大内核。在介绍五大浏览器的同时也已经顺便介绍了四大内核。四大内核分别是：Trident（也称IE内核）、webkit、Blink、Gecko。五大浏览器采用的都是单内核，而随着浏览器的发展现在也出现了双内核。像360浏览器、QQ浏览器都是采用双内核。
+作为前端开发，熟悉四大内核是非常有必要的。四大内核的解析不同使网页渲染效果更具多样化。下面总结一下各常用浏览器所使用的内核。&lt;/p>
+&lt;h2 id="相关浏览器总结">相关浏览器总结
+&lt;/h2>&lt;ol>
+&lt;li>IE浏览器内核：Trident内核，也是俗称的IE内核；&lt;/li>
+&lt;li>Chrome浏览器内核：统称为Chromium内核或Chrome内核，以前是Webkit内核，现在是Blink内核；&lt;/li>
+&lt;li>Firefox浏览器内核：Gecko内核，俗称Firefox内核；&lt;/li>
+&lt;li>Safari浏览器内核：Webkit内核；&lt;/li>
+&lt;li>Opera浏览器内核：最初是自己的Presto内核，后来是Webkit，现在是Blink内核；&lt;/li>
+&lt;li>360浏览器、猎豹浏览器内核：IE+Chrome双内核；&lt;/li>
+&lt;li>搜狗、遨游、QQ浏览器内核：Trident（兼容模式）+Webkit（高速模式）；&lt;/li>
+&lt;li>百度浏览器、世界之窗内核：IE内核；&lt;/li>
+&lt;li>2345浏览器内核：以前是IE内核，现在也是IE+Chrome双内核；&lt;/li>
+&lt;/ol>
+&lt;p>写这篇文章主要是因为自己在前端开发过程常遇到浏览器兼容问题，以后有时间要对不同内核浏览器渲染效果的区别做一下总结。这是对不同浏览器和内核的总结，希望对大家有帮助。&lt;/p>
+&lt;p>版权
+作者：kookic
+来源：CSDN
+原文：https://blog.csdn.net/yuyanjing123456789/article/details/78689595
+转载也是因为我遇到了兼容性方面的问题，看见这篇文章非常全面&lt;/p></description></item><item><title>优雅的从 VMWare 官网上下载完整版 Workstation Pro</title><link>https://blog.gaein.cn/passages/download-workstation-pro/</link><pubDate>Wed, 23 Jan 2019 14:46:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/download-workstation-pro/</guid><description>&lt;p>VMWare是世界闻名的虚拟机软件，那么如何在官网下载正版呢？&lt;/p>
+&lt;h2 id="打开vmware官网">打开VMWare官网
+&lt;/h2>&lt;p>&lt;a class="link" href="https://www.vmware.com/cn.html" target="_blank" rel="noopener"
+>VMware中国&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Download-Workstation-Pro/01.webp"
+loading="lazy"
+alt="首页"
+>&lt;/p>
+&lt;h2 id="转到下载页面">转到下载页面
+&lt;/h2>&lt;p>点击左侧下载&amp;gt;产品下载&amp;gt;Workstation Pro&lt;/p>
+&lt;p>&lt;strong>！注意，是“产品下载”中的Workstation Pro而不是“免费产品试用版和演示”中的&lt;/strong>&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Download-Workstation-Pro/02.webp"
+loading="lazy"
+alt="下载"
+>&lt;/p>
+&lt;h2 id="跳转到软件下载">跳转到软件下载
+&lt;/h2>&lt;p>跳转后在页面中选择自己需要的，跳转至下载&lt;/p>
+&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Download-Workstation-Pro/03.webp"
+loading="lazy"
+alt="下载详细页面"
+>&lt;/p>
+&lt;h2 id="点击了解更多信息">点击“了解更多信息”
+&lt;/h2>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Download-Workstation-Pro/04.webp"
+loading="lazy"
+alt="更多信息"
+>&lt;/p>
+&lt;h2 id="记下内部版本号">记下“内部版本号”
+&lt;/h2>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Download-Workstation-Pro/05.webp"
+loading="lazy"
+alt="版本号"
+>&lt;/p>
+&lt;h2 id="拼接链接">拼接链接：
+&lt;/h2>&lt;p>&lt;code>&amp;quot;https://download3.vmware.com/software/wkst/file/VMware-workstation-full-&amp;quot;+版本（15.0.2）+&amp;quot;-&amp;quot;+内部版本号（10952284）+&amp;quot;.exe&amp;quot;&lt;/code>&lt;/p>
+&lt;p>比如我这个15.0.2,10952284的下载链接就是
+&lt;a class="link" href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.2-10952284.exe" target="_blank" rel="noopener"
+>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.2-10952284.exe&lt;/a>&lt;/p>
+&lt;h2 id="脚本">脚本
+&lt;/h2>&lt;blockquote>
+&lt;p>2021.5.15 补充&lt;/p>&lt;/blockquote>
+&lt;p>前阵子无聊扒了一下VMWare的API，瞎写了一个屎山脚本，用于实验室内网资源站更新VMWare方便一些：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># import requests&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">httpx&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">requests&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">json&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">vmware_public_api_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;https://my.vmware.com/channel/public/api/v1.0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">get_latest_version&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">vmware_all_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">vmware_public_api_url&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;/products/getProductsAtoZ?locale=en_US&amp;amp;isPrivate=false&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;[INFO]向&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">vmware_all_url&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">发送请求，请稍后...&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">all_file_resp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vmware_all_url&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">latest_rev&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">all_file_resp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">status_code&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">200&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ret_json&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">json&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">loads&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">all_file_resp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">text&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">products_list&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ret_json&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;productCategoryList&amp;#34;&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="s2">&amp;#34;productList&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">item&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">products_list&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;name&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;VMware Workstation Pro&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">latest_rev&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;actions&amp;#34;&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="s2">&amp;#34;target&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/&amp;#39;&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">latest_rev&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">get_info_by_version&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">version&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">dict&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">vmware_list_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">vmware_public_api_url&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;/products/getRelatedDLGList?category=desktop_end_user_computing&amp;amp;product=vmware_workstation_pro&amp;amp;version=&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">version&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;amp;dlgType=PRODUCT_BINARY&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;[INFO]向&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">vmware_list_url&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">发送请求，请稍后...&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">resp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vmware_list_url&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">resp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">status_code&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">200&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">json&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">loads&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">resp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">text&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="s2">&amp;#34;dlgEditionsLists&amp;#34;&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="s2">&amp;#34;dlgList&amp;#34;&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;ERROR:&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">resp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">status_code&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2"> at url &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">vmware_list_url&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">get_file_by_id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">product_id&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dl_group&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">vmware_file_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">vmware_public_api_url&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;/dlg/details?locale=en_US&amp;amp;downloadGroup=&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">dl_group&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;amp;productId=&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">product_id&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;[INFO]向&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">vmware_file_url&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">发送请求，请稍后...&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">resp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vmware_file_url&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">resp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">status_code&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">200&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">json&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">loads&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">resp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">text&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="s2">&amp;#34;downloadFiles&amp;#34;&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="vm">__name__&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;__main__&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">latest_version&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">get_latest_version&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">latest_version&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;[INFO]获取到最新版本&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">latest_version&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">vmware_info&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">get_info_by_version&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">latest_version&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">vmware_info&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;[INFO]获取到：ID &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">vmware_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;productId&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">,名称 &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">vmware_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;name&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">,发布时间 &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">vmware_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;releaseDate&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">file_info&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">get_file_by_id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vmware_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;productId&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">vmware_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;code&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;[INFO]获取到：文件名 &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">file_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;fileName&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">,MD5&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">file_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;md5checksum&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">,文件大小&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">file_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;fileSize&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">download_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;https://download3.vmware.com/software/wkst/file/&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">file_info&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;fileName&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;[INFO]拼接下载链接：&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">download_url&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>屎山（但是能跑）&lt;/p></description></item></channel></rss>

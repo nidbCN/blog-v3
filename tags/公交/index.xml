@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>公交 on Gaein nidb 的博客</title><link>https://blog.gaein.cn/tags/%E5%85%AC%E4%BA%A4/</link><description>Recent content in 公交 on Gaein nidb 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 11 Feb 2023 15:10:18 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E5%85%AC%E4%BA%A4/index.xml" rel="self" type="application/rss+xml"/><item><title>玉田公交线路图</title><link>https://blog.gaein.cn/passages/yutian-bus-map/</link><pubDate>Sat, 11 Feb 2023 15:10:18 +0800</pubDate><guid>https://blog.gaein.cn/passages/yutian-bus-map/</guid><description>&lt;h2 id="玉田公交线路图">玉田公交线路图
+&lt;/h2>&lt;h3 id="概览">概览
+&lt;/h3>&lt;p>&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Yutian-bus-map/1.webp"
+loading="lazy"
+alt="公交线路图"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>点击图片可查看大图，更多缩放功能使用下文的查看器或独立页面的查看器&lt;/p>&lt;/blockquote>
+&lt;h3 id="查看器">查看器
+&lt;/h3>&lt;p>{% raw %}&lt;/p>
+&lt;iframe title="页内查看器" width="100%" height="480" src="https://static.cdn.gaein.cn/yutian-bus-map-viewer/">&lt;/iframe>
+&lt;p>{% endraw %}&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://static.cdn.gaein.cn/yutian-bus-map-viewer/" target="_blank" rel="noopener"
+>独立页面的查看器&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;h3 id="数据来源">数据来源
+&lt;/h3>&lt;ul>
+&lt;li>玉田生活&lt;/li>
+&lt;li>腾讯出行服务&lt;/li>
+&lt;/ul>
+&lt;h3 id="附">附
+&lt;/h3>&lt;p>使用 railmapgen.github.io 绘制，转载请附上本文链接。&lt;/p></description></item></channel></rss>
