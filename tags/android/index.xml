@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Android on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/android/</link><description>Recent content in Android on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 04 Oct 2021 18:43:15 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/android/index.xml" rel="self" type="application/rss+xml"/><item><title>【弃坑】在红米4X上安装LineageOS</title><link>https://blog.gaein.cn/passages/lineageos-on-redmi-4x/</link><pubDate>Mon, 04 Oct 2021 18:43:15 +0800</pubDate><guid>https://blog.gaein.cn/passages/lineageos-on-redmi-4x/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;本来就想顺便玩玩结果用了4部手机了.jpg&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;设备：红米4X(santoni)&lt;br&gt;
+系统：MIUI开发版 9.10.11
+架构：ARM64&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;咕咕咕中，问题真的好多啊&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="准备工作"&gt;准备工作
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;另请参阅：&lt;a class="link" href="https://wiki.lineageos.org/devices/santoni/install" target="_blank" rel="noopener"
+&gt;Install LineageOS on santoni | LineageOS Wiki&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="安装adb和fastboot"&gt;安装ADB和FastBoot
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;从 &lt;a class="link" href="https://dl.google.com/android/repository/platform-tools-latest-windows.zip" target="_blank" rel="noopener"
+&gt;Google&lt;/a&gt; 下载Windows版的压缩包；&lt;/li&gt;
+&lt;li&gt;解压缩下载的压缩包到你习惯的文件夹（比如 &lt;code&gt;C:\Users\YourName\Tools\PlatformTools\&lt;/code&gt;）；&lt;/li&gt;
+&lt;li&gt;将解压缩的文件夹添加到系统 &lt;code&gt;Path&lt;/code&gt; 环境变量。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="解锁-bootloader"&gt;解锁 bootloader
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;在 &lt;code&gt;设置&amp;gt;我的设备&amp;gt;全部参数&lt;/code&gt; 中点击3次MIUI版本，再点击3次MIUI版本，开启开发者模式；&lt;/li&gt;
+&lt;li&gt;下载 &lt;a class="link" href="https://www.miui.com/unlock/index.html" target="_blank" rel="noopener"
+&gt;小米解锁工具&lt;/a&gt;，确保账号有权限解锁；&lt;/li&gt;
+&lt;li&gt;在 &lt;code&gt;设置&amp;gt;更多设置&amp;gt;开发者选项&amp;gt;设备解锁状态&lt;/code&gt; 中，插入SIM卡并绑定账号。具体步骤可以参考&lt;a class="link" href="https://www.xiaomi.cn/post/4378807" target="_blank" rel="noopener"
+&gt;小米社区&lt;/a&gt;；&lt;/li&gt;
+&lt;li&gt;在 &lt;code&gt;设置&amp;gt;更多设置&amp;gt;开发者选项&amp;gt;USB调试&lt;/code&gt; 中启用USB调试。&lt;/li&gt;
+&lt;li&gt;下载 &lt;a class="link" href="http://www.miui.com/shuaji-393.html" target="_blank" rel="noopener"
+&gt;小米刷机工具&lt;/a&gt; ，不用下载任何包，在 &lt;code&gt;fastboot&lt;/code&gt; 下解压运行后按提示安装驱动，然后这玩意就没用了；
+&lt;blockquote&gt;
+&lt;p&gt;似乎只有在 &lt;code&gt;fastboot&lt;/code&gt; 模式下用小米来装驱动才行，此前不知道怎么回事一直没驱动。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;在电脑终端内输入 &lt;code&gt;adb shell reboot -p&lt;/code&gt; ，手机弹窗允许调试点击“确定”，手机关机；&lt;/li&gt;
+&lt;li&gt;关机状态下，按住 &lt;code&gt;音量-&lt;/code&gt; 再按 &lt;code&gt;电源键&lt;/code&gt; ，开机进入 fastboot；&lt;/li&gt;
+&lt;li&gt;运行小米解锁工具，登录账户并确认解锁。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="刷入第三方-recovery"&gt;刷入第三方 Recovery
+&lt;/h2&gt;&lt;p&gt;这里选择使用 &lt;a class="link" href="https://pitchblackrecovery.com/" target="_blank" rel="noopener"
+&gt;PitchBlack Recovery&lt;/a&gt; &lt;del&gt;因为好看&lt;/del&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;另请参阅：&lt;a class="link" href="https://pitchblackrecovery.com/docs/how-to-install/" target="_blank" rel="noopener"
+&gt;How to Install - PitchBlack Recovery Project&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="准备"&gt;准备
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;确保你的设备已经解锁；&lt;/li&gt;
+&lt;li&gt;确保PC端有 &lt;code&gt;adb&lt;/code&gt; 和 &lt;code&gt;fastboot&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;从 &lt;a class="link" href="https://pitchblackrecovery.com/santoni/" target="_blank" rel="noopener"
+&gt;PitchBlack Recovery&lt;/a&gt; 下载适用于红米4X的 Recovery；&lt;/li&gt;
+&lt;li&gt;从 &lt;a class="link" href="https://twrp.me/xiaomi/xiaomiredmi4x.html" target="_blank" rel="noopener"
+&gt;TeamWin Recovery&lt;/a&gt; 翻到“Download Links:” 处，下载适用于红米4X的 Recovery。（我这边是欧洲的镜像比较快，自行选择）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="从twrp刷入pbrp"&gt;从TWRP刷入PBRP
+&lt;/h3&gt;&lt;p&gt;因为以前是小米的 Recovery ，直接安装 PitchBlack 没有搞太明白，所以先刷入 TWRP。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;到下载TWEP的目录，在PC终端执行 &lt;code&gt;fastboot boot twrp-&amp;lt;version&amp;gt;-santoni.img&lt;/code&gt; ，从TWRP中启动；&lt;/li&gt;
+&lt;li&gt;在手机进入TWRP后，点击 &lt;code&gt;Wipe&amp;gt;Format Data&lt;/code&gt; 并输入 &lt;code&gt;yes&lt;/code&gt; 后执行；&lt;/li&gt;
+&lt;li&gt;点击 &lt;code&gt;Back&lt;/code&gt; 返回到主界面，点击 &lt;code&gt;Advanced&amp;gt;ADB Sideload&lt;/code&gt; 启动 ADB 旁加载；&lt;/li&gt;
+&lt;li&gt;到下载PBRP的目录，从PC终端执行 &lt;code&gt;adb sideload .\PBRP-santoni-&amp;lt;version&amp;gt;-OFFICIAL.zip &lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;手机终端出现 &lt;code&gt;---Installation finished!---&lt;/code&gt; 字样即为刷入完成；&lt;/li&gt;
+&lt;li&gt;按下 &lt;code&gt;音量-&lt;/code&gt; 重启至 PitchBlack Recovery。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="编译-lineageos"&gt;编译 LineageOS
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;另请参阅：&lt;a class="link" href="https://wiki.lineageos.org/devices/santoni/build" target="_blank" rel="noopener"
+&gt;Build for santoni | LineageOS Wiki&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="准备工作-1"&gt;准备工作
+&lt;/h3&gt;&lt;p&gt;准备一台装有 64位的 &lt;strong&gt;Ubuntu&lt;/strong&gt; 20.04 （或Ubuntu Server 20.04）的电脑，可以考虑使用虚拟机或云服务器，为了避免麻烦，建议使用Ubuntu Server完成。编译的时间取决于性能。LineageOS官方的要求是200G存储空间，并且内存越小编译越慢。&lt;/p&gt;
+&lt;p&gt;为了速度我就直接拿服务器编译了。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;DELL PowerEdge R620&lt;br&gt;
+Intel® Xeon® Processor E5-2670 v2 X2&lt;br&gt;
+MT DDR3 REG-ECC PC8500R 16GB X4&lt;br&gt;
+HGST 600GB 15K SAS X3 (Raid5)&lt;br&gt;
+Ubuntu server 20.04.02&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Ubuntu 发行版的光盘可以从 &lt;a class="link" href="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/" target="_blank" rel="noopener"
+&gt;清华大学开源软件镜像站&lt;/a&gt; 下载。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;安装服务器过程略过，由于我在tty下使用所以语言选择了英语。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;建议在安装时候配置国内源，比如清华源（&lt;code&gt;https://mirrors.tuna.tsinghua.edu.cn/ubuntu/&lt;/code&gt;）。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="环境配置"&gt;环境配置
+&lt;/h3&gt;&lt;p&gt;通过SSH连接上服务器之后就可以进一步进行环境的配置了（当然你在tty内配置也不是不行）。&lt;/p&gt;
+&lt;h4 id="安装platform-tools"&gt;安装platform Tools
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;【可能需要代理】使用 wget 下载 Linux 版的 platform Tools: &lt;code&gt;wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;使用 apt 安装 zip: &lt;code&gt;apt install zip&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;解压缩 platform Tools :&lt;code&gt;unzip platform-tools_&amp;lt;version&amp;gt;-linux.zip&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;编辑 &lt;code&gt;~/.profile&lt;/code&gt;，添加:
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# add Android SDK platform tools to path&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;$HOME/platform-tools&amp;#34;&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;$HOME/platform-tools:$PATH&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;添加完成后运行 &lt;code&gt;source ~/.profile&lt;/code&gt; 更新环境。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="安装依赖"&gt;安装依赖
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;使用 apt 安装依赖: &lt;code&gt;apt install zip bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev&lt;/code&gt;；
+&lt;blockquote&gt;
+&lt;p&gt;对于 Ubuntu 20.04 以前的操作系统来说，还需要安装 libwxgtk3.0-dev: &lt;code&gt;apt install libwxgtk3.0-dev&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;如果希望构建 lineageOS 15，则需要安装OpenJDK8: &lt;code&gt;apt install openjdk-8-jdk&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="创建目录"&gt;创建目录
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;mkdir -p ~/bin&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mkdir -p ~/android/lineage&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="安装repo命令"&gt;安装repo命令
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;下载repo: &lt;code&gt;curl https://storage.googleapis.com/git-repo-downloads/repo &amp;gt; ~/bin/repo&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;更改权限: &lt;code&gt;chmod a+x ~/bin/repo&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;将 &lt;code&gt;~/bin&lt;/code&gt; 添加到环境变量，在 &lt;code&gt;~/.profile&lt;/code&gt; 中添加:
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;# set PATH so it includes user&amp;#39;s private bin if it exists
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;if [ -d &amp;#34;$HOME/bin&amp;#34; ] ; then
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; PATH=&amp;#34;$HOME/bin:$PATH&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;fi
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;运行 &lt;code&gt;source ~/.profile&lt;/code&gt; 更新环境。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="配置git"&gt;配置Git
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;使用 &lt;code&gt;apt install git&lt;/code&gt; 安装 Git；&lt;/li&gt;
+&lt;li&gt;配置你的邮箱和用户名：
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;git config --global user.email &amp;#34;you@example.com&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;git config --global user.name &amp;#34;Your Name&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="开启缓存"&gt;开启缓存
+&lt;/h4&gt;&lt;blockquote&gt;
+&lt;p&gt;开启缓存可以加快构建&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;设置环境变量
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;export&lt;/span&gt; &lt;span class="n"&gt;USE_CCACHE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;export&lt;/span&gt; &lt;span class="n"&gt;CCACHE_EXEC&lt;/span&gt;&lt;span class="o"&gt;=/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;ccache&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;设置ccache，编辑&lt;code&gt;~/.profile&lt;/code&gt;，加入:
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ccache -M 32G
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;使用&lt;code&gt;source ~/.profile&lt;/code&gt; 使配置生效&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="配置lineageos仓库"&gt;配置LineageOS仓库
+&lt;/h4&gt;&lt;p&gt;红米4X可以选择如下两个分支：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;lineage-15.1(需要OpenJDK-8)&lt;/li&gt;
+&lt;li&gt;lineage-16.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;进入目录: &lt;code&gt;cd ~/android/lineage&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;安装python（由于Ubuntu自带python，安装 &lt;code&gt;python-is-python3&lt;/code&gt;）即可；&lt;/li&gt;
+&lt;li&gt;【可能需要代理】初始化项目: &lt;code&gt;repo init -u https://github.com/LineageOS/android.git -b lineage-&amp;lt;version&amp;gt;&lt;/code&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果无法下载可以考虑添加环境变量 &lt;code&gt;REPO_URL=https://github.com/GerritCodeReview/git-repo&lt;/code&gt;；&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;【可能需要代理】使用 &lt;code&gt;repo sync&lt;/code&gt; 下载源代码；
+&lt;blockquote&gt;
+&lt;p&gt;这步好艰难&amp;hellip;要下很长时间&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="配置设备相关"&gt;配置设备相关
+&lt;/h4&gt;&lt;p&gt;输入&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;source build/envsetup.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;breakfast santoni
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;下载红米4X(santoni)的配置文件和内核。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;部分机型需要一个vendor目录。如果你收到了一个关于vendor的错误，到 &lt;a class="link" href="https://gitlab.com/the-muppets/proprietary_vendor_xiaomi/-/tree/lineage-16.0/santoni" target="_blank" rel="noopener"
+&gt;GitLab&lt;/a&gt; 下载。放入 &lt;code&gt;~/android/lineageos/vendor/xiaomi&lt;/code&gt; 后，再次执行 &lt;code&gt;breakfast santoni&lt;/code&gt; 即可。
+经尝试上述方法在后来引起了错误，所以参考官方文档，从LineageOS的包里导出该文件，首先下载 &lt;a class="link" href="https://lineageosroms.com/santoni/" target="_blank" rel="noopener"
+&gt;LineageOS 16.0 for santoni&lt;/a&gt; （这个包的来历我也不知道，应该是以前镜像的官方build），使用 &lt;code&gt;unzip path/to/lineage-*.zip system/*&lt;/code&gt; 解压，并将 &lt;code&gt;system&lt;/code&gt; 目录移动到 &lt;code&gt;~/android/system_dump/&lt;/code&gt;，到 &lt;code&gt;~/android/lineage/device/xiaomi/santoni&lt;/code&gt; 目录执行 &lt;code&gt;./extract-files.sh ~/android/system_dump/&lt;/code&gt; 导出。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id="编译lineageos"&gt;编译LineageOS
+&lt;/h4&gt;&lt;p&gt;执行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;croot
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;brunch santoni
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;报错&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ninja: error: &amp;#39;/home/nidb/android/lineageos/out/target/common/obj/JAVA_LIBRARIES/WfdCommon_intermediates/javalib.jar&amp;#39;, needed by &amp;#39;/home/nidb/android/lineageos/out/target/product/santoni/dex_bootjars/system/framework/boot.prof&amp;#39;, missing and no known rule to make it
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;很是绝望。参考 &lt;a class="link" href="https://stackoverflow.com/questions/54946271" target="_blank" rel="noopener"
+&gt;StackOverflow&lt;/a&gt; 发现或许是缺了 Wfd，在Github找到&lt;a class="link" href="https://github.com/bionicBUG/android_device_xiaomi_santoni/tree/los16" target="_blank" rel="noopener"
+&gt;这个仓库&lt;/a&gt; ，克隆该项目替换，没有作用。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;考虑使用 &lt;code&gt;make&lt;/code&gt; 直接编译，因为脚本中含有 python2，所以卸载 &lt;code&gt;python-is-python3&lt;/code&gt; ，然后 &lt;code&gt;apt install python2&lt;/code&gt;；&lt;br&gt;
+尝试使用 &lt;code&gt;lunch&lt;/code&gt; ,&lt;code&gt;make -j10&lt;/code&gt; 。&lt;br&gt;
+报错 &lt;code&gt;ninja: error: 'prebuilts/lineage-sdk/api/9.txt'&lt;/code&gt;，参考 &lt;a class="link" href="https://forum.xda-developers.com/t/help-by-building-lineageos-16.3887273/" target="_blank" rel="noopener"
+&gt;XDA&lt;/a&gt; 克隆 &lt;code&gt;https://github.com/LineageOS/android_prebuilts_lineage-sdk&lt;/code&gt; 到 &lt;code&gt;prebuilts&lt;/code&gt; 解决。&lt;br&gt;
+编译到一大半报错 &lt;code&gt;ninja: build stopped: subcommand failed.&lt;/code&gt; 原因是被Linux系统限制，使用 &lt;code&gt;ulimit -c unlimited&lt;/code&gt; 解除。&lt;/p&gt;
+&lt;/blockquote&gt;</description></item></channel></rss>

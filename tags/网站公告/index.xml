@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>网站公告 on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/%E7%BD%91%E7%AB%99%E5%85%AC%E5%91%8A/</link><description>Recent content in 网站公告 on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 17 Sep 2020 22:26:55 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E7%BD%91%E7%AB%99%E5%85%AC%E5%91%8A/index.xml" rel="self" type="application/rss+xml"/><item><title>2020年9月17日服务器宕机说明</title><link>https://blog.gaein.cn/passages/errorlog-200917/</link><pubDate>Thu, 17 Sep 2020 22:26:55 +0800</pubDate><guid>https://blog.gaein.cn/passages/errorlog-200917/</guid><description>&lt;p&gt;网站从2020年9月17日午13点起宕机，到当天22:00基本恢复访问&lt;/p&gt;
+&lt;h2 id=""&gt;
+&lt;/h2&gt;&lt;p&gt;宕机原因如下：
+没事闲的使用rm -rf /*结果没有提示直接执行（人类迷惑行为）&lt;/p&gt;
+&lt;h2 id="解决步骤"&gt;解决步骤：
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;当场懵了然后按下Ctrl+C&lt;/li&gt;
+&lt;li&gt;查看快照&lt;/li&gt;
+&lt;li&gt;尝试连接SSH，显示密码错误&lt;/li&gt;
+&lt;li&gt;更改SSH密码，无法连接&lt;/li&gt;
+&lt;li&gt;使用阿里云紧急救援，发现服务器已经无法开启&lt;/li&gt;
+&lt;li&gt;回滚到刚刚安装环境的快照&lt;/li&gt;
+&lt;li&gt;启动nginx，修改配置文件&lt;/li&gt;
+&lt;li&gt;上传网站页面，恢复主页等访问&lt;/li&gt;
+&lt;li&gt;开启PHP，修复数据库，恢复评论系统和旧博客的访问&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;应多使用快照功能以便在出现问题时及时回滚&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>2019年2月12日服务器宕机说明</title><link>https://blog.gaein.cn/passages/errorlog-190212/</link><pubDate>Tue, 12 Feb 2019 23:18:56 +0800</pubDate><guid>https://blog.gaein.cn/passages/errorlog-190212/</guid><description>&lt;p&gt;网站从2019年2月12日早7点起宕机，到当天23:10基本恢复访问&lt;/p&gt;
+&lt;h3 id="宕机原因"&gt;宕机原因
+&lt;/h3&gt;&lt;p&gt;忘记续费服务器，超时一周后导致服务器被删除&lt;/p&gt;
+&lt;h3 id="解决步骤"&gt;解决步骤：
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;上午同学发现网站无法访问联系我&lt;/li&gt;
+&lt;li&gt;更改DNS到虚拟主机，但发现虚拟主机里面的index.html已经丢失&lt;/li&gt;
+&lt;li&gt;下午到家联系IDC客服进行数据恢复&lt;/li&gt;
+&lt;li&gt;13:55购入新服务器&lt;/li&gt;
+&lt;li&gt;联系客服完成数据恢复&lt;/li&gt;
+&lt;li&gt;更改DNS回到网站服务器&lt;/li&gt;
+&lt;li&gt;晚上解决网卡设置问题（解决无法访问）&lt;/li&gt;
+&lt;li&gt;23:10恢复主页、博客、博客（旧）、文件和res资源服务器的访问&lt;/li&gt;
+&lt;li&gt;23:26恢复 SeaFile 客户端和网页版的访问&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;此后应牢记续费服务器事宜，及时备份服务器&lt;/p&gt;
+&lt;/blockquote&gt;</description></item></channel></rss>

@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DNS on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/dns/</link><description>Recent content in DNS on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 12 Jun 2021 14:57:12 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/dns/index.xml" rel="self" type="application/rss+xml"/><item><title>常见公共DNS服务&amp;Linux和Windows下修改DNS的方法</title><link>https://blog.gaein.cn/passages/use-public-dns-and-configure-dns/</link><pubDate>Sat, 12 Jun 2021 14:57:12 +0800</pubDate><guid>https://blog.gaein.cn/passages/use-public-dns-and-configure-dns/</guid><description>&lt;p&gt;因为校园网 DNS 污染，导致我无法连接 &lt;code&gt;githubusercontent.com&lt;/code&gt; ，所以准备更换一个公共 DNS。以下为常见的一些公共 DNS 服务。&lt;/p&gt;
+&lt;p&gt;DNS 全称是 Domain Name System ，可以理解为负责把域名变成 IP 的一个玩意。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注：所有 IPv6 地址均无阿里云测试，因为我服务器没有 v6。目前只有这两三种网络测试，选择 DNS 时候还是自己 ping 一下看看。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="常见公共-dns-服务"&gt;常见公共 DNS 服务
+&lt;/h2&gt;&lt;h3 id="阿里-dns"&gt;阿里 DNS
+&lt;/h3&gt;&lt;p&gt;网址: &lt;a class="link" href="https://alidns.com/" target="_blank" rel="noopener"
+&gt;https://alidns.com/&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id="ipv6"&gt;IPv6
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2400:3200::1&lt;/td&gt;
+&lt;td&gt;2400:3200:baba::1&lt;/td&gt;
+&lt;td&gt;10ms&lt;/td&gt;
+&lt;td&gt;19ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="ipv4"&gt;IPv4
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;223.5.5.5&lt;/td&gt;
+&lt;td&gt;223.6.6.6&lt;/td&gt;
+&lt;td&gt;15ms&lt;/td&gt;
+&lt;td&gt;20ms&lt;/td&gt;
+&lt;td&gt;4ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="百度-dns"&gt;百度 DNS
+&lt;/h3&gt;&lt;p&gt;网址: &lt;a class="link" href="https://dudns.baidu.com/" target="_blank" rel="noopener"
+&gt;https://dudns.baidu.com/&lt;/a&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;180.76.76.76&lt;/td&gt;
+&lt;td&gt;无&lt;/td&gt;
+&lt;td&gt;13ms&lt;/td&gt;
+&lt;td&gt;18ms&lt;/td&gt;
+&lt;td&gt;5ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="dnspod腾讯"&gt;DNSPOD（腾讯）
+&lt;/h3&gt;&lt;p&gt;网址: &lt;a class="link" href="https://www.dnspod.cn/products/public.dns" target="_blank" rel="noopener"
+&gt;https://www.dnspod.cn/products/public.dns&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id="免费版"&gt;免费版
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;119.29.29.29&lt;/td&gt;
+&lt;td&gt;无&lt;/td&gt;
+&lt;td&gt;12ms&lt;/td&gt;
+&lt;td&gt;21ms&lt;/td&gt;
+&lt;td&gt;7ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="专业版"&gt;专业版
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;见控制台&lt;/td&gt;
+&lt;td&gt;见控制台&lt;/td&gt;
+&lt;td&gt;20ms&lt;/td&gt;
+&lt;td&gt;未测试&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="114dns"&gt;114DNS
+&lt;/h3&gt;&lt;p&gt;网址: &lt;a class="link" href="https://www.114dns.com/" target="_blank" rel="noopener"
+&gt;https://www.114dns.com/&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id="无劫持"&gt;无劫持
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;114.114.114.114&lt;/td&gt;
+&lt;td&gt;114.114.115.115&lt;/td&gt;
+&lt;td&gt;33ms&lt;/td&gt;
+&lt;td&gt;34ms&lt;/td&gt;
+&lt;td&gt;29ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="拦截-钓鱼病毒木马网站"&gt;拦截 钓鱼病毒木马网站
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;114.114.114.119&lt;/td&gt;
+&lt;td&gt;114.114.115.119&lt;/td&gt;
+&lt;td&gt;34ms&lt;/td&gt;
+&lt;td&gt;34ms&lt;/td&gt;
+&lt;td&gt;29ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="拦截-色情网站"&gt;拦截 色情网站
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;114.114.114.110&lt;/td&gt;
+&lt;td&gt;114.114.115.110&lt;/td&gt;
+&lt;td&gt;47ms&lt;/td&gt;
+&lt;td&gt;36ms&lt;/td&gt;
+&lt;td&gt;31ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="google-public-dns"&gt;Google Public DNS
+&lt;/h3&gt;&lt;p&gt;网址: &lt;a class="link" href="https://dns.google.com/" target="_blank" rel="noopener"
+&gt;https://dns.google.com/&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id="ipv6-1"&gt;IPv6
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2001:4860:4860::8888&lt;/td&gt;
+&lt;td&gt;2001:4860:4860::8844&lt;/td&gt;
+&lt;td&gt;43ms&lt;/td&gt;
+&lt;td&gt;253ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="ipv4-1"&gt;IPv4
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;8.8.8.8&lt;/td&gt;
+&lt;td&gt;8.8.4.4&lt;/td&gt;
+&lt;td&gt;58ms&lt;/td&gt;
+&lt;td&gt;49ms&lt;/td&gt;
+&lt;td&gt;54ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="1111"&gt;1.1.1.1
+&lt;/h3&gt;&lt;p&gt;网址: https://1.1.1.1/dns/&lt;/p&gt;
+&lt;h4 id="ipv6-2"&gt;IPv6
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2606:4700:4700::1111&lt;/td&gt;
+&lt;td&gt;2606:4700:4700::1001&lt;/td&gt;
+&lt;td&gt;79ms&lt;/td&gt;
+&lt;td&gt;202ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="ipv4-2"&gt;IPv4
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;主 DNS&lt;/th&gt;
+&lt;th&gt;辅 DNS&lt;/th&gt;
+&lt;th&gt;太原电信&lt;/th&gt;
+&lt;th&gt;唐山电信&lt;/th&gt;
+&lt;th&gt;北京阿里云&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1.1.1.1&lt;/td&gt;
+&lt;td&gt;1.0.0.1&lt;/td&gt;
+&lt;td&gt;188ms（辅）&lt;/td&gt;
+&lt;td&gt;165ms&lt;/td&gt;
+&lt;td&gt;165ms&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="配置-dns"&gt;配置 DNS
+&lt;/h2&gt;&lt;h3 id="windows-10"&gt;Windows 10
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;点击右下角网络图标，然后点击&amp;quot;Network &amp;amp; Internat settings&amp;quot;；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/01.webp"
+loading="lazy"
+alt="图标"
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;点击正在使用的网络（比如我的是&amp;quot;Ethernet&amp;quot;，如果你在使用 WiFi 这里应该会显示&amp;quot;Wi-Fi&amp;quot;），点击&amp;quot;Properties&amp;quot;；
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/02.webp"
+loading="lazy"
+alt="设置页面"
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在 &amp;ldquo;IP Settings&amp;rdquo; 处点击 &amp;ldquo;Edit&amp;rdquo;，依次输入 &amp;ldquo;Preferred DNS&amp;rdquo; 和 &amp;ldquo;Alternate DNS&amp;rdquo;，如果有 IPv6 那么在下面的 &amp;ldquo;IPv6&amp;rdquo; 栏的对应位置输入 IPv6 DNS。
+&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Public-DNS-and-configure-DNS/03.webp"
+loading="lazy"
+alt="输入DNS"
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="ubuntu"&gt;Ubuntu
+&lt;/h3&gt;&lt;p&gt;我手里只有 Ubuntu，其它 Linux 如何配置未知。貌似更改 &lt;code&gt;/etc/resolv.conf&lt;/code&gt; 是通用方法。&lt;/p&gt;
+&lt;p&gt;由于我们使用的是 Ubuntu，Ubuntu 的 DNS 是由 systemd-resolve 来管理的，因此我们不需要手动更新 &lt;code&gt;/etc/resolv.conf&lt;/code&gt; （事实上更新了也会被覆盖）。&lt;/p&gt;
+&lt;p&gt;更好的方法还可以考虑使用 Netplan 来管理 DNS ， 详见 &lt;a class="link" href="https://netplan.io/examples/#using-dhcp-and-static-addressing" target="_blank" rel="noopener"
+&gt;Using DHCP and static addressing&lt;/a&gt; 中 &lt;code&gt;nameservers&lt;/code&gt; 一章的配置。&lt;/p&gt;
+&lt;p&gt;关于错误示范请见我在 18 年干的傻事：&lt;/p&gt;
+&lt;p&gt;&lt;a class="link" href="https://blog.gaein.cn/passages/Fix-Ubuntu-DNS-Error/" target="_blank" rel="noopener"
+&gt;Ubuntu 下 apt“无法解析域名”解决方案&lt;/a&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;确定使用的是 systemd 管理的解析服务：使用命令 &lt;code&gt;systemd-resolve --status&lt;/code&gt; 查看服务状态；&lt;/li&gt;
+&lt;li&gt;编辑 DNS 文件：&lt;code&gt;/etc/systemd/resolved.conf&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;DNS&lt;/code&gt; 为 DNS 地址，可以配置多个 DNS，用空格隔开。&lt;br&gt;
+&lt;code&gt;FallbackDNS&lt;/code&gt; 为备用 DNS，同理。
+比如：
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;[Resolve]
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;DNS=223.5.5.5 119.29.29.29 180.76.76.76
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;FallbackDNS=223.6.6.6
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;另请参阅：&lt;a class="link" href="https://fedoramagazine.org/use-dns-over-tls/" target="_blank" rel="noopener"
+&gt;Use DNS over TLS - Fedora Magazine&lt;/a&gt;&lt;/p&gt;</description></item><item><title>Ubuntu下apt“无法解析域名”解决方案</title><link>https://blog.gaein.cn/passages/fix-ubuntu-dns-error/</link><pubDate>Sat, 20 Oct 2018 11:42:39 +0800</pubDate><guid>https://blog.gaein.cn/passages/fix-ubuntu-dns-error/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;注意：本博客过于久远，内容可能已经不适用&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：正确的更改DNS的方法见博客：&lt;a class="link" href="https://blog.gaein.cn/passages/Public-DNS-and-configure-DNS" target="_blank" rel="noopener"
+&gt;常见公共DNS服务&amp;amp;Linux和Windows下修改DNS的方法&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;DNS莫名其妙出错，啥也干不了&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Fix-Ubuntu-DNS-Error/01.webp"
+loading="lazy"
+alt="错误"
+&gt;&lt;/p&gt;
+&lt;p&gt;百度了一波，发现解决方案很简单，就是手动加入DNS&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo vim /etc/resolv.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;加入DNS&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;nameserver 119.29.29.29
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;当然可以自己去百度其他家的DNS，我这是DNS PUBLIC+的地址&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;按照百度说的我保存重启&lt;/p&gt;
+&lt;p&gt;结果发现并没有什么卵用&amp;hellip;&lt;/p&gt;
+&lt;p&gt;仔细观摩一下文件&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;# Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;# DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;# 127.0.0.53 is the systemd-resolved stub resolver.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;# run &amp;#34;systemd-resolve --status&amp;#34; to see details about the actual nameservers.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;nameserver 127.0.0.53&amp;lt;/pre&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;被覆盖了&lt;/p&gt;
+&lt;p&gt;而且说明也写着“DO NOT EDIT THIS FILE BY HAND”&lt;/p&gt;
+&lt;p&gt;我按照其他的方法修改了一下编辑resolv.conf.d目录下的base文件&lt;/p&gt;
+&lt;p&gt;不过也没有效果&lt;/p&gt;
+&lt;p&gt;但是按照第二篇看的文章找到了问题所在：&lt;/p&gt;
+&lt;p&gt;重启系统后DNS设置不但不会被应用还会被覆盖，应该重启网卡来解决&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo /etc/init.d/networking restart&amp;lt;/pre&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;完美解决&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Fix-Ubuntu-DNS-Error/02.webp"
+loading="lazy"
+alt="修复"
+&gt;&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="http://www.myexceptions.net/ai/1477082.html" target="_blank" rel="noopener"
+&gt;ubuntu apt-get 异常 Temporary failure resolving &amp;lsquo;us.archive.ubuntu.com&amp;rsquo; 解决 - 人工智能&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.csdn.net/tsq292978891/article/details/75039926" target="_blank" rel="noopener"
+&gt;ubuntu16.04 出现域名解析暂时失败 解决方法_tsq292978891的博客-CSDN博客_域名解析暂时失败&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.csdn.net/u012207345/article/details/78339218" target="_blank" rel="noopener"
+&gt;ubuntu域名解析失败解决方案_廿四桥明月夜的博客-CSDN博客_ubuntu域名解析失败&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;不过刚刚重启了好像又被覆盖了，很是绝望&lt;/p&gt;
+&lt;p&gt;干脆写了个脚本，然后开机自动运行脚本得了&amp;hellip;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;### BEGIN INIT INFO&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# Provides: run.sh &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# Required-start: $local_fs $remote_fs $network $syslog &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# Required-Stop: $local_fs $remote_fs $network $syslog &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# Default-Start: 2 3 4 5 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# Default-Stop: 0 1 6 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# Short-Description: starts the run.shh daemon &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# Description: starts run.sh using start-stop-daemon &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;### END INIT INFO&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;nameserver 119.29.29.29&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/resolv.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo /etc/init.d/networking restart
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;然后复制到init.d中，再&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;update-rc.d run.sh defaults 99
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item></channel></rss>

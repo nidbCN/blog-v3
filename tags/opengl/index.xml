@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OpenGL on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/opengl/</link><description>Recent content in OpenGL on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 26 Dec 2020 01:27:00 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/opengl/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenGL GLFW 窗口前端显示</title><link>https://blog.gaein.cn/passages/glfw-window-float/</link><pubDate>Sat, 26 Dec 2020 01:27:00 +0800</pubDate><guid>https://blog.gaein.cn/passages/glfw-window-float/</guid><description>&lt;p&gt;使用 GLFW 库自带的函数设置窗口置于顶层前端显示。起因：一位群友问到这个问题，在网上查找 GLFW 前端显示窗口和 OpenGL 前端显示窗口无果后翻阅 GLFW 的 docs 找到了解决方案。写个博客记录一下。&lt;/p&gt;
+&lt;h2 id="起因"&gt;起因
+&lt;/h2&gt;&lt;p&gt;群友在群里问有没有会 OpenGL 的，&lt;del&gt;虽然我不会但是肯定要凑热闹假装会啊&lt;/del&gt;。它的需求是创建一个窗口，显示在最顶层（即使是有全屏程序的情况下）大概就是类似于录屏工具的样子。&lt;/p&gt;
+&lt;h2 id="过程"&gt;过程
+&lt;/h2&gt;&lt;p&gt;在网上几番搜索没用结果后我干脆直接翻看了 GLFW 的官方文档（果然那玩意才是最好用的）&lt;/p&gt;
+&lt;p&gt;一开始我以为是在创建窗口&lt;code&gt;glfwCreateWindow()&lt;/code&gt;时候传入参数里面设置置顶。但是并没有相关的参数，倒是发现了&lt;a class="link" href="https://www.glfw.org/docs/latest/window_guide.html##window_windowed_full_screen" target="_blank" rel="noopener"
+&gt;全屏的方法&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;继续查阅函数列表，希望找到一个能置顶窗口的函数，类似于&lt;code&gt;glfwSetWindowTop()&lt;/code&gt;这样名字的。但是一番查找无果。像&lt;code&gt;glfwShowWindow ( GLFWwindow * window ) &lt;/code&gt;显示窗口和&lt;code&gt;void glfwFocusWindow ( GLFWwindow * window ) &lt;/code&gt;聚焦窗口都不是我想要的，聚集窗口会把焦点移动到窗口上，如果你打游戏时候干了这怕是要被打死。&lt;/p&gt;
+&lt;p&gt;最后引起我注意的是函数&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;glfwSetWindowAttrib&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;GLFWwindow&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;window&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;attrib&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;它的意思是设置窗口的属性，我想，置顶不正是一种属性嘛？于是我跳转到了&lt;code&gt;glfwSetWindowAttrib()&lt;/code&gt;的&lt;a class="link" href="https://www.glfw.org/docs/latest/group__window.html##gace2afda29b4116ec012e410a6819033e" target="_blank" rel="noopener"
+&gt;页面&lt;/a&gt;，用法很简单，和想象的一样。里面有个链接到&lt;a class="link" href="https://www.glfw.org/docs/latest/window_guide.html##window_attribs" target="_blank" rel="noopener"
+&gt;Window attributes&lt;/a&gt;，及窗口的所有属性列表。在这里我们可以看到一个叫做&lt;code&gt;GLFW_FLOATING&lt;/code&gt;属性，&lt;a class="link" href="https://www.glfw.org/docs/latest/window_guide.html##GLFW_FLOATING_hint" target="_blank" rel="noopener"
+&gt;它的介绍&lt;/a&gt;是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;GLFW_FLOATING indicates whether the specified window is floating, also called topmost or always-on-top. This can be set before creation with the GLFW_FLOATING window hint or after with glfwSetWindowAttrib.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;它可以让窗口浮动，也就是置顶（always-on-top）这正是我们想要的了！&lt;/p&gt;
+&lt;h2 id="实施"&gt;实施
+&lt;/h2&gt;&lt;p&gt;随便打开了以前测试 OpenGL 环境的项目，我的想法是按下&lt;code&gt;T&lt;/code&gt;键置顶，这样可以有一个前后对比。在监听按键的函数里面如下写道：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 按下T设置浮动
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nf"&gt;glfwGetKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;window&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;GLFW_KEY_T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;GLFW_PRESS&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nf"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;[INFO]监测到置顶窗口&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nf"&gt;glfwSetWindowAttrib&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;window&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;GLFW_FLOATING&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;GLFW_TRUE&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;启动程序，点击其它程序发现可以覆盖我们的窗口。焦点在窗口时按下&lt;code&gt;T&lt;/code&gt;，然后再将其它程序拖动过去，发现不能覆盖。
+&lt;img src="https://s3.ax1x.com/2020/12/26/rfwPXQ.md.jpg"
+loading="lazy"
+alt="结果"
+&gt;
+全屏播放视频和全屏游戏也不能将我们的窗口覆盖。至此目的达成。&lt;/p&gt;
+&lt;h2 id="总结"&gt;总结
+&lt;/h2&gt;&lt;p&gt;使用如下代码将窗口置顶，其中&lt;code&gt;window&lt;/code&gt;是窗口指针&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nf"&gt;glfwSetWindowAttrib&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;window&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;GLFW_FLOATING&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;GLFW_TRUE&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用如下代码取消窗口置顶，其中&lt;code&gt;window&lt;/code&gt;是窗口指针&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nf"&gt;glfwSetWindowAttrib&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;window&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;GLFW_FLOATING&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;GLFW_FALSE&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="参考"&gt;参考
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://www.glfw.org/documentation.html" target="_blank" rel="noopener"
+&gt;GLFW 文档&lt;/a&gt;&lt;br&gt;
+&lt;a class="link" href="https://www.glfw.org/docs/latest/group__window.html" target="_blank" rel="noopener"
+&gt;GLFW 文档 -&amp;gt; 窗口参考&lt;/a&gt;&lt;br&gt;
+&lt;a class="link" href="https://www.glfw.org/docs/latest/group__window.html#gace2afda29b4116ec012e410a6819033e" target="_blank" rel="noopener"
+&gt;GLFW 文档 -&amp;gt; 窗口参考:glfwSetWindowAttrib&lt;/a&gt;&lt;br&gt;
+&lt;a class="link" href="https://www.glfw.org/docs/latest/window_guide.html#window_attribs" target="_blank" rel="noopener"
+&gt;GLFW 文档 -&amp;gt; 窗口导览 -&amp;gt; 窗口属性&lt;/a&gt;&lt;br&gt;
+&lt;a class="link" href="https://www.glfw.org/docs/latest/window_guide.html#GLFW_FLOATING_hint" target="_blank" rel="noopener"
+&gt;GLFW 文档 -&amp;gt; 窗口导览 -&amp;gt; 窗口属性:GLFW_FLOATING&lt;/a&gt;&lt;/p&gt;</description></item><item><title>OpenGL学习笔记——第一个窗口</title><link>https://blog.gaein.cn/passages/opengl-note1-firstwindow/</link><pubDate>Fri, 13 Nov 2020 20:50:55 +0800</pubDate><guid>https://blog.gaein.cn/passages/opengl-note1-firstwindow/</guid><description>&lt;p&gt;学校的C语言程序设计课设是编写一个图形化的程序，学校方面采用的是EasyX，当然也允许其它图形库，因此我准备学习OpenGL&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;blockquote&gt;
+&lt;p&gt;EasyX虽然可能比OpenGL简单一些，但是可能不如OpenGL应用面更广泛，也不如OpenGL更有挑战性。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="基本"&gt;基本
+&lt;/h2&gt;&lt;h4 id="笔记"&gt;笔记
+&lt;/h4&gt;&lt;p&gt;OpenGL是一个图形API，需要一个编程语言来工作，因此我选择C/C++，在不需要用到C++特性的情况下会使用C来编写（因为毕竟是C语言程序设计课设）。我使用的教程是&lt;a class="link" href="https://learnopengl-cn.github.io" target="_blank" rel="noopener"
+&gt;LearnOpenGL CN&lt;/a&gt;和《OpenGL编程指南》（忘了是那一版了，实验室的书；大部分情况下会使用LearnOpenGL CN网站的教程）&lt;/p&gt;
+&lt;h4 id="opengl"&gt;OpenGL
+&lt;/h4&gt;&lt;p&gt;早期的OpenGL使用&lt;strong&gt;立即渲染模式&lt;/strong&gt;（固定渲染管线），这个模式下绘制图形很方便。从OpenGL3.2开始，立即渲染模式开始被废除，鼓励使用&lt;strong&gt;核心模式&lt;/strong&gt;。&lt;br&gt;
+OpenGL自身是一个巨大的状态机：一系列的变量描述OpenGL此刻应当如何运行。OpenGL的状态通常被称为OpenGL上下文(Context)。
+（OpenGL自己搓了面向对象）一般来说，我们创建一个对象，然后用一个id保存它的引用（实际数据被储存在后台）。然后我们将对象绑定至上下文的目标位置（例子中窗口对象目标的位置被定义成GL_WINDOW_TARGET）。接下来我们设置窗口的选项。最后我们将目标位置的对象id设回0，解绑这个对象。设置的选项将被保存在objectId所引用的对象中，一旦我们重新绑定这个对象到GL_WINDOW_TARGET位置，这些选项就会重新生效。&lt;/p&gt;
+&lt;h4 id="glfw"&gt;GLFW
+&lt;/h4&gt;&lt;p&gt;GLFW是一个库，提供了渲染物体的最低限度的接口。&lt;/p&gt;
+&lt;h6 id="获取"&gt;获取
+&lt;/h6&gt;&lt;p&gt;&lt;a class="link" href="http://www.glfw.org/download.html" target="_blank" rel="noopener"
+&gt;官方网站下载页&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;使用预编译的二进制版本时下载32位，因为64位可能有奇奇怪怪的问题。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h6 id="链接"&gt;链接
+&lt;/h6&gt;&lt;ol&gt;
+&lt;li&gt;“右键项目”-&amp;gt;“属性”-&amp;gt;“VC++目录”，在“包含目录”和“库目录”中添加GLFW的include文件夹；&lt;/li&gt;
+&lt;li&gt;在“链接器”-&amp;gt;“输入”-&amp;gt;“附加依赖项”中加入&amp;quot;&lt;code&gt;glfw3.lib&lt;/code&gt;&amp;quot;、&amp;quot;&lt;code&gt;opengl32.lib&lt;/code&gt;&amp;quot;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="glad"&gt;GLAD
+&lt;/h4&gt;&lt;p&gt;由于OpenGL驱动版本众多，因此大多数函数在编译时没有确定的位置，在运行时查询的工作量很大，因此使用GLAD库来解决。&lt;/p&gt;
+&lt;h6 id="配置glad"&gt;配置GLAD
+&lt;/h6&gt;&lt;ol&gt;
+&lt;li&gt;打开&lt;a class="link" href="http://glad.dav1d.de/" target="_blank" rel="noopener"
+&gt;GLAD在线服务&lt;/a&gt;；&lt;/li&gt;
+&lt;li&gt;设置语言为&lt;code&gt;C/C++&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;OpenGL版本选择&lt;code&gt;3.3&lt;/code&gt;及以上；&lt;/li&gt;
+&lt;li&gt;模式设置为&lt;code&gt;Core&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;选中&lt;strong&gt;生成加载器&lt;/strong&gt;(Generate a loader)；&lt;/li&gt;
+&lt;li&gt;点击&lt;strong&gt;生成&lt;/strong&gt;(Generate)按钮。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h6 id="使用glad"&gt;使用GLAD
+&lt;/h6&gt;&lt;p&gt;将生成的文件添加到&lt;code&gt;include&lt;/code&gt;目录中
+引用头文件&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;##include &amp;lt;glad/glad.h&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;来使用&lt;/p&gt;
+&lt;h2 id="你好窗口"&gt;你好，窗口
+&lt;/h2&gt;&lt;p&gt;在&lt;code&gt;main()&lt;/code&gt;函数中&lt;/p&gt;</description></item></channel></rss>

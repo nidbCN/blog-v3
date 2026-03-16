@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>视频剪辑 on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/</link><description>Recent content in 视频剪辑 on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 12 May 2021 22:32:26 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/index.xml" rel="self" type="application/rss+xml"/><item><title>【过期内容】Adobe Premiere 导入 mkv 格式的视频</title><link>https://blog.gaein.cn/passages/import-hevc-for-old-adobe-premiere/</link><pubDate>Wed, 12 May 2021 22:32:26 +0800</pubDate><guid>https://blog.gaein.cn/passages/import-hevc-for-old-adobe-premiere/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;注意：此内容已过期。Adobe Premiere 不能导入的本质原因的 PR 2020 前的版本不支持 HEVC/H.265 编码。旧版本使用 ffmpeg 进行转码即可正常使用，新版本没有此问题。&lt;br&gt;
+有关视频编码、容器、格式等见：&lt;a class="link" href="https://blog.gaein.cn/passages/live-streaming-protocols/" target="_blank" rel="noopener"
+&gt;直播推流常见协议及网页端实现 RTMP/STR/FLV/HLS/WebRTC&lt;/a&gt;&lt;br&gt;
+此文章内所述较为片面。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="mkv"&gt;mkv
+&lt;/h2&gt;&lt;p&gt;mkv格式本身是一个“容器”，它包括了视频、音频、章节等，其实，不需要转码，只需要把需要的视频和音频“拆”出来即可。&lt;/p&gt;
+&lt;h2 id="工具"&gt;工具
+&lt;/h2&gt;&lt;h3 id="mkvtoolnix"&gt;MKVToolNix
+&lt;/h3&gt;&lt;p&gt;该工具用于操作mkv文件（虽然我们只需要其中的解包部分）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;官网：https://mkvtoolnix.download/&lt;/li&gt;
+&lt;li&gt;Windows下载：https://www.fosshub.com/MKVToolNix.html&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="mkvextractgui2"&gt;MKVExtractGUI2
+&lt;/h3&gt;&lt;p&gt;图形化界面的解包mkv的程序，需要放置在 MKVToolNix 的根目录下。&lt;/p&gt;
+&lt;p&gt;目录结构如下：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/AdobePr-import-mkv/01.webp"
+loading="lazy"
+alt="Dir"
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sourceforge：https://sourceforge.net/projects/mkvextractgui-2/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="提取音视频"&gt;提取音视频
+&lt;/h2&gt;&lt;p&gt;可以直接双击点开 &lt;code&gt;MKVExtractGUI2&lt;/code&gt; ，选择 &lt;code&gt;input&lt;/code&gt; ，下面的框中将显示出来 Tracks，选择需要的然后导出即可。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;可惜我的并不能用，它什么也不显示，只能手动来一波了。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="提取音视频命令行"&gt;提取音视频（命令行）
+&lt;/h2&gt;&lt;p&gt;实际上 MKVExtractGUI2 也是调用的 MKVToolNix 命令行来提取的，而 MKVToolNix 的图形化又比较复杂，不会用。直接使用命令行甚至会方便一些。&lt;/p&gt;
+&lt;p&gt;在当前目录打开 powershell 后，输入：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;.\mkvinfo.exe &amp;quot;&amp;lt;mkv文件路径&amp;gt;&amp;quot;&lt;/code&gt; ，比如我这个是 &lt;code&gt;.\mkvinfo.exe &amp;quot;C:\Users\Gaein_nidb\Videos\High School Fleet [01].mkv&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/AdobePr-import-mkv/02.webp"
+loading="lazy"
+alt="Output"
+&gt;&lt;/p&gt;
+&lt;p&gt;以VCB-S压制的 High School Fleet/高校舰队 为例，程序会输出一大坨mkv的信息，我们需要关注的为 &lt;code&gt;Tracks&lt;/code&gt; ，其中的每一个 &lt;code&gt;Track&lt;/code&gt; 为一条轨道，其中包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Track number&lt;/code&gt;：轨道ID（在mkvextract工具中轨道ID从0开始）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Track type&lt;/code&gt;：轨道的类型（视频或音频等）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Codec ID&lt;/code&gt;：编码ID&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;以上均用 &amp;ldquo;//&amp;rdquo; 做了伪注释&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;以及一些其它重要信息&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;span class="lnt"&gt;33
+&lt;/span&gt;&lt;span class="lnt"&gt;34
+&lt;/span&gt;&lt;span class="lnt"&gt;35
+&lt;/span&gt;&lt;span class="lnt"&gt;36
+&lt;/span&gt;&lt;span class="lnt"&gt;37
+&lt;/span&gt;&lt;span class="lnt"&gt;38
+&lt;/span&gt;&lt;span class="lnt"&gt;39
+&lt;/span&gt;&lt;span class="lnt"&gt;40
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;|+ Tracks
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track // 第一条轨道
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track number: 1 (track ID for mkvmerge &amp;amp; mkvextract: 0) // 在mkvextract工具中轨道ID为0
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track UID: 16171542915234837125
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track type: video // 视频
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + &amp;#34;Lacing&amp;#34; flag: 0
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Minimum cache: 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Codec ID: V_MPEGH/ISO/HEVC // 格式为HEVC
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Language: und
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Video track
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Pixel width: 1920
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Pixel height: 1080
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Display width: 1920
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Display height: 1080
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Codec&amp;#39;s private data: size 1151 (HEVC profile: Main 10 @L4.1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Default duration: 00:00:00.041708333 (23.976 frames/fields per second for a video track)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track // 第二条轨道
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track number: 2 (track ID for mkvmerge &amp;amp; mkvextract: 1) // ID为1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track UID: 11899936184913956278
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track type: audio // 音频
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Codec ID: A_FLAC // 格式为flac
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Codec&amp;#39;s private data: size 113
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Default duration: 00:00:00.085333333 (11.719 frames/fields per second for a video track)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Language: jpn
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Audio track
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Sampling frequency: 48000
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Channels: 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Bit depth: 24
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track // 第三条轨道
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track number: 3 (track ID for mkvmerge &amp;amp; mkvextract: 2) // ID为2
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track UID: 10563629169812897935
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Track type: audio // 音频
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + &amp;#34;Default track&amp;#34; flag: 0
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Codec ID: A_AAC // 格式为ACC
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Codec&amp;#39;s private data: size 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Default duration: 00:00:00.021333333 (46.875 frames/fields per second for a video track)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Language: jpn
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Audio track
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Sampling frequency: 48000
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| + Channels: 2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;那么我们需要提取的有：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;HEVC视频，轨道0&lt;/li&gt;
+&lt;li&gt;FLAC音频，轨道1&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;当然你想要ACC不要FLAC也行，咋都行，看需求而来&lt;/p&gt;
+&lt;p&gt;使用 &lt;code&gt;mkvextract&lt;/code&gt; 工具来解mkv文件，输入命令：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;.\mkvextract.exe &amp;quot;&amp;lt;mkv文件&amp;gt;&amp;quot; tracks 0:video.hevc 1:audio.flac&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;其中，tracks后面的参数为 &lt;code&gt;&amp;lt;轨道ID&amp;gt;:&amp;lt;输出文件&amp;gt;&lt;/code&gt; ，根据你想解的轨道，输入上面看信息看到的轨道ID即可。&lt;/p&gt;
+&lt;p&gt;然后，在这个文件夹中，我们得到了 &lt;code&gt;video.hevc&lt;/code&gt; 和 &lt;code&gt;audio.flac&lt;/code&gt; 两个文件。&lt;/p&gt;
+&lt;h2 id="导入pr"&gt;导入PR
+&lt;/h2&gt;&lt;p&gt;尽管我们已经解开了，但是仍然不能导入，PR会说不支持的文件格式。&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;对于视频来说，解决的方法很简单：更改后缀名为PR能识别的，比如 &lt;code&gt;mp4&lt;/code&gt;&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;对于flac音频来说：更改后缀名为 &lt;code&gt;wav&lt;/code&gt;&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;请使用 ffmpeg 或其他工具进行 re-mux 或 re-enc&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,1918 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>网站建设 on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE/</link><description>Recent content in 网站建设 on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 08 Feb 2020 22:36:25 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE/index.xml" rel="self" type="application/rss+xml"/><item><title>PHP考勤系统源码 利用PHP实现简单的打卡考勤 超详细教程+实例+代码（一）</title><link>https://blog.gaein.cn/passages/checker-webpage-1/</link><pubDate>Sat, 08 Feb 2020 22:36:25 +0800</pubDate><guid>https://blog.gaein.cn/passages/checker-webpage-1/</guid><description>&lt;p&gt;利用PHP实现简单的考勤打卡、人数统计功能。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这什么屑玩意啊，黑历史黑历史。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="先讲个故事"&gt;先讲个故事&amp;hellip;
+&lt;/h2&gt;&lt;p&gt;由于疫情原因，开学延迟，班主任为了监督我们学习，所以叫我们每天打卡。那么就要到群里点人，还要统计，谁打卡了谁没打卡谁迟到&amp;hellip;我一想太麻烦了&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/01.webp"
+loading="lazy"
+alt="截屏1"
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/02.webp"
+loading="lazy"
+alt="截屏2"
+&gt;&lt;/p&gt;
+&lt;p&gt;于是我在群里水了一句，要不然开发个考勤系统吧&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/03.webp"
+loading="lazy"
+alt="截屏3"
+&gt;&lt;/p&gt;
+&lt;p&gt;当然我当时的开发指的是“面向百度”编程（就是随便找个什么源码改一下title。&lt;/p&gt;
+&lt;p&gt;结果我发现行不通&amp;hellip;没有符合我要求的源码，只好试试了。&lt;/p&gt;
+&lt;p&gt;我虽然接触了点编程，不过PHP还真没碰过，想想编程语言也都是26个字母只好硬着头皮干了。&lt;/p&gt;
+&lt;h2 id="要求"&gt;要求
+&lt;/h2&gt;&lt;p&gt;明确一下自己的期望吧：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;能记录打卡人（开始就这一个想法）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;好的没有了。&lt;/p&gt;
+&lt;p&gt;现在实现的功能（很多都是我晚上在被窝的新奇想法）&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;记录打卡人，打卡时间，自动标注准时或者迟到；&lt;/li&gt;
+&lt;li&gt;打卡成功后返回页面，提示成功与否并且提示信息（非常智障的实现，我跳转了一个html并且get传参信息，当时自己不知道php echo能输出html）；（2021补:什么我为什么要用php echo来输出html？？？）&lt;/li&gt;
+&lt;li&gt;后台统计打卡人数、未打卡人数、迟到人数还有未打卡人名单；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="准备"&gt;准备
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;语言：思考来思考去，服务器只装着PHP，空间倒是有 &lt;code&gt;.NET fw&lt;/code&gt;，不过看看还是PHP的网站居多；&lt;/li&gt;
+&lt;li&gt;实现：操作数据库一想就头大了，MySQL这玩意真玩不了，上次导入旧博客数据就差点没玩死我，想想还是直接磁盘上写文件吧；&lt;/li&gt;
+&lt;li&gt;服务器：本来想用我一个虚拟主机来着，不过那玩意权限有问题，写不了文件，无奈搬到网站服务器上面；&lt;/li&gt;
+&lt;li&gt;IDE：没有专门去找PHP的IDE，直接用的vscode+网上随便找一个在线PHP作为调试；&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="开工"&gt;开工
+&lt;/h2&gt;&lt;h3 id="表单页面"&gt;表单页面
+&lt;/h3&gt;&lt;h4 id="表单创建"&gt;表单创建
+&lt;/h4&gt;&lt;p&gt;想来想去输入一个姓名就可以了，后来又想想需要一个时间，那么html如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-html" data-lang="html"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;meta&lt;/span&gt; &lt;span class="na"&gt;charset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;title&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;考勤打卡&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;title&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;form&lt;/span&gt; &lt;span class="na"&gt;action&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;process.php&amp;#34;&lt;/span&gt; &lt;span class="na"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;post&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 姓名：&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;text&amp;#34;&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;br&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 时间：&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;text&amp;#34;&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;time&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;br&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 日期：&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;text&amp;#34;&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;filename&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;br&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;submit&amp;#34;&lt;/span&gt; &lt;span class="na"&gt;value&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;打卡 &amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;form&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;看起来是这样的：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/04.webp"
+loading="lazy"
+alt="界面"
+&gt;&lt;/p&gt;
+&lt;p&gt;（丑死了）&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/code&gt; 和 &lt;code&gt;meta&lt;/code&gt; 是必须的，否则有可能乱码。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;form&lt;/code&gt; 标签里面是表单，&lt;code&gt;action&lt;/code&gt; 后面是提交到的地址，&lt;code&gt;method&lt;/code&gt; 是方法（别问我为啥用 &lt;code&gt;post&lt;/code&gt; ，因为它看起来好看）&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;input&lt;/code&gt; 中的 &lt;code&gt;type&lt;/code&gt; 是输入的类型，&lt;code&gt;text&lt;/code&gt; 自然就是文本啦，&lt;code&gt;submit&lt;/code&gt; 是提交表单，&lt;code&gt;name&lt;/code&gt; 是参数的名字（我日期参数是 &lt;code&gt;filename&lt;/code&gt; 是因为我想把存储打卡信息的文件用日期命名），&lt;code&gt;value&lt;/code&gt; 是默认的值。&lt;/p&gt;
+&lt;h4 id="时间获取"&gt;时间获取
+&lt;/h4&gt;&lt;p&gt;那么又一个问题来了，时间和日期怎么获取？这就要用的&lt;code&gt;javascript&lt;/code&gt; 了，&lt;code&gt;js&lt;/code&gt; 获取时间和日期后再去改动 &lt;code&gt;html&lt;/code&gt;，为了找到他们我把他们用 &lt;code&gt;div&lt;/code&gt; 框起来然后给他们 &lt;code&gt;id&lt;/code&gt; 为 &lt;code&gt;0&lt;/code&gt; 和 &lt;code&gt;1&lt;/code&gt;（懒死了）&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;js&lt;/code&gt; 的时间获取百度一下就有，不过获取的都是浏览网页的人电脑上的时间，我怕别人通过修改本地时间来掩盖自己迟到的事实，所以我要去获取网络时间。&lt;/p&gt;
+&lt;p&gt;我的方法是 &lt;code&gt;get&lt;/code&gt; 请求自己的服务器，在返回的头里面有时间信息（服务器的）。当然，你也可以百度一下时间 &lt;code&gt;api&lt;/code&gt;，调用起来也会很方便的。
+&lt;code&gt;js&lt;/code&gt; 代码如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;script&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;getTime&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;ajax&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;ajax&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;option&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;XMLHttpRequest&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;XMLHttpRequest&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="c1"&gt;// ie
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;ActiveObject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;Microsoft&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;// 通过get的方式请求当前文件
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;// 监听请求状态变化
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;onreadystatechange&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;curDate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readyState&lt;/span&gt;&lt;span class="o"&gt;===&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;// 获取响应头里的时间戳
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getResponseHeader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;Date&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;curDate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;time&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;//下面修改HTML
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;innerHTML&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;时间：&amp;lt;input type=&amp;#39;text&amp;#39; name=&amp;#39;time&amp;#39; value=&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getHours&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;:&amp;#34;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getMinutes&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&amp;#39; readonly&amp;gt;&amp;lt;br&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="c1"&gt;//拼接时间
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;innerHTML&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;日期：&amp;lt;input type=&amp;#39;text&amp;#39; name=&amp;#39;filename&amp;#39; value=&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getFullYear&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getMonth&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getDate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&amp;#39; readonly&amp;gt;&amp;lt;br&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="c1"&gt;//通过readonly阻止修改时间
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;/script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id="页面代码"&gt;页面代码
+&lt;/h4&gt;&lt;p&gt;因为HTML是顺序加载的，所以我希望 &lt;code&gt;HTML&lt;/code&gt; 加载完全后再读取&lt;code&gt;js&lt;/code&gt;（否则 &lt;code&gt;js&lt;/code&gt; 会找不到 &lt;code&gt;id&lt;/code&gt; 为 &lt;code&gt;0&lt;/code&gt; 的 &lt;code&gt;div&lt;/code&gt;），所以我们写个 &lt;code&gt;onload&lt;/code&gt;，为了刷新时间我在 &lt;code&gt;getTime&lt;/code&gt; 函数里面利用 &lt;code&gt;setTimeout&lt;/code&gt; 调用它自己实现定时（一分钟）刷新。HTML全文如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;span class="lnt"&gt;33
+&lt;/span&gt;&lt;span class="lnt"&gt;34
+&lt;/span&gt;&lt;span class="lnt"&gt;35
+&lt;/span&gt;&lt;span class="lnt"&gt;36
+&lt;/span&gt;&lt;span class="lnt"&gt;37
+&lt;/span&gt;&lt;span class="lnt"&gt;38
+&lt;/span&gt;&lt;span class="lnt"&gt;39
+&lt;/span&gt;&lt;span class="lnt"&gt;40
+&lt;/span&gt;&lt;span class="lnt"&gt;41
+&lt;/span&gt;&lt;span class="lnt"&gt;42
+&lt;/span&gt;&lt;span class="lnt"&gt;43
+&lt;/span&gt;&lt;span class="lnt"&gt;44
+&lt;/span&gt;&lt;span class="lnt"&gt;45
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-html" data-lang="html"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;meta&lt;/span&gt; &lt;span class="na"&gt;charset&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;title&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;考勤打卡&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;title&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;getTime&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;ajax&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;ajax&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;option&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;XMLHttpRequest&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;XMLHttpRequest&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="c1"&gt;// ie
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;ActiveObject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;Microsoft&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;// 通过get的方式请求当前文件
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;//可以把/改成https://www.baidu.com/
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;// 监听请求状态变化
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;onreadystatechange&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;curDate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readyState&lt;/span&gt;&lt;span class="o"&gt;===&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;// 获取响应头里的时间戳
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getResponseHeader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;Date&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;curDate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;time&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;//下面修改HTML
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;innerHTML&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;时间：&amp;lt;input type=&amp;#39;text&amp;#39; name=&amp;#39;time&amp;#39; value=&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getHours&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;:&amp;#34;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;cur&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;DateGetMinutes&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&amp;#39; readonly&amp;gt;&amp;lt;br&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="c1"&gt;//拼接时间
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;1&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;innerHTML&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;日期：&amp;lt;input type=&amp;#39;text&amp;#39; name=&amp;#39;filename&amp;#39; value=&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getFullYear&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getMonth&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;curDate&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getDate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&amp;#39; readonly&amp;gt;&amp;lt;br&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="c1"&gt;//通过readonly阻止修改时间
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;setTimeout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;getTime&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;60000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt; &lt;span class="na"&gt;onload&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;getTime()&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;form&lt;/span&gt; &lt;span class="na"&gt;action&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;process.php&amp;#34;&lt;/span&gt; &lt;span class="na"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;post&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 姓名：&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;text&amp;#34;&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;br&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;1&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;input&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;submit&amp;#34;&lt;/span&gt; &lt;span class="na"&gt;value&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;打卡 &amp;#34;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;form&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;很可惜在自己家电脑上面是无法完成测试的，&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/05.webp"
+loading="lazy"
+alt="CORS"
+&gt;&lt;/p&gt;
+&lt;p&gt;把html上传到服务器之后效果是这样的:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/06.webp"
+loading="lazy"
+alt="效果"
+&gt;&lt;/p&gt;
+&lt;p&gt;虽然很丑，但是功能实现了，手动试一试确实无法修改时间、日期，而且时间也会每分钟刷新&lt;/p&gt;
+&lt;h3 id="php页面"&gt;PHP页面
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;由于PHP较为奇特的语法，和跟没有一样的报错，坑了我很长时间。PHP中字符串用 &lt;code&gt;.&lt;/code&gt; 拼接、变量无需声明前面加上 &lt;code&gt;$&lt;/code&gt; 即可&amp;hellip;建议先过一遍菜鸟教程或者w3school&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id="参数接收"&gt;参数接收
+&lt;/h4&gt;&lt;p&gt;PHP中接收到的POST的参数的值在&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;参数名&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;GET的在&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$_GET&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;参数名&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id="参数处理"&gt;参数处理
+&lt;/h4&gt;&lt;h5 id="文件名"&gt;文件名
+&lt;/h5&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$filename&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;filename&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;txt&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="c1"&gt;//拼接文件名
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h5 id="姓名"&gt;姓名
+&lt;/h5&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h5 id="时间"&gt;时间
+&lt;/h5&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;span class="lnt"&gt;7
+&lt;/span&gt;&lt;span class="lnt"&gt;8
+&lt;/span&gt;&lt;span class="lnt"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;str_replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;:&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;time&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;&lt;span class="c1"&gt;//把时间里的“:”去除掉
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="nx"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$time&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;730&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="c1"&gt;//7:30之后迟到
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;[迟到]&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;[准时]&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h5 id="写入文件"&gt;写入文件
+&lt;/h5&gt;&lt;p&gt;我使用的是函数&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;file_put_contents&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;文件&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nx"&gt;内容&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nx"&gt;模式可选&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;文件是文件的路径（字符串），比如/root/test.txt；（没有则创建一个文件）&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：当无法创建且无法写入文件时，应该检查是否有权限。当能够创建但是无法写入文件时，应该检查首次写入的字符串是否为空，再检查后续代码是否有相关的操作覆盖了该文件，最后记得check一下你的磁盘空间（真的，我的硬盘满了，我检查了一天代码&amp;hellip;）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;内容是需要写入文件的内容；
+模式是写入文件的模式，它包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;FILE_USE_INCLUDE_PATH //检查 &lt;em&gt;filename&lt;/em&gt; 副本的内置路径?&lt;/li&gt;
+&lt;li&gt;FILE_APPEND //添加模式更改文件，向文件的末尾加入字符串&lt;/li&gt;
+&lt;li&gt;LOCK_EX //锁定文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;//如果模式为空则采用覆盖原内容的方式写入&lt;/p&gt;
+&lt;p&gt;它相对于 &lt;code&gt;fopen&lt;/code&gt; 再 &lt;code&gt;write&lt;/code&gt; 再 &lt;code&gt;close&lt;/code&gt;
+来说更简洁，功能上几乎是一样的。
+我们写入的文件要求内容格式大致如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;张三[准时] | 7:25
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;李四[迟到] | 7:33
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这样后续我们可以通过计算“|”的数量来得出打卡人数，通过“[迟到]”的数量来得出迟到人数（当然我并不是这么办的，刚想起来这么机智的办法）
+那么下面我们来写入文件：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34; | &amp;#34;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;time&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;file_put_contents&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nx"&gt;FILE_APPEND&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;打卡成功&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;那么PHP的全文是：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;&amp;lt;?&lt;/span&gt;&lt;span class="nx"&gt;php&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$filename&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;filename&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;txt&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="c1"&gt;//拼接文件名
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;str_replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;:&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;time&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;&lt;span class="c1"&gt;//把时间里的“:”去除掉
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="nx"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$time&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;730&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="c1"&gt;//7:30之后迟到
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;[迟到]&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;[准时]&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$name&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34; | &amp;#34;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nv"&gt;$_POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;time&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="c1"&gt;// \n的目的是在文件里面换行
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;file_put_contents&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nx"&gt;FILE_APPEND&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;or&lt;/span&gt; &lt;span class="k"&gt;die&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;打卡失败&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;打卡成功&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;?&amp;gt;&lt;/span&gt;&lt;span class="err"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;让我们把前面的HTML代码保存到 &lt;code&gt;index.html&lt;/code&gt;，上面的 &lt;code&gt;php&lt;/code&gt; 保存到 &lt;code&gt;process.php&lt;/code&gt;，上传到服务器试试吧！&lt;/p&gt;
+&lt;p&gt;输入姓名提交表单：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/06.webp"
+loading="lazy"
+alt="表单"
+&gt;&lt;/p&gt;
+&lt;p&gt;POST到PHP，输出成功&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/07.webp"
+loading="lazy"
+alt="结果"
+&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果PHP不输出任何内容，可以考虑在第一行加入一个 echo &amp;ldquo;test&amp;rdquo;; ，如果仍然不输出任何内容，那么可能是你的代码有问题&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;打卡前文件列表：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/08.webp"
+loading="lazy"
+alt="列表"
+&gt;&lt;/p&gt;
+&lt;p&gt;打卡后文件列表：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/09.webp"
+loading="lazy"
+alt="列表2"
+&gt;&lt;/p&gt;
+&lt;p&gt;TXT内容：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://img.cdn.gaein.cn/website_used/blog/Checker-Webpage-1/10.webp"
+loading="lazy"
+alt="文件内容"
+&gt;&lt;/p&gt;
+&lt;p&gt;（一）完结
+实在是太累了，其他功能在后续的（二）中说&lt;/p&gt;
+&lt;p&gt;代码自己copy，成品会在（二）p.s.也没准是（三）中放出来&lt;/p&gt;
+&lt;p&gt;如果你觉得有用或者有需要补充之处不妨评论一下&lt;/p&gt;</description></item><item><title>javascript 制作高考倒计时网页</title><link>https://blog.gaein.cn/passages/javascipt-ceetime/</link><pubDate>Sun, 01 Dec 2019 09:54:14 +0800</pubDate><guid>https://blog.gaein.cn/passages/javascipt-ceetime/</guid><description>&lt;p&gt;暑假的时候做了一个高考倒计时兼目标的页面，由于高三实在是忙，一直没有时间写成博客&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;blockquote&gt;
+&lt;p&gt;网上有很多javascript实现倒计时的代码，但是我找到的都不是很好用，或者有bug，所以自己绞尽没有脑子的汁写了一个，算法智障还请多多包涵。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id="一原理"&gt;[一]原理
+&lt;/h4&gt;&lt;p&gt;其实原理非常简单，就是用高考开始的时间（河北省是6月7日9：00语文第一场开考）减去当前的时间（javascript函数获取的用户电脑时间），然后换算成天、时、分、秒，再舍去小数。每一秒钟调用一次自己，就实现了动态更新。&lt;/p&gt;
+&lt;h4 id="二代码"&gt;[二]代码
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;script&lt;/span&gt; &lt;span class="n"&gt;language&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;javascript&amp;#34;&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;text/javascript&amp;#34;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;function&lt;/span&gt; &lt;span class="n"&gt;timerun&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;2020/06/07 09:00:00&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;24000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShowDay&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShowHour&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="nb"&gt;min&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShowMin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;min&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;sec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;min&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShowSec&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sec&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShow&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;高考已经开始&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;setTimeout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timerun()&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;script&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id="三效果"&gt;[三]效果
+&lt;/h4&gt;&lt;p&gt;见 &lt;a class="link" href="https://www.gaein.cn/live-for-dream/" target="_blank" rel="noopener"
+&gt;https://www.gaein.cn/live-for-dream/&lt;/a&gt;
+或标题图&lt;/p&gt;</description></item><item><title>CentOS部署MySQL8步骤</title><link>https://blog.gaein.cn/passages/install-mysql8-on-centos7/</link><pubDate>Mon, 15 Jul 2019 10:52:59 +0800</pubDate><guid>https://blog.gaein.cn/passages/install-mysql8-on-centos7/</guid><description>&lt;p&gt;早就想去写的一篇博文，因为我在部署现在这个网站的服务器时，使用了最新版的MySQL，按照网上的教程安装出现了不少问题，写在这里备忘。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h2 id="获取rpm"&gt;获取rpm
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;访问 &lt;a class="link" href="https://www.mysql.com/downloads/" target="_blank" rel="noopener"
+&gt;https://www.mysql.com/downloads/&lt;/a&gt;
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEUeO.md.png"
+loading="lazy"
+alt="MySQL官网的下载界面"
+&gt;
+选择Yum Repository&lt;/li&gt;
+&lt;li&gt;选择适合于自己系统的版本，比如我的是CentOS7，则选择这个，点击下载（Donwnload）
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEJQx.png"
+loading="lazy"
+alt="下载栏"
+&gt;&lt;/li&gt;
+&lt;li&gt;忽略下载页面的登录提示，右键&amp;quot;No thanks,just start my download.&amp;quot;，复制连接
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEYy6.md.png"
+loading="lazy"
+alt="下载页面"
+&gt;&lt;/li&gt;
+&lt;li&gt;连接到服务器，使用wget命令下载rpm&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEtOK.png"
+loading="lazy"
+alt="wget下载完成"
+&gt;&lt;/p&gt;
+&lt;h2 id="安装mysql"&gt;安装MySQL
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;导入rpm，使用命令：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo rpm -Uvh mysql80-community-release-el7-3.noarch.rpm
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEGS1.png"
+loading="lazy"
+alt="导入rpm"
+&gt;
+2. 完成后使用：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; yum install mysql-community-server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;安装MySQL社区版
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEawD.md.png"
+loading="lazy"
+alt="Mysql社区版安装"
+&gt;
+提示后按y开始安装，会自动下载文件，可能需要一段时间，依网速和服务器位置而定
+提示&amp;quot;Is this ok&amp;quot;时再次输入y并回车，确认
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEBYd.md.png"
+loading="lazy"
+alt="确认"
+&gt;&lt;/p&gt;
+&lt;h2 id="设置mysql"&gt;设置MySQL
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;启动MySQL
+使用&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo service mysqld start
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;启动MySQL服务
+使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo service mysqld status
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;查看状态
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEylt.png"
+loading="lazy"
+alt="状态"
+&gt;
+不能使用mysqld来启动，会启动失败
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEdTe.png"
+loading="lazy"
+alt="启动失败"
+&gt;
+2. 连接到MySQL
+MySQL8不支持无密码登录，在初次安装时就自动生成了root用户的密码
+使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;grep&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;temporary password&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nb"&gt;log&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mysqld&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;查看root用户的密码
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoEDfA.png"
+loading="lazy"
+alt="查看密码"
+&gt;
+使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mysql -u root -p
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;并输入默认密码（Linux系统输入密码时不会显示）
+连接到MySQL服务器
+&lt;img src="https://s2.ax1x.com/2019/07/15/ZoE66P.md.png"
+loading="lazy"
+alt="连接到MySQL"
+&gt;&lt;/p&gt;
+&lt;h2 id="修改默认密码"&gt;修改默认密码
+&lt;/h2&gt;&lt;p&gt;连接到MySQL服务器后，使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;alter user &amp;#39;root&amp;#39;@&amp;#39;localhost&amp;#39;IDENTIFIED BY &amp;#39;pWD123456-&amp;#39;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;修改root的密码，其中&amp;rsquo;pWD123456-&amp;lsquo;是要修改成的新密码&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意！MySQL8默认安装 validate_password 插件。这将要求密码包含至少一个大写字母，一个小写字母，一个数字和一个特殊字符，
+并且密码总长度至少为8个字符。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果不符合密码规范，修改密码会失败&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;修改成功会控制台输出&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Query OK, 0 rows affected (0.01 sec)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src="https://s2.ax1x.com/2019/07/15/Zoe76I.png"
+loading="lazy"
+alt="实例"
+&gt;
+使用“exit”或“quit”命令退出MySQL&lt;/p&gt;</description></item><item><title>MySQL8服务器配置远程连接用户</title><link>https://blog.gaein.cn/passages/mysql8-connect/</link><pubDate>Mon, 15 Jul 2019 08:50:50 +0800</pubDate><guid>https://blog.gaein.cn/passages/mysql8-connect/</guid><description>&lt;p&gt;最近需要有网站程序连接到数据库，但网站程序放在另外一个服务器上，所以需要设置数据库的远程连接。不同于网上给root远程连接权限的方法，我准备新建一个用户。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;blockquote&gt;
+&lt;p&gt;最近需要有网站程序连接到数据库，但网站程序放在另外一个服务器上，所以需要设置数据库的远程连接。不同于网上给root远程连接权限的方法，我准备新建一个用户。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;服务器环境：
+操作系统：CentOS7
+MySQL版本：8.0.16 MySQL Community Server&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;########## 首先，登录服务器ssh
+使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mysql -u root -p
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;并输入密码，进入mysql
+由于我使用的是MySQL8，安全级别比以前高，不能同时创建用户并且赋值
+首先创建用户&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;create user testuser@&amp;#39;%&amp;#39; identified by &amp;#39;TestUserPWD0&amp;#39;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;再进行赋值&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;grant all privileges on *.* to testuser@&amp;#39;%&amp;#39; with grant option;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;刷新&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;flush privileges
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;因为MySQL8使用的是caching_sha2_password加密规则，所以为了方便连接，需要更改一下规则&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ALTER USER &amp;#39;testuser&amp;#39;@&amp;#39;%&amp;#39; IDENTIFIED WITH mysql_native_password BY &amp;#39;TestUserPWD0&amp;#39;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;########## 注意事项
+testuser是你要创建的用户的用户名
+TestUserPWD0是新创建的用户的密码
+MySQL8默认安装 validate_password 插件。这将要求密码包含至少一个大写字母，一个小写字母，一个数字和一个特殊字符，并且密码总长度至少为8个字符。
+如果无法连接，主要检查服务器防火墙或安全狗等规则限制&lt;/p&gt;</description></item><item><title>nginX设置错误页面</title><link>https://blog.gaein.cn/passages/nginx-error-page/</link><pubDate>Fri, 07 Jun 2019 18:40:33 +0800</pubDate><guid>https://blog.gaein.cn/passages/nginx-error-page/</guid><description>&lt;p&gt;最近几天完善了一下网站，尤其是nginx默认的丑的要死的错误页面（标题图那样的）。今天把nginx配置错误页面的方法写在这里&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;p&gt;首先在网上搜教程，说必须要有
+&lt;code&gt;fastcgi_intercept_errors on; &lt;/code&gt;
+自定义的错误页面才会生效，但是我删除这句话仍然可以正常跳转。大家依据实际需求添加。
+接下来就是配置错误页面的具体代码了
+&lt;code&gt; error_page 404 /404.html; error_page 502 /502.html; location = /404.html{ root /data/errpages; } location = /502.html{ root /data/errpages; } &lt;/code&gt;
+error_page的意思是设置错误页，后面接状态码和页面文件，然后使用location来跳转。由于location的存在，这部分代码只能写在server区块里面。&lt;/p&gt;</description></item><item><title>网站转战阿里云服务器</title><link>https://blog.gaein.cn/passages/change-idc-to-alicloud/</link><pubDate>Sat, 27 Apr 2019 23:40:49 +0800</pubDate><guid>https://blog.gaein.cn/passages/change-idc-to-alicloud/</guid><description>&lt;p&gt;网站有一段时间不能访问，原因是转备案到阿里云了。&lt;/p&gt;
+&lt;h2 id="原因"&gt;原因
+&lt;/h2&gt;&lt;p&gt;最近网站没法访问了，原因很简单，不是服务器日常爆炸，而是拿去转备案了。
+因为备案比较费事，不说材料准备，审核也要挺长时间（这次大概是15天）所以我不会轻易的转备案的。
+不过最近仍然抛弃了陪伴我2年的主机屋，入了阿里云，原因很简单：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;阿里云确实在性能上比主机屋强&lt;/li&gt;
+&lt;li&gt;阿里云的学生云服务器（24岁以下）才114/年，相比较90/月的老服务器来说太值了！&lt;/li&gt;
+&lt;li&gt;服务稳定，工作效率高&lt;/li&gt;
+&lt;li&gt;备案服务免费&lt;/li&gt;
+&lt;li&gt;功能齐全，其他各项服务也很优秀&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;当然，主机屋也有一定的优点，比如很少需要手机验证码（因为上学的原因，没办法接收短信，以至于在阿里云重启服务器都成了难题）&lt;/p&gt;
+&lt;h2 id="购买前"&gt;购买前
+&lt;/h2&gt;&lt;p&gt;实在是无法相信自己的眼睛，114/年，确认再三后终于入手。因为是放假前三天看见的，就提前在闲鱼买了阿里云的幕布（他自己印的，20块钱，这样比较方便）&lt;/p&gt;
+&lt;p&gt;放假当天，先买了服务器，不过需要审核（因为限制24岁）&lt;/p&gt;
+&lt;p&gt;流程：购买&amp;gt;审核&amp;gt;发放提货券&amp;gt;绑定账号&amp;gt;提取阿里云服务器。&lt;/p&gt;
+&lt;p&gt;提货券有效期一个月，记得及时用啊！一开始我还以为商品有问题，那个有效期是服务器，还专门打了电话问一下。&lt;/p&gt;
+&lt;h2 id="备案"&gt;备案
+&lt;/h2&gt;&lt;p&gt;到手后申请备案，然后打印核验单，把幕布粘墙上，架起三脚架和相机，拍照。家里有个相机是真的舒服。&lt;/p&gt;
+&lt;p&gt;阿里云上传资料是不限制大小的，不过尽量不要上传太大的文件，容易由于网络原因出错，当然，也要保证清晰。&lt;/p&gt;
+&lt;p&gt;第二天阿里云审核就给我来电话了，先后来了两次（清明节都不放假的？）&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;第一次比较戏剧，客服跟我说我还没到年龄。我就很迷茫了，我初三就备案成功了，高二反而没到年龄？客服于是和我解释说阿里云这边要求16周岁（按照身份证上面的生日算），您还有两个个月才够岁数。蒙了一秒钟，我默默回复了一句，今年是2019年&amp;hellip;客服沉默了一下，才发现日期算错了&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;第二次来电是提醒我域名快要到期，并且提醒我说如果中间到期备案是不会成功的，可见服务之细致。我还真忘了这码子事，赶紧续费一波。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;一番折腾，上传图片，终于进入到了管局审核阶段。&lt;/p&gt;
+&lt;h2 id="部署"&gt;部署
+&lt;/h2&gt;&lt;p&gt;一狠心上了大佬们说很“优雅”的CentOS，以前都是用的Ubuntu（2021补：屑CentOS的时代过去了，Ubuntu好时代，来力！）&lt;/p&gt;
+&lt;p&gt;一点点部署nginx，nodejs，hexo&amp;hellip;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;到现在主页也没有完成，虽然没感觉CentOS怎么好用（因为Ubuntu习惯了吧）不过确实学到了很多东西。具体部署可能会以后再发。&lt;/p&gt;</description></item><item><title>NodeBB设置——使用NginX进行反代理并优化</title><link>https://blog.gaein.cn/passages/configure-nginx-for-nodebb/</link><pubDate>Wed, 25 Jul 2018 21:16:00 +0800</pubDate><guid>https://blog.gaein.cn/passages/configure-nginx-for-nodebb/</guid><description>&lt;p&gt;nodeBB在默认的4567开启，通常需要nginx作为反代理才能更好的访问，并且nginx也能开启一些优化使访问更快速&lt;/p&gt;
+&lt;!-- More --&gt;
+&lt;p&gt;默认安装nginx的配置文件在 /etc/nginx/nginx.conf 使用&lt;/p&gt;
+&lt;p&gt;vim /etc/nginx/nginx.conf&lt;/p&gt;
+&lt;p&gt;编辑配置文件，在http{}之间，追加&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;server {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; listen 80;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; server_name www.xxx.com; ## 你的域名
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; location /
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header X-Real-IP $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header X-Forwarded-Proto $scheme;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header Host $http_host;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header X-NginX-Proxy true;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_pass http://127.0.0.1:4567;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_redirect off;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ## Socket.IO Support
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_http_version 1.1;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header Upgrade $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header Connection &amp;#34;upgrade&amp;#34;;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;因为我网站跑的服务器在香港，配置又不行，所以只能想办法来优化一下&lt;/p&gt;
+&lt;p&gt;先上整个的配置文件，因为用了宝塔面板（SSL实在弄不好）所以配置文件可能与其他的有出入，请自行修改&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;span class="lnt"&gt;33
+&lt;/span&gt;&lt;span class="lnt"&gt;34
+&lt;/span&gt;&lt;span class="lnt"&gt;35
+&lt;/span&gt;&lt;span class="lnt"&gt;36
+&lt;/span&gt;&lt;span class="lnt"&gt;37
+&lt;/span&gt;&lt;span class="lnt"&gt;38
+&lt;/span&gt;&lt;span class="lnt"&gt;39
+&lt;/span&gt;&lt;span class="lnt"&gt;40
+&lt;/span&gt;&lt;span class="lnt"&gt;41
+&lt;/span&gt;&lt;span class="lnt"&gt;42
+&lt;/span&gt;&lt;span class="lnt"&gt;43
+&lt;/span&gt;&lt;span class="lnt"&gt;44
+&lt;/span&gt;&lt;span class="lnt"&gt;45
+&lt;/span&gt;&lt;span class="lnt"&gt;46
+&lt;/span&gt;&lt;span class="lnt"&gt;47
+&lt;/span&gt;&lt;span class="lnt"&gt;48
+&lt;/span&gt;&lt;span class="lnt"&gt;49
+&lt;/span&gt;&lt;span class="lnt"&gt;50
+&lt;/span&gt;&lt;span class="lnt"&gt;51
+&lt;/span&gt;&lt;span class="lnt"&gt;52
+&lt;/span&gt;&lt;span class="lnt"&gt;53
+&lt;/span&gt;&lt;span class="lnt"&gt;54
+&lt;/span&gt;&lt;span class="lnt"&gt;55
+&lt;/span&gt;&lt;span class="lnt"&gt;56
+&lt;/span&gt;&lt;span class="lnt"&gt;57
+&lt;/span&gt;&lt;span class="lnt"&gt;58
+&lt;/span&gt;&lt;span class="lnt"&gt;59
+&lt;/span&gt;&lt;span class="lnt"&gt;60
+&lt;/span&gt;&lt;span class="lnt"&gt;61
+&lt;/span&gt;&lt;span class="lnt"&gt;62
+&lt;/span&gt;&lt;span class="lnt"&gt;63
+&lt;/span&gt;&lt;span class="lnt"&gt;64
+&lt;/span&gt;&lt;span class="lnt"&gt;65
+&lt;/span&gt;&lt;span class="lnt"&gt;66
+&lt;/span&gt;&lt;span class="lnt"&gt;67
+&lt;/span&gt;&lt;span class="lnt"&gt;68
+&lt;/span&gt;&lt;span class="lnt"&gt;69
+&lt;/span&gt;&lt;span class="lnt"&gt;70
+&lt;/span&gt;&lt;span class="lnt"&gt;71
+&lt;/span&gt;&lt;span class="lnt"&gt;72
+&lt;/span&gt;&lt;span class="lnt"&gt;73
+&lt;/span&gt;&lt;span class="lnt"&gt;74
+&lt;/span&gt;&lt;span class="lnt"&gt;75
+&lt;/span&gt;&lt;span class="lnt"&gt;76
+&lt;/span&gt;&lt;span class="lnt"&gt;77
+&lt;/span&gt;&lt;span class="lnt"&gt;78
+&lt;/span&gt;&lt;span class="lnt"&gt;79
+&lt;/span&gt;&lt;span class="lnt"&gt;80
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;server
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##基础设置
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; listen 80;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; listen 443 ssl;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; server_name www.minecrafter.cn;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##错误页面
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; error_page 502 /502.html;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; location = /502.html
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; root /502;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; internal;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##反代理设置
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header X-Real-IP $remote_addr;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header X-Forwarded-Proto $scheme;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header Host $http_host;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header X-NginX-Proxy true;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##proxy_pass http://127.0.0.1:4567;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##proxy_pass http://io_nodes;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_redirect off;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ## Socket.IO Support
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_http_version 1.1;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header Upgrade $http_upgrade;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_set_header Connection &amp;#34;upgrade&amp;#34;;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##gizip设置
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; gzip on;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; gzip_min_length 1000;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; gzip_proxied off;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; gzip_types text/plain application/xml text/javascript application/javascript application/x-javascript text/css application/json;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##error_page 404/404.html;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##HTTP_TO_HTTPS_START
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; if ($server_port !~ 443)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; rewrite ^(/.*)$ https://$host$1 permanent;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##HTTP_TO_HTTPS_END
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ssl_certificate /etc/letsencrypt/live/www.minecrafter.cn/fullchain.pem;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ssl_certificate_key /etc/letsencrypt/live/www.minecrafter.cn/privkey.pem;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ssl_protocols TLSv1.1 TLSv1.2;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ssl_prefer_server_ciphers on;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ssl_session_cache shared:SSL:10m;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ssl_session_timeout 10m;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; error_page 497 https://$host$request_uri;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##SSL-END
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##静态资源代理设置
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; location @nodebb
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_pass http://io_nodes;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; location ~ ^/assets/(.*)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; root /data/nodebb/;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; try_files /build/public/$1 /public/$1 @nodebb;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; location /plugins/
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; root /data/nodebb/build/public/;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; try_files $uri @nodebb;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; location /
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; proxy_pass http://io_nodes;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ##负载均衡设置
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;upstream io_nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ip_hash;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; server 127.0.0.1:526;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; server 127.0.0.1:527;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这是最终版本，有负载均衡，资源代理，压缩&lt;/p&gt;
+&lt;p&gt;不需要压缩删除 ##gzip设置的内容即可&lt;/p&gt;
+&lt;p&gt;不需要负载均衡（仅一个端口）删除 ##负载均衡的内容，将 ##静态资源代理设置的内容中&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;proxy_pass http://io_nodes;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;改成&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;proxy_pass ##端口依情况而定
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;不需要静态资源代理删除 ##静态资源代理内容，如果有负载均衡，删除&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;##proxy_pass http://io_nodes;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;前的“##”&lt;/p&gt;
+&lt;p&gt;没有则删除&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;proxy_pass http://127.0.0.1:4567; ##端口依情况而定
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;前的“##”&lt;/p&gt;
+&lt;p&gt;除了nginx之外要做的&lt;/p&gt;
+&lt;p&gt;集群使用：&lt;/p&gt;
+&lt;p&gt;默认情况下，NodeBB将在一个进程上运行，某些调用可能比其他进程更长，从而导致相同资源的延迟或队列等待。要解决这个问题，可以通过添加多个端口到config.json中来指示NodeBB在多个进程上运行。&lt;/p&gt;
+&lt;p&gt;我习惯把端口数目设置为核心数，首先使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cat /proc/cpuinfo| grep &amp;#34;cpu cores&amp;#34;| uniq
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;查看核心数目（我的四核）&lt;/p&gt;
+&lt;p&gt;在nodebb目录下（就是输./nodebb setup那个目录），使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;vim config.json
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;编辑配置文件&lt;/p&gt;
+&lt;p&gt;将与端口有关的port:4567,改成&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &amp;#34;port&amp;#34;: [&amp;#34;4567&amp;#34;, &amp;#34;4568&amp;#34;] //这将启动2个进程，分别监听这2个端口
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;具体为什么可以百度JSON格式，如果重启nodebb出错请检查这个文件，端口随便写，不要占用80(HTTP),22(SSH),443(SSL),6379(Redis),27017(MongoDB)等&lt;/p&gt;
+&lt;p&gt;在Nginx配置文件中加入&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;upstream io_nodes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ip_hash;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; server 127.0.0.1:4567;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; server 127.0.0.1:4568;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;端口依config内容而定&lt;/p&gt;
+&lt;p&gt;然后把以前配置文件中的&lt;/p&gt;
+&lt;p&gt;proxy_pass 一行&lt;/p&gt;
+&lt;p&gt;改成&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;proxy_pass http://io_nodes;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;即可&lt;/p&gt;</description></item><item><title>在CentOS上搭建现代化的论坛Nodebb|NodeBB安装记录（Linux-CentOS篇）</title><link>https://blog.gaein.cn/passages/install-nodebb-on-centos/</link><pubDate>Sat, 21 Jul 2018 19:20:03 +0800</pubDate><guid>https://blog.gaein.cn/passages/install-nodebb-on-centos/</guid><description>&lt;p&gt;
+CentOS在各种服务器上使用的较多，所以捏，就来尝试一下CnetOS上安装NodeBB
+&lt;/p&gt;
+&lt;p&gt;
+CentOS 7 on VMWare
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/21/P8H8tf.jpg" alt="" data-load="full" style="" width="1717" height="935"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+不过我这次选择的数据库是MongoDB
+&lt;/p&gt;
+&lt;p&gt;
+一、准备工作
+&lt;/p&gt;
+&lt;p&gt;
+打开终端，切换到root用户
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;su root&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/21/P8H3AP.jpg" alt="https://s1.ax1x.com/2018/07/21/P8H3AP.jpg"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+关闭SELinux（有些可能没有，跳过）
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;vim /etc/sysconfig/selinux&lt;/pre&gt;
+&lt;p&gt;
+如果没有vim（见&lt;a href="https://blog-old.gaein.cn/post/Nodebb-Linux-Ubuntu.html" target="_self" textvalue="https://blog-old.gaein.cn/post/Nodebb-Linux-Ubuntu.html"&gt;https://blog-old.gaein.cn/post/Nodebb-Linux-Ubuntu.html&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;
+就用yum安装呗
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;yum install vim ##如果 vim 指令未安装，那就安装它&lt;/pre&gt;
+&lt;p&gt;
+按下i键（当然如果你想知道有什么键可以自行百度）
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/21/P8HOud.jpg" alt="" data-load="full" style="" width="750" height="521"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+找到 &lt;code&gt;SELINUX&lt;/code&gt; 然后修改成 &lt;code&gt;disabled&lt;/code&gt;.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/21/P8Hbge.jpg" alt="" data-load="full" style="" width="756" height="517"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+按下ESC退出编辑模式，输入:，再输入退出并保存命令：wq
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;yum update
+yum -y install epel-release
+yum -y groupinstall &amp;quot;Development Tools&amp;quot;
+yum -y install git ImageMagick ImageMagick-devel##更新系统并安装一些基础工具&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/21/P8HqjH.jpg" alt="" width="619" height="477"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/21/P8bm5V.jpg" alt="" data-load="full" style="" width="769" height="547"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+二、安装NodeJS
+&lt;/p&gt;
+&lt;p&gt;
+在Github可以找到最新的nvm安装命令
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href="https://github.com/creationix/nvm" _src="https://github.com/creationix/nvm"&gt;https://github.com/creationix/nvm&lt;/a&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/21/P8buCT.jpg" alt="" data-load="full" style="" width="1098" height="732"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+所以我们使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+##或者
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash&lt;/pre&gt;
+&lt;p&gt;
+安装nvm（这是一个快速部署的脚本）
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/21/P8beU0.jpg" alt="" data-load="full" style="" width="744" height="193"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;export NVM_DIR=&amp;quot;$HOME/.nvm&amp;quot;
+[ -s &amp;quot;$NVM_DIR/nvm.sh&amp;quot; ] &amp;amp;&amp;amp; . &amp;quot;$NVM_DIR/nvm.sh&amp;quot; ## This loads nvm&lt;/pre&gt;
+&lt;p&gt;
+把nvm添加到环境变量
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;source ~/.bashrc&lt;/pre&gt;
+&lt;p&gt;
+令环境变量生效
+&lt;/p&gt;
+&lt;p&gt;
+最后使用&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;command -v nvm&lt;/pre&gt;
+&lt;p&gt;
+检查是否安装成功
+&lt;/p&gt;
+&lt;p&gt;
+安装成功之后，如果是国内的机器需要使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;export NVM_NODEJS_ORG_MIRROR=http://npm.taobao.org/mirrors/node
+export NVM_IOJS_ORG_MIRROR=http://npm.taobao.org/mirrors/iojs&lt;/pre&gt;
+&lt;p&gt;
+让nvm使用淘宝源&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;npm config set registry http://registry.npm.taobao.org/&lt;/pre&gt;
+&lt;p&gt;
+让npm使用淘宝源
+&lt;/p&gt;
+&lt;p&gt;
+使用&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;nvm install --lts&lt;/pre&gt;
+&lt;p&gt;
+安装lts版本的nodejs
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfSzj.jpg" alt="" data-load="full" style="" width="723" height="233"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+之后记得使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;npm -v&lt;/pre&gt;
+&lt;p&gt;
+和
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;nodeb -v&lt;/pre&gt;
+&lt;p&gt;
+检查版本，如果成功输出版本号，则安装成功
+&lt;/p&gt;
+&lt;p&gt;
+三，安装数据库（MongoDB）
+&lt;/p&gt;
+&lt;p&gt;
+使用命令&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;vim /etc/yum.repos.d/mongodb-org-3.6.repo&lt;/pre&gt;
+&lt;p&gt;
+创建文件并且输入i进行编辑，将以下内容粘贴进去
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;[mongodb-org-3.6]name=MongoDB
+Repositorybaseurl=
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-3.6.asc&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYWzWQ.jpg" alt="" data-load="full" style="" width="781" height="534"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+输入:wq保存并退出
+&lt;/p&gt;
+&lt;p&gt;
+再使用&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;yum updata&lt;/pre&gt;
+&lt;p&gt;
+更新
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfkwV.jpg" alt="" width="380" height="181"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;yum -y install mongodb-org&lt;/pre&gt;
+&lt;p&gt;
+安装mongoDB
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYWvFS.jpg" alt="" data-load="full" style="" width="738" height="506"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+因为是国外的服务器所以速度不行，当然也可以自行在使用update之前把链接替换为国内的镜像站
+&lt;/p&gt;
+&lt;p&gt;
+完成之后使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;service mongod start ##启动 Mongodb
+mongod --version ##查看 Mongodb 版本&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYf9Qs.jpg" alt="" width="555" height="478"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;span style="color: ##0070C0;"&gt;有一点需要注意：如果版本3.4.10的话需要升级，因为3.4.10以下有风险&lt;/span&gt;
+&lt;/p&gt;
+&lt;p&gt;
+安装完成后，为了消除 MongoDB 的性能警告，需要关闭 Linux 巨型页：
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;echo never &amp;gt; /sys/kernel/mm/transparent_hugepage/enabled
+echo never &amp;gt; /sys/kernel/mm/transparent_hugepage/defrag&lt;/pre&gt;
+&lt;p&gt;
+来关闭
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfKyR.jpg" alt="" data-load="full" style="" width="744" height="63"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+不同于官方文档，在获取nodebb之前，我选择先进行数据库设置
+&lt;/p&gt;
+&lt;p&gt;
+输入
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;mongo&lt;/pre&gt;
+&lt;p&gt;
+进入mongoDB的命令行
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfPLq.jpg" alt="" data-load="full" style="" width="777" height="373"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;use nodebb&lt;/pre&gt;
+&lt;p&gt;
+新建数据库（名为nodebb）
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfFe0.jpg" alt="" width="224" height="64"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;db.createUser({user: &amp;quot;nodebb&amp;quot; ,pwd: &amp;quot;替换成你的密码&amp;quot; ,roles:[ &amp;quot;readWrite&amp;quot; ]})&lt;/pre&gt;
+&lt;p&gt;
+添加用户角色&lt;span style="color: ##0070C0;"&gt;（牢记用户名（此处为nodebb）和密码！）&lt;/span&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;span style="color: ##0070C0;"&gt;&lt;img src="https://s1.ax1x.com/2018/07/24/PYfAoT.jpg" alt="" data-load="full" style="" width="767" height="113"/&gt;&lt;/span&gt;
+&lt;/p&gt;
+&lt;p&gt;
+如果需要在nodebb后台查看数据库数据，输入以下代码
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;db.grantRolesToUser( &amp;quot;nodebb&amp;quot; ,[{ role: &amp;quot;clusterMonitor&amp;quot;, db: &amp;quot;admin&amp;quot; }]);&lt;/pre&gt;
+&lt;p&gt;
+打开权限认证，使用命令
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;vim /etc/mongod.conf&lt;/pre&gt;
+&lt;p&gt;
+取消注释并改为
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;security:
+authorization: enabled&lt;/pre&gt;
+&lt;p&gt;
+如图所示
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfeW4.jpg" alt="" data-load="full" style="" width="752" height="270"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;service mongod restart&lt;/pre&gt;
+&lt;p&gt;
+重启mongoDB
+&lt;/p&gt;
+&lt;p&gt;
+四、安装NodeBB
+&lt;/p&gt;
+&lt;p&gt;
+如果没有git，请使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;yum install git&lt;/pre&gt;
+&lt;p&gt;
+中文社区的文档中已经说明
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;
+&lt;em&gt;&lt;strong&gt;在开始之前:&lt;/strong&gt;&lt;/em&gt;&lt;br/&gt;&lt;strong&gt;① 提前切换成root用户，免得麻烦。&lt;/strong&gt;&lt;br/&gt;&lt;strong&gt;② 不要直接下载 Github 上发布的 release 压缩包&lt;/strong&gt;，那里面没有 &lt;code&gt;.git/config&lt;/code&gt; 配置文件，而在安装过程中需要读取配置文件的值。正确的做法是使用 Git 从 GitHub 上克隆源代码。&lt;br/&gt;
+&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;
+新建一个目录（如果是云服务器的话最好放在数据盘里面，默认的/root目录不会太大，不过因为我比较懒就直接这样了）
+&lt;/p&gt;
+&lt;p&gt;
+可以使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;mkdir 目录&lt;/pre&gt;
+&lt;p&gt;
+来新建文件夹（注意有&amp;##39;/&amp;##39;和没有的区别）
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;cd 目录&lt;/pre&gt;
+&lt;p&gt;
+进入刚刚新建的目录（同样注意&amp;##39;/&amp;##39;）
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;git clone -b v1.10.x https://github.com/NodeBB/NodeBB.git nodebb##把nodebb克隆进nodebb文件夹&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;
+现在，你可以使用国内的镜像仓库(&lt;code&gt;https://gitee.com/NodeBB-CN/NodeBB.git&lt;/code&gt;)来提高连接速度。&lt;br/&gt;
+&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;
+这是中文社区文档上的话，但是...
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfCyn.jpg" alt="" data-load="full" style="" width="754" height="76"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/25/PYLpqg.jpg" alt="" width="457" height="55"/&gt;（这个是当时没有截图后来用物理机补的:D）
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/25/PYLCZQ.jpg" alt="" width="453" height="420"/&gt;嗯...
+&lt;/p&gt;
+&lt;p&gt;
+所以我闲的创建了一个仓库，可以使用 &lt;a href="https://gitee.com/nidb/NodeBB.git" _src="https://gitee.com/nidb/NodeBB.git"&gt;https://gitee.com/nidb/NodeBB.git&lt;/a&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;./nodebb setup&lt;/pre&gt;
+&lt;p&gt;
+来安装，当然，上一篇（&lt;a href="https://blog-old.gaein.cn/post/Nodebb-Linux-Ubuntu.html" target="_blank"&gt;在Ubuntu上搭建现代化的论坛Nodebb|NodeBB安装记录（Linux-Ubuntu篇）&lt;/a&gt;）中说过，可以使用可视化的界面来安装，使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;./nodebb install&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfVFU.jpg" alt="" data-load="full" style="" width="1722" height="937"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+和普通的博客安装差不多啦！
+&lt;/p&gt;
+&lt;p&gt;
+说明：
+&lt;/p&gt;
+&lt;p&gt;
+Web Address(URL)是以后访问的地址，如果是搭建的论坛记得写域名（可以不加端口，以后在nginx反代理）当然，建议先使用默认的调试。注意不要忘记“http://”，结尾不要加&amp;##39;/&amp;##39;，只有这个链接能够访问论坛，其他链接访问会显示链接断开（比如我有一个服务器，IP是1.2.3.4，域名www.exp.com和exp.com都A记录过去了，这里我填写www.exp.com，那么exp.com和1.2.3.4访问的时候都会显示与“NodeBB的链接断开”）&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+Username，Email Address ，Password是论坛管理员的账号邮箱密码，牢记。邮箱要填写可以用的，以便以后开邮件验证功能的时候不用再去修改
+&lt;/p&gt;
+&lt;p&gt;
+Confirm Password是确认密码
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfZYF.jpg" alt="" data-load="full" style="" width="778" height="693"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+数据库选择MongoDB
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYful9.jpg" alt="" data-load="full" style="" width="1118" height="185"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+Redis的话自己去网上看资料吧23333
+&lt;/p&gt;
+&lt;p&gt;
+中文社区的文档都很详细的，这个是CentOS+Redis的链接：&lt;a href="https://www.kancloud.cn/a632079/nodebb-cn/372107" _src="https://www.kancloud.cn/a632079/nodebb-cn/372107"&gt;https://www.kancloud.cn/a632079/nodebb-cn/372107&lt;/a&gt;&amp;nbsp; ，至于Ubuntu，看我以前的博文
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfnSJ.jpg" alt="" data-load="full" style="" width="726" height="685"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+Host IP or address of your MongoDB instance是数据库的地址，如果使用的是本机，默认即可
+&lt;/p&gt;
+&lt;p&gt;
+Host port of your MongoDB instance是数据库端口，如果没有改过，默认即可
+&lt;/p&gt;
+&lt;p&gt;
+MongoDB username是用户名，Password of your MongoDB database是密码，前面设置过的
+&lt;/p&gt;
+&lt;p&gt;
+MongoDB database name是数据库名，前面use nodebb创建的
+&lt;/p&gt;
+&lt;p&gt;
+点击Install NodeBB安装
+&lt;/p&gt;
+&lt;p&gt;
+终端已经有反应了
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYflex.jpg" alt="" data-load="full" style="" width="1034" height="797"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+然后开始部署
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfMO1.jpg" alt="" data-load="full" style="" width="1014" height="637"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+这可能需要几分钟，部署完成后提示你使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;./nodebb start&lt;/pre&gt;
+&lt;p&gt;
+开启nodebb
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYf7hF.jpg" alt="" data-load="full" style="" width="1056" height="658"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+NodeBB已经成功运行，并且提示你三个常用的命令：分别是停止、日志（实时）、和重启
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/07/24/PYfGFO.jpg" alt="" data-load="full" style="" width="1529" height="572"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+打开&lt;a href="http://127.0.0.1:4567" _src="http://127.0.0.1:4567"&gt;http://127.0.0.1:4567&lt;/a&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+已经可以正常访问！&lt;br/&gt;
+&lt;/p&gt;</description></item><item><title>在Ubuntu上搭建现代化的论坛Nodebb|NodeBB安装记录（Linux-Ubuntu篇）</title><link>https://blog.gaein.cn/passages/install-nodebb-on-ubuntu/</link><pubDate>Fri, 22 Jun 2018 23:47:33 +0800</pubDate><guid>https://blog.gaein.cn/passages/install-nodebb-on-ubuntu/</guid><description>&lt;p&gt;
+继上次&amp;nbsp;&lt;a href="https://blog-old.gaein.cn/post/nodeBB-windows-4.html" _src="https://blog-old.gaein.cn/post/nodeBB-windows-4.html"&gt;https://blog-old.gaein.cn/post/nodeBB-windows-4.html&lt;/a&gt;&amp;nbsp;失败后，我仍然不思悔改，NodeBB就是好看！在老家闲来无事的时候租用了一个服务器，于是，故事开始了
+&lt;/p&gt;
+&lt;p&gt;
+NodeBB是基于nodejs的现代化论坛程序
+&lt;/p&gt;
+&lt;p&gt;
+系统我选择了Ubuntu，再多次干到凌晨四五点后，终于让网站成功运行了！
+&lt;/p&gt;
+&lt;p&gt;
+&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pphves.md.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+因为服务器是使用SSH链接的，所以即使有桌面，我也选择用终端（在安装NodeBB这方面桌面好像没用...）
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/PphqSS.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+相关安装文档查看：
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href="https://www.kancloud.cn/a632079/nodebb-cn/" _src="https://www.kancloud.cn/a632079/nodebb-cn/"&gt;https://www.kancloud.cn/a632079/nodebb-cn/&lt;/a&gt;
+&lt;/p&gt;
+&lt;div&gt;
+&lt;p&gt;
+&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;br/&gt;
+&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;
+&lt;span style="font-size: 24px; color: ##FFC000;"&gt;前奏&lt;/span&gt;
+&lt;/p&gt;
+&lt;p&gt;
+第一步我选择切换到管理员账户（root）&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp49YV.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/PphHW8.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+貌似没有vim（一个强大的文本编辑软件）
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/PphOyQ.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;apt-get install vim&lt;/pre&gt;
+&lt;p&gt;
+按y同意安装
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pphzoq.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+这网速真是伤感
+&lt;/p&gt;
+&lt;p&gt;
+如果安装失败了，尝试用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;apt-get update&lt;/pre&gt;
+&lt;p&gt;
+更新，然后再尝试
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pphxwn.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+在执行第一条命令（快速安装nodejs用）的时候，又报错了&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4pF0.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4CWT.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+这系统真是纯洁，啥都没有...
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;apt install curl&lt;/pre&gt;
+&lt;p&gt;
+安装curl
+&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;
+&lt;span style="font-size: 24px; color: ##FFC000;"&gt;安装Node.js LTS&lt;/span&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4AOJ.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -&lt;/pre&gt;
+&lt;p&gt;
+来快速安装Node.js
+&lt;/p&gt;
+&lt;p&gt;
+如果服务器在大陆的话&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4ky4.png"/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;vim /etc/apt/sources.list.d/nodesource.list&lt;/pre&gt;
+&lt;p&gt;
+将链接全部换成
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;https://mirrors.ustc.edu.cn/nodesource/deb/node_{版本号，例如: 8}.x&lt;/pre&gt;
+&lt;p&gt;
+&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+按“i”进入编辑模式，完成后按ESC退出编辑模式，再输入:wq 保存退出
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4iSU.png"/&gt;&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4ZwR.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+再次更新APT源
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;sudo apt-get update&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4Vm9.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+然后通过APT安装Node.js&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;sudo apt-get install -y nodejs&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4eT1.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;node -v&lt;/pre&gt;
+&lt;p&gt;
+检查版本，确实已经安装完成
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4uY6.png"/&gt;
+&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;
+&lt;span style="font-size: 24px; color: ##FFC000;"&gt;数据库：Redis&lt;/span&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+鉴于Redis体积较小等优点，数据库我选择了redis
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4KfK.png"/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;sudo add-apt-repository ppa:chris-lea/redis-server
+sudo apt-get update
+sudo apt-get install -y redis-server ##安装redis&lt;/pre&gt;
+&lt;p&gt;
+使用这三行来安装redis（当然是从上到下一行一行来）
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/22/Pp4nFx.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+按回车键继续
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4xje.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+最后一步，慢慢等待
+&lt;/p&gt;
+&lt;p&gt;
+&lt;span style="color: ##8064A2;"&gt;Redis安全设置（强烈推荐进行这一步）&lt;/span&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;vim /etc/redis/redis.conf&lt;/pre&gt;
+&lt;p&gt;
+编辑配置文件&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4vcD.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+按“i”进入编辑模式，在前面插入如下三行
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;requirepass yourpassword
+bind 127.0.0.1
+rename-command FLUSHALL &amp;quot;&amp;quot;&lt;/pre&gt;
+&lt;p&gt;
+其中，“yourpassword”是你自己设置的密码，记住它，后面要用到的
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4X9K.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+我设置为2018password
+&lt;/p&gt;
+&lt;p&gt;
+按ESC再输入:wq保存
+&lt;/p&gt;
+&lt;p&gt;
+使用：
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;service redis-server restart&lt;/pre&gt;
+&lt;p&gt;
+重启redis
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4Lh6.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+如果没有任何报错信息就是没问题了，否则检查你的配置文件
+&lt;/p&gt;
+&lt;hr/&gt;
+&lt;p&gt;
+&lt;span style="font-size: 24px; color: ##FFC000;"&gt;NodeBB的安装&lt;/span&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+一切无误，进入最后步骤了（这当然不是全部的全部）
+&lt;/p&gt;
+&lt;p&gt;
+如果没有git，使用：
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;sudo apt-get install -y git build-essential&lt;/pre&gt;
+&lt;p&gt;
+安装它&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+不知道有没有，使用
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;git&lt;/pre&gt;
+&lt;p&gt;
+如果返回了一大串东西则是安装了，返回“Command &amp;##39;git&amp;##39; not found, but can be installed with:......”则是没有安装
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4qtx.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+安装完毕后进入一个你喜欢的目录&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp5pBd.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+在新版本的Ubuntu，你需要先
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;mkdir /www ##你喜欢的名字，带不带/有很大区别的&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp4j1O.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+然后再
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;cd /www&lt;/pre&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp59HA.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用命令，从git克隆nodebb
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;sudo git clone -b v1.9.x https://github.com/NodeBB/NodeBB.git nodebb ##这将在 /home 下面 新建一个名叫nodebb的文件夹并且会把程序从Github克隆到里面&lt;/pre&gt;
+&lt;p&gt;
+在大陆，尤其是网络环境不好的情况下，这个过程可能会非常漫长（解决方案见&lt;a href="https://blog-old.gaein.cn/post/NodeBB-Linux-CentOS.html）"&gt;https://blog-old.gaein.cn/post/NodeBB-Linux-CentOS.html）&lt;/a&gt;&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+目前NodeBB已经更新v1.10.x，请将“v1.9.x”替换成“v1.10.x”在发送命令，以获取最新版
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp5SnH.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp5PAI.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+在50kib/s的速度下，需要将近16分钟！
+&lt;/p&gt;
+&lt;p&gt;
+妈呀，终于完成了，合个影&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp5GgU.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+输入：&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;cd nodebb&lt;/pre&gt;
+&lt;p&gt;
+进入目录
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp583T.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+使用：&lt;br/&gt;
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;./nodebb setup ##尽管我使用的是./nodebb start &amp;lt;=习惯的锅，由于没有运行过，仍然会进行安装&lt;/pre&gt;
+&lt;p&gt;
+进行安装
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/Pp53CV.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+可能还需要一些时间，顺便一提，在新版的NodeBB（1.7以后，也不算新啦！）中，可以使用：
+&lt;/p&gt;
+&lt;pre class="fy-prettyprint linenums"&gt;./nodebb install&lt;/pre&gt;
+&lt;p&gt;
+进行可视化安装，也就是在服务器上面进入
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9Gyrj.png" alt="" style="" width="1078" height="827"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;a href="http://127.0.0.1:4567"&gt;http://127.0.0.1:4567&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;
+进行安装，和普通的PHP博客论坛什么的差不多，很简单！
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/PpIS2T.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+GOOGLE字体库全责！
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/23/PpICMF.png"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+再次成功翻车！
+&lt;/p&gt;
+&lt;p&gt;
+无奈挂VPN
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GDxg.png" alt="" style="" width="903" height="617"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9G2aq.png" alt="" style="" width="1359" height="441"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+这个就是安装完成了，需要你输入一些信息
+&lt;/p&gt;
+&lt;p&gt;
+第一个URL used... 如果有相要对外开放，请输入实际使用的域名:端口（4567），如果使用的不是这里设置的域名，会出现 无法连接的现象
+&lt;/p&gt;
+&lt;p&gt;
+第二个是直接回车
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9G0G8.png" alt="" width="390" height="50"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+第三个我们安装的数据库是redis，熟入redis即可
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GBRS.png" alt="" width="514" height="94"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+然后是前面设置的数据库密码（LINUX输入密码不会显示任何东西！）
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GsMQ.png" alt="" width="320" height="132"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+管理员用户名和密码
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GgZn.png" alt="" width="428" height="139"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+完成设置
+&lt;/p&gt;
+&lt;p&gt;
+&lt;img src="https://s1.ax1x.com/2018/06/24/P9GRI0.png" alt="" style="" width="1371" height="807"/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+NODEBB基础搭建完成！&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;br/&gt;
+&lt;/p&gt;
+&lt;/div&gt;</description></item></channel></rss>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>天天向上 on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/%E5%A4%A9%E5%A4%A9%E5%90%91%E4%B8%8A/</link><description>Recent content in 天天向上 on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 01 Dec 2019 09:54:14 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E5%A4%A9%E5%A4%A9%E5%90%91%E4%B8%8A/index.xml" rel="self" type="application/rss+xml"/><item><title>javascript 制作高考倒计时网页</title><link>https://blog.gaein.cn/passages/javascipt-ceetime/</link><pubDate>Sun, 01 Dec 2019 09:54:14 +0800</pubDate><guid>https://blog.gaein.cn/passages/javascipt-ceetime/</guid><description>&lt;p&gt;暑假的时候做了一个高考倒计时兼目标的页面，由于高三实在是忙，一直没有时间写成博客&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;blockquote&gt;
+&lt;p&gt;网上有很多javascript实现倒计时的代码，但是我找到的都不是很好用，或者有bug，所以自己绞尽没有脑子的汁写了一个，算法智障还请多多包涵。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id="一原理"&gt;[一]原理
+&lt;/h4&gt;&lt;p&gt;其实原理非常简单，就是用高考开始的时间（河北省是6月7日9：00语文第一场开考）减去当前的时间（javascript函数获取的用户电脑时间），然后换算成天、时、分、秒，再舍去小数。每一秒钟调用一次自己，就实现了动态更新。&lt;/p&gt;
+&lt;h4 id="二代码"&gt;[二]代码
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;script&lt;/span&gt; &lt;span class="n"&gt;language&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;javascript&amp;#34;&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;text/javascript&amp;#34;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;function&lt;/span&gt; &lt;span class="n"&gt;timerun&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;2020/06/07 09:00:00&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;24000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShowDay&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShowHour&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="nb"&gt;min&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShowMin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;min&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;sec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3600&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;min&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShowSec&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;sec&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timeShow&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;innerHTML&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;高考已经开始&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;setTimeout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;timerun()&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;script&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id="三效果"&gt;[三]效果
+&lt;/h4&gt;&lt;p&gt;见 &lt;a class="link" href="https://www.gaein.cn/live-for-dream/" target="_blank" rel="noopener"
+&gt;https://www.gaein.cn/live-for-dream/&lt;/a&gt;
+或标题图&lt;/p&gt;</description></item><item><title>最新官方版化学元素周期表高清大图下载</title><link>https://blog.gaein.cn/passages/periodictable-of-theelements/</link><pubDate>Sat, 13 Jul 2019 22:55:37 +0800</pubDate><guid>https://blog.gaein.cn/passages/periodictable-of-theelements/</guid><description>&lt;p&gt;来自国际纯粹与应用化学联合会和中国化学会的权威元素周期表高清下载。有最新的元素和最权威的数据&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因为刚好需要元素周期表就找了一下，网上大多数更新不及时而且样式不好看，数据不权威。终于在IUPAC官网和中国化学会找到了英文和中文（中国化学会译制的IUPAC周期表）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id="iupac国际纯粹与应用化学联合会元素周期表英文english"&gt;IUPAC（国际纯粹与应用化学联合会）元素周期表[英文/English]
+&lt;/h4&gt;&lt;blockquote&gt;
+&lt;p&gt;International Union of Pure and Applied Chemistry (IUPAC) 国际纯粹与应用化学联合会，又译 国际理论（化学）与应用化学联合会， 是一个致力于促进化学相关的非政府组织，也是各国化学会的一个联合组织。 以公认的化学命名权威著称。 命名及符号分支委员会每年都会修改IUPAC命名法，以力求提供化合物命名的准确规则。 IUPAC 也是国际科学理事会的会员之一。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;IUPAC官网:&lt;a class="link" href="https://iupac.org" title="国际纯粹与应用化学联合会官网"
+target="_blank" rel="noopener"
+&gt;IUPAC.org&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://s2.ax1x.com/2019/07/13/Z4O5i4.md.png"
+loading="lazy"
+alt="元素周期表英文版(IUPAC)"
+&gt;&lt;/p&gt;
+&lt;h6 id="图片下载gaeincn--pte-iupacpng--225-kb"&gt;图片下载：[&lt;a class="link" href="https://static.cdn.gaein.cn/website_used/files/PTE/PTE-IUPAC.png" target="_blank" rel="noopener"
+&gt;Gaein.cn | PTE-IUPAC.png | 225 KB&lt;/a&gt;]
+&lt;/h6&gt;&lt;h6 id="pdf下载gaeincn--pte-iupacpdf--236-kb"&gt;PDF下载：[&lt;a class="link" href="https://static.cdn.gaein.cn/website_used/files/PTE/PTE-IUPAC.pdf" target="_blank" rel="noopener"
+&gt;Gaein.cn | PTE-IUPAC.pdf | 236 KB&lt;/a&gt;]
+&lt;/h6&gt;&lt;p&gt;//推荐下载PDF文件，更清晰，方便打印&lt;/p&gt;
+&lt;h4 id="ccs中国化学会元素周期表中文chinese"&gt;CCS（中国化学会）元素周期表[中文/Chinese]
+&lt;/h4&gt;&lt;blockquote&gt;
+&lt;p&gt;中国化学会（Chinese Chemical Society，缩写CCS）是从事化学或与化学相关专业的科技、教育工作者自愿组成并依法注册登记的学术性、公益性法人社会团体，是中国科学技术协会的组成部分，是中国发展化学科学技术的重要社会力量。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;中国化学会于1932年在南京成立。1959年，中国化学会曾与中国化工学会筹委会合并成立中国化学化工学会。1963年，又分为化学、化工两个学会。中国化学会是国际纯粹与应用化学联合会（IUPAC）、亚洲化学学会联合会（FACS）等7个国际组织的成员。&lt;/p&gt;
+&lt;p&gt;CCS官网：&lt;a class="link" href="https://www.chemsoc.org.cn" title="中国化学会官网"
+target="_blank" rel="noopener"
+&gt;chemsoc.org.cn&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://s2.ax1x.com/2019/07/13/Z4XcfH.md.png"
+loading="lazy"
+alt="元素周期表中文版(CCS)"
+&gt;&lt;/p&gt;
+&lt;h6 id="图片下载gaeincn--pte-ccspng--217-kb"&gt;图片下载：[&lt;a class="link" href="https://static.cdn.gaein.cn/website_used/files/PTE/PTE-CCS.png" target="_blank" rel="noopener"
+&gt;Gaein.cn | PTE-CCS.png | 217 KB&lt;/a&gt;]
+&lt;/h6&gt;&lt;h6 id="pdf下载gaeincn--pte-ccspdf--638-kb"&gt;PDF下载：[&lt;a class="link" href="https://static.cdn.gaein.cn/website_used/files/PTE/PTE-CCS.pdf" target="_blank" rel="noopener"
+&gt;Gaein.cn | PTE-CCS.pdf | 638 KB&lt;/a&gt;]
+&lt;/h6&gt;&lt;p&gt;//推荐下载PDF文件，更清晰，方便打印&lt;/p&gt;
+&lt;p&gt;另外发现一个非常不错的在线元素周期表网站：&lt;a class="link" href="https://periodic-table.io/" target="_blank" rel="noopener"
+&gt;periodic-table.io&lt;/a&gt;
+这个网站有很多的优点&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;元素：周期表 在一个界面中提供易于理解且有用的关于化学元素的信息。 点击一个元素符号去了解更多的关于其性质，历史，名字来源，图片，应用，危险性和电子层分布的图片。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;令人视觉愉悦的彩色表格&lt;/li&gt;
+&lt;li&gt;简单流畅的设计和丰富的信息&lt;/li&gt;
+&lt;li&gt;每个元素的详细描述&lt;/li&gt;
+&lt;li&gt;使用字母表顺序来浏览元素&lt;/li&gt;
+&lt;li&gt;每个元素的电子壳层示意图&lt;/li&gt;
+&lt;li&gt;在一个表格中比较两种元素的性质&lt;/li&gt;
+&lt;li&gt;用符号，原子序数或者名称来搜索元素&lt;/li&gt;
+&lt;li&gt;详情网站的超链接以便进一步学习&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;支持多国语言，建议各位使用，当然也存在部分中文元素汉字无法拼写的问题（字库没有字）&lt;/p&gt;
+&lt;p&gt;另外 元素：周期表 开发了Windows10应用，请到 [&lt;a class="link" href="https://www.microsoft.com/zh-cn/p/%e5%85%83%e7%b4%a0-%e5%91%a8%e6%9c%9f%e8%a1%a8/9wzdncrfjcm1" target="_blank" rel="noopener"
+&gt;Microsoft应用商店 元素：周期表&lt;/a&gt;] 下载&lt;/p&gt;
+&lt;h2 id="有关版权的特别声明"&gt;有关版权的特别声明：
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;英文版化学元素周期表版权归国际纯粹与应用化学联合会（IUPAC）所有&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;中文版化学元素周期表版权归中国化学会（CCS）所有&lt;/p&gt;
+&lt;p&gt;元素：周期表 网站及应用程序版权归原作者所有&lt;/p&gt;
+&lt;p&gt;本站仅撰写此文并转载元素周期表文件以及转换为PNG图片文件，未参与化学元素周期表的制作。向IUPAC及CCS和元素：周期表作者致敬&lt;/p&gt;</description></item></channel></rss>

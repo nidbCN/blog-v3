@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>命令行 on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/</link><description>Recent content in 命令行 on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 09 Nov 2022 10:26:22 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/index.xml" rel="self" type="application/rss+xml"/><item><title>在 Windows 下舒适的使用命令行</title><link>https://blog.gaein.cn/passages/use-cli-in-windows/</link><pubDate>Wed, 09 Nov 2022 10:26:22 +0800</pubDate><guid>https://blog.gaein.cn/passages/use-cli-in-windows/</guid><description>&lt;h2 id="前言"&gt;前言
+&lt;/h2&gt;&lt;p&gt;自从大一坐到 &lt;a class="link" href="https://aimerneige.com/" target="_blank" rel="noopener"
+&gt;AimerNeige&lt;/a&gt; 身边以来，就见到他的双系统 Linux。后来自己也装了一个 ubuntu server + i3wm 日常用（虽然后来因为臭打游戏的原因回 windows 了），不得不说 Linux 的命令行以及各种命令行工具用起来非常的爽啊，相比较而言，用 windows 几乎很少用到命令行，cmd 和 powershell 都很丑，而且默认字体对眼睛很不友好 :D。以及各种工具并不多导致我不怎么用。&lt;/p&gt;
+&lt;h2 id="美化"&gt;美化
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://blog.gaein.cn/passages/Windows-Terminal-Usage/" target="_blank" rel="noopener"
+&gt;个性化你的Windows Terminal终端与PowerShell&lt;/a&gt; 其实以前写过一篇文章来记录如何安装配置 Windows Terminal 和 Powershell 7（后改名 Powershell Core，现名 Powershell）（谢谢微软改名部）&lt;/p&gt;
+&lt;p&gt;至于字体方面选择了 Cascadia Code。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意，oh-my-posh 需要使用 &lt;a class="link" href="https://www.nerdfonts.com/" target="_blank" rel="noopener"
+&gt;Nerd Font&lt;/a&gt; 字体，否则不能正常显示各种图标。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="包管理"&gt;包管理
+&lt;/h2&gt;&lt;p&gt;Linux 各种发行版通常有着一个包管理，pacman 也好、apt 也好、傻逼 snap 也好，总之有一个。Windows 这边没有一个中心化的包管理器，不管是微软的 win-get 还是第三方的 choco 和 scoop，都是直接从软件发行商那边进行下载的。不过我比较喜欢 scoop 的 portable 的思想，所以使用了 scoop 作为我的包管理器，配置各种环境非常舒适。&lt;/p&gt;
+&lt;p&gt;至于 scoop 的安装，参考其&lt;a class="link" href="https://scoop.sh/" target="_blank" rel="noopener"
+&gt;官网&lt;/a&gt;即可。顺带一提，scoop 的“软件源”在 Github 上，你可能需要某些技术来解决连接性问题。&lt;/p&gt;
+&lt;p&gt;当然，对于某些 scoop 内没有的软件包，可以使用 win-get 来安装。&lt;/p&gt;
+&lt;h3 id="scoop-常用指令"&gt;scoop 常用指令
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;scoop help&lt;/code&gt; 查看帮助
+&lt;code&gt;scoop update&lt;/code&gt; 更新软件源
+&lt;code&gt;scoop update *&lt;/code&gt; 安装所有包的更新
+&lt;code&gt;scoop search &amp;lt;keyword&amp;gt;&lt;/code&gt; 搜索包
+&lt;code&gt;scoop info &amp;lt;package name&amp;gt;&lt;/code&gt; 查看包的详细信息
+&lt;code&gt;scoop cleanup *&lt;/code&gt; 清理软件包&lt;/p&gt;
+&lt;p&gt;更多命令：自己看吧。&lt;/p&gt;
+&lt;h3 id="使用-scoop-配置环境"&gt;使用 scoop 配置环境
+&lt;/h3&gt;&lt;p&gt;平时会用到各种语言的环境（虽然我是远程编译人但是本地还是有环境罢）&lt;/p&gt;
+&lt;p&gt;哦其实好像根本不用怎么配，你只需要：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;scoop install gcc&lt;/code&gt;
+&lt;code&gt;scoop install nodejs&lt;/code&gt;
+&lt;code&gt;scoop install python&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;之类的。&lt;/p&gt;
+&lt;p&gt;怎么样，是不是非常爽？终于不用找到官网然后点 download 然后疯狂 next 了。&lt;/p&gt;
+&lt;h2 id="cli-工具"&gt;CLI 工具
+&lt;/h2&gt;&lt;h3 id="命令行美化"&gt;命令行美化
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;oh-my-posh&lt;/code&gt; —— prompt 美化
+&lt;code&gt;lsd&lt;/code&gt; —— 列出文件&lt;/p&gt;
+&lt;h3 id="网络工具"&gt;网络工具
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;nmap&lt;/code&gt; —— 扫描
+&lt;code&gt;tcping&lt;/code&gt; —— 测试端口连接性
+&lt;code&gt;clash&lt;/code&gt; —— 代理分流
+&lt;code&gt;wireshark&lt;/code&gt; —— 抓包
+&lt;code&gt;nexttrace&lt;/code&gt; —— 路由追踪&lt;/p&gt;
+&lt;h3 id="系统管理"&gt;系统管理
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;btop&lt;/code&gt; —— 资源任务管理
+&lt;code&gt;neofetch&lt;/code&gt; —— 让我看看（系统信息）&lt;/p&gt;
+&lt;p&gt;当然，还有很多例如 &lt;code&gt;ffmpeg&lt;/code&gt; 这种多媒体处理、&lt;code&gt;7z&lt;/code&gt;、 &lt;code&gt;tar&lt;/code&gt; 这种压缩解压以及各种其它工具。&lt;/p&gt;
+&lt;h2 id="自定义脚本"&gt;自定义脚本
+&lt;/h2&gt;&lt;p&gt;bash 使用 &lt;code&gt;.bashrc&lt;/code&gt; 作为用户启动 shell 时执行的脚本，而 powershell 则会执行一个 &lt;code&gt;.ps1&lt;/code&gt; 脚本，这个脚本的位置可以保存在 Powershell 中名为 &lt;code&gt;$PROFILE&lt;/code&gt; 的变量。&lt;/p&gt;
+&lt;p&gt;可以使用 &lt;code&gt;Write-Host $PROFILE&lt;/code&gt; 来查看路径。&lt;/p&gt;
+&lt;p&gt;这个脚本在我那篇 Window Terminal 也提过。不过在那个玩意的基础上，我最近又添加了一些自己用的实用函数：&lt;/p&gt;
+&lt;p&gt;比如先对于“在 Windows Terminal 中打开” 的 “在文件资源管理器中打开”：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;span class="lnt"&gt;7
+&lt;/span&gt;&lt;span class="lnt"&gt;8
+&lt;/span&gt;&lt;span class="lnt"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-pwsh" data-lang="pwsh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;Get-Exploere&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="no"&gt;string&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="nv"&gt;$Path&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;$PWD&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;explorer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="py"&gt;exe&lt;/span&gt; &lt;span class="nv"&gt;$Path&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;Set-Alias&lt;/span&gt; &lt;span class="n"&gt;-Name&lt;/span&gt; &lt;span class="n"&gt;open&lt;/span&gt; &lt;span class="n"&gt;-Value&lt;/span&gt; &lt;span class="nb"&gt;Get-Exploere&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;用于测试命令是否存在：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;span class="lnt"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-pwsh" data-lang="pwsh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;Test-Command&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="no"&gt;string&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="nv"&gt;$CommandName&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="vm"&gt;$null&lt;/span&gt; &lt;span class="o"&gt;-ne&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;Get-Command&lt;/span&gt; &lt;span class="nv"&gt;$CommandName&lt;/span&gt; &lt;span class="n"&gt;-ErrorAction&lt;/span&gt; &lt;span class="n"&gt;SilentlyContinue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;当然还有很多别名，比如将 &lt;code&gt;ls&lt;/code&gt; 改为使用 &lt;code&gt;lsd&lt;/code&gt;：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;span class="lnt"&gt;7
+&lt;/span&gt;&lt;span class="lnt"&gt;8
+&lt;/span&gt;&lt;span class="lnt"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-pwsh" data-lang="pwsh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;Get-Item-Line&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;lsd&lt;/span&gt; &lt;span class="n"&gt;-lh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;Test-Command&lt;/span&gt; &lt;span class="n"&gt;lsd&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nb"&gt;Set-Alias&lt;/span&gt; &lt;span class="n"&gt;-Name&lt;/span&gt; &lt;span class="nb"&gt;ls &lt;/span&gt;&lt;span class="n"&gt;-Value&lt;/span&gt; &lt;span class="n"&gt;lsd&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nb"&gt;Set-Alias&lt;/span&gt; &lt;span class="n"&gt;-Name&lt;/span&gt; &lt;span class="n"&gt;ll&lt;/span&gt; &lt;span class="n"&gt;-Value&lt;/span&gt; &lt;span class="nb"&gt;Get-Item&lt;/span&gt;&lt;span class="n"&gt;-Line&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;除此之外，为 ffmpeg 的常见操作也写了一些函数：&lt;/p&gt;
+&lt;p&gt;比如如下代码可以将图片转为 &lt;code&gt;webp&lt;/code&gt; 格式并且调整大小。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-pwsh" data-lang="pwsh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;Get-Webp&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;param&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="no"&gt;string&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="nv"&gt;$FileName&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="no"&gt;int&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="nv"&gt;$Width&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="no"&gt;int&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="nv"&gt;$Height&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$file&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;Get-Item&lt;/span&gt; &lt;span class="nv"&gt;$FileName&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="nv"&gt;$Width&lt;/span&gt; &lt;span class="o"&gt;-ne&lt;/span&gt; &lt;span class="mf"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-and&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="nv"&gt;$Height&lt;/span&gt; &lt;span class="o"&gt;-ne&lt;/span&gt; &lt;span class="mf"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;ffmpeg&lt;/span&gt; &lt;span class="n"&gt;-i&lt;/span&gt; &lt;span class="nv"&gt;$file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="py"&gt;FullName&lt;/span&gt; &lt;span class="nv"&gt;$file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="py"&gt;Name&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="py"&gt;Replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Extension&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;.webp&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;ffmpeg&lt;/span&gt; &lt;span class="n"&gt;-i&lt;/span&gt; &lt;span class="nv"&gt;$file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="py"&gt;FullName&lt;/span&gt; &lt;span class="n"&gt;-vf&lt;/span&gt; &lt;span class="n"&gt;scale&lt;/span&gt;&lt;span class="p"&gt;=${&lt;/span&gt;&lt;span class="n"&gt;Width&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="p"&gt;${&lt;/span&gt;&lt;span class="n"&gt;Height&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="nv"&gt;$file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="py"&gt;Name&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="py"&gt;Replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Extension&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;.webp&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;另外，powershell 中 &lt;code&gt;mv&lt;/code&gt;、&lt;code&gt;ls&lt;/code&gt; 等命令的用法和 Linux 下的 shell 极为相似，上手也很快。&lt;/p&gt;</description></item></channel></rss>

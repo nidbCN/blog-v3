@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>网络 on hollis gaein 的博客</title><link>https://blog.gaein.cn/tags/%E7%BD%91%E7%BB%9C/</link><description>Recent content in 网络 on hollis gaein 的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 07 Oct 2021 17:07:35 +0800</lastBuildDate><atom:link href="https://blog.gaein.cn/tags/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml"/><item><title>配置 ZeroTier 私人节点</title><link>https://blog.gaein.cn/passages/configure-zerotier-moon/</link><pubDate>Thu, 07 Oct 2021 17:07:35 +0800</pubDate><guid>https://blog.gaein.cn/passages/configure-zerotier-moon/</guid><description>&lt;h2 id="准备工作"&gt;准备工作
+&lt;/h2&gt;&lt;p&gt;一台有 &lt;strong&gt;静态公网 IP&lt;/strong&gt; 的服务器，装有 Ubuntu 20.04 LTS 以及 ZeroTier-one 。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Ubuntu 安装 ZeroTier-one 详见 &lt;a class="link" href="https://www.zerotier.com/download/#downloadLinux" target="_blank" rel="noopener"
+&gt;Download - ZeroTier&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="创建网络"&gt;创建网络
+&lt;/h2&gt;&lt;p&gt;在 &lt;a class="link" href="https://my.zerotier.com/network" target="_blank" rel="noopener"
+&gt;ZeroTier Central&lt;/a&gt; 中创建一个网路并设置为 private。&lt;/p&gt;
+&lt;h2 id="配置服务器"&gt;配置服务器
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;参考 &lt;a class="link" href="https://docs.zerotier.com/zerotier/moons" target="_blank" rel="noopener"
+&gt;Private Root Servers | ZeroTier Documentation&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="创建-world-定义"&gt;创建 world 定义
+&lt;/h3&gt;&lt;p&gt;转到目录 &lt;code&gt;/var/lib/zerotier-one&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /var/lib/zerotier-one
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;生成 &lt;code&gt;moon.json&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;zerotier-idtool initmoon identity.public &amp;gt;&amp;gt;moon.json
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;此文件包含机密信息，请妥善保管&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;修改 &lt;code&gt;moon.json&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;vim moon.json
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在 &lt;code&gt;roots&lt;/code&gt; 中的第一个子节点的 &lt;code&gt;stableEndpoints&lt;/code&gt; 节点中填入 &lt;code&gt;&amp;lt;你的服务器IP&amp;gt;/&amp;lt;ZeroTier端口&amp;gt;&lt;/code&gt; 如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s2"&gt;&amp;#34;stableEndpoints&amp;#34;&lt;/span&gt;: &lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;1.2.3.4/9993&amp;#34;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="签发-moon"&gt;签发 moon
+&lt;/h3&gt;&lt;p&gt;签发 &lt;code&gt;000000deadbeef00.moon&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;zerotier-idtool genmoon moon.json
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;此文件不包含机密信息，但是它从包含有机密信息的 &lt;code&gt;moon.json&lt;/code&gt; 签发而来。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="启用端口"&gt;启用端口
+&lt;/h3&gt;&lt;p&gt;开启 Ubuntu 防火墙的 &lt;code&gt;9993&lt;/code&gt; 端口：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ufw allow &lt;span class="m"&gt;9993&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;服务商控制面板如有防火墙请放行 &lt;code&gt;9993&lt;/code&gt; 端口。&lt;/p&gt;
+&lt;h2 id="配置客户端"&gt;配置客户端
+&lt;/h2&gt;&lt;p&gt;转到 &lt;code&gt;ZeroTier&lt;/code&gt; 目录&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Windows: &lt;code&gt;C:\ProgramData\ZeroTier\One&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Macintosh: &lt;code&gt;/Library/Application Support/ZeroTier/One&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Linux: &lt;code&gt;/var/lib/zerotier-one&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;FreeBSD/OpenBSD: &lt;code&gt;/var/db/zerotier-one&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在 &lt;code&gt;ZeroTier&lt;/code&gt; 目录下创建文件夹 &lt;code&gt;moons.d&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;将服务端生成的 &lt;code&gt;.moon&lt;/code&gt; 文件复制到 &lt;code&gt;moons.d&lt;/code&gt; 文件夹中并重启 ZeroTier&lt;/p&gt;</description></item></channel></rss>
